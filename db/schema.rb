@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130908194043) do
+ActiveRecord::Schema.define(:version => 20130909202312) do
+
+  create_table "backend_admins", :force => true do |t|
+    t.string   "name"
+    t.string   "role"
+    t.boolean  "admin",      :default => true
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
 
   create_table "business_hours", :force => true do |t|
     t.integer  "day"
@@ -84,6 +92,16 @@ ActiveRecord::Schema.define(:version => 20130908194043) do
 
   add_index "invoices", ["merchant_store_id"], :name => "index_invoices_on_merchant_store_id"
 
+  create_table "members", :force => true do |t|
+    t.string   "name"
+    t.string   "phone"
+    t.string   "postal_code"
+    t.string   "gender"
+    t.date     "birthday"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "merchant_stores", :force => true do |t|
     t.boolean  "active"
     t.string   "store_name"
@@ -102,6 +120,15 @@ ActiveRecord::Schema.define(:version => 20130908194043) do
   end
 
   add_index "merchant_stores", ["sms_keyword"], :name => "index_merchant_stores_on_sms_keyword", :unique => true
+
+  create_table "merchant_users", :force => true do |t|
+    t.string   "name"
+    t.string   "role"
+    t.boolean  "admin",             :default => true
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.integer  "merchant_store_id"
+  end
 
   create_table "message_notifications", :force => true do |t|
     t.string   "recipient"
@@ -140,8 +167,9 @@ ActiveRecord::Schema.define(:version => 20130908194043) do
     t.integer  "member_id"
     t.integer  "merchant_store_id"
     t.date     "start_date"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.boolean  "active",            :default => true
   end
 
   add_index "subscribers", ["member_id"], :name => "index_subscribers_on_member_id"
@@ -179,10 +207,15 @@ ActiveRecord::Schema.define(:version => 20130908194043) do
     t.string   "reset_password_token"
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
+    t.integer  "sub_id"
+    t.string   "sub_type"
   end
 
   add_index "users", ["remember_me_token"], :name => "index_users_on_remember_me_token"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token"
+  add_index "users", ["sub_id", "sub_type"], :name => "index_users_on_sub_id_and_sub_type", :unique => true
+  add_index "users", ["sub_id"], :name => "index_users_on_sub_id"
+  add_index "users", ["sub_type"], :name => "index_users_on_sub_type"
 
   create_table "welcome_offers", :force => true do |t|
     t.boolean  "active"

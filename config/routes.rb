@@ -1,4 +1,16 @@
 EnlightmentProd::Application.routes.draw do
+
+  get "logout" => "sessions#destroy", :as => "logout"
+  get "login" => "sessions#new", :as => "login"
+  get "signup" => "users#new", :as => "signup"
+  get "dashboard" => "merchant_root#home", :as => "dashboard"
+  
+  resources :users
+  resources :sessions
+  
+  get "secret" => "root#secret", :as => "secret"
+  
+  root :to => "root#home"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

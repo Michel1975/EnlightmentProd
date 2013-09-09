@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Merchant - Forside</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+  <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Project name</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">DashBoard</a></li>
+                <li><a href="#">Medlemmer</a></li>
+                <li><a href="#">Rapporter</a></li>
+                <li><a href="#">SMS kampagne</a></li>
+                <li><a href="#">Tilbud</a></li>
+                 <li><a href="#">Indstillinger</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+
+      <div class="span9">
+      <% if current_user %>
+        Logged in as <%= current_user.email %>.
+        <%= link_to "Log out", logout_path %>
+      <% else %>
+        <%= link_to "Sign up", signup_path %> or
+        <%= link_to "log in", login_path %>.
+      <% end %>
+      </div>
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, msg, :id => "flash_#{name}" %>
+    <% end %>
+
+      <div class="span9">
+        <%= yield %>
+      </div>
+</div><!-- /container -->
+<div class="footer">
+        <p>&copy; Company 2013</p>
+      </div>
+</body>
+</html>
