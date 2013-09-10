@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 	attr_accessible :email, :password, :password_confirmation
 
-	belongs_to :sub, :polymorphic => true
+	#belongs_to :sub, :polymorphic => true
 
 	authenticates_with_sorcery!
 	
