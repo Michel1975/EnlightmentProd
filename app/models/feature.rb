@@ -1,5 +1,7 @@
 class Feature < ActiveRecord::Base
-  attr_accessible :description, :subscription_type_id, :title
+  attr_accessible :title, :description
 
   belongs_to :subscription_type
+
+  validates :title, :description, :subscription_type_id, presence: true
 end

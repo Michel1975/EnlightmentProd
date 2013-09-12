@@ -1,5 +1,7 @@
 class StatusCode < ActiveRecord::Base
-  attr_accessible :description, :name
+  attr_accessible :name, :description
 
   has_many :message_notifications
+
+  validates :name, :description, presence: true
 end

@@ -1,5 +1,5 @@
 class MerchantStore < ActiveRecord::Base
-  attr_accessible :active, :city, :country, :description, :house_number, :latitude, :longitude, :owner, :postal_code, :sms_keyword, :store_name, :street
+  attr_accessible :store_name, :description, :owner, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword
 
   has_one :welcome_offer, dependent: :destroy
   has_many :offers, dependent: :destroy
@@ -12,4 +12,11 @@ class MerchantStore < ActiveRecord::Base
   has_many :merchant_users, dependent: :destroy
 
   
+  validates :active, :inclusion => { :in => [ true, false ] }
+  validates :store_name, presence: true, length: { maximum: 30 }
+  validates :description, :city, :country, presence: true
+  validates :owner, presence: true, length: { maximum: 30 }
+  validates :street, presence: true, length: { maximum: 30 }
+  validates :house_number, :postal_code, numericality: { only_integer: true }, length: { maximum: 4 } 
+  validates :sms_keyword, presence: true, uniqueness: { case_sensitive: false }
 end

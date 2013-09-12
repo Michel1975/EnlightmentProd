@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130909202312) do
+ActiveRecord::Schema.define(:version => 20130910131942) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -98,8 +98,9 @@ ActiveRecord::Schema.define(:version => 20130909202312) do
     t.string   "postal_code"
     t.string   "gender"
     t.date     "birthday"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.boolean  "terms_of_service", :default => false
   end
 
   create_table "merchant_stores", :force => true do |t|
