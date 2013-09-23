@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130910131942) do
+ActiveRecord::Schema.define(:version => 20130919115645) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(:version => 20130910131942) do
   end
 
   create_table "merchant_stores", :force => true do |t|
-    t.boolean  "active"
+    t.boolean  "active",       :default => false
     t.string   "store_name"
     t.text     "description"
     t.string   "owner"
@@ -116,8 +116,8 @@ ActiveRecord::Schema.define(:version => 20130910131942) do
     t.string   "latitude"
     t.string   "longitude"
     t.string   "sms_keyword"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   add_index "merchant_stores", ["sms_keyword"], :name => "index_merchant_stores_on_sms_keyword", :unique => true
@@ -201,8 +201,8 @@ ActiveRecord::Schema.define(:version => 20130910131942) do
     t.string   "email"
     t.string   "crypted_password"
     t.string   "salt"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.string   "remember_me_token"
     t.datetime "remember_me_token_expires_at"
     t.string   "reset_password_token"
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(:version => 20130910131942) do
     t.datetime "reset_password_email_sent_at"
     t.integer  "sub_id"
     t.string   "sub_type"
+    t.boolean  "active",                          :default => true
   end
 
   add_index "users", ["remember_me_token"], :name => "index_users_on_remember_me_token"
@@ -219,11 +220,11 @@ ActiveRecord::Schema.define(:version => 20130910131942) do
   add_index "users", ["sub_type"], :name => "index_users_on_sub_type"
 
   create_table "welcome_offers", :force => true do |t|
-    t.boolean  "active"
+    t.boolean  "active",            :default => false
     t.text     "description"
     t.integer  "merchant_store_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
 
   add_index "welcome_offers", ["merchant_store_id"], :name => "index_welcome_offers_on_merchant_store_id"

@@ -1,4 +1,4 @@
-class MerchantRootController < ApplicationController
+class Merchant::MerchantRootController < Shared::BaseController
 	layout 'merchant'
 	before_filter :require_login
 

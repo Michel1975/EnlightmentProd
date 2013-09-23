@@ -3,7 +3,6 @@ class RootController < ApplicationController
 
 	def home
 
-
 	end
 
 	def secret

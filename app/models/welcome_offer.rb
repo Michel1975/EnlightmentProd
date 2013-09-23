@@ -1,5 +1,5 @@
 class WelcomeOffer < ActiveRecord::Base
-  attr_accessible :description
+  attr_accessible :description, :active
 
   belongs_to :merchant_store
 

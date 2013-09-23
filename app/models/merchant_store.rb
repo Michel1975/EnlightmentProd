@@ -6,10 +6,12 @@ class MerchantStore < ActiveRecord::Base
   has_many :business_hours, dependent: :destroy
   has_many :message_notifications, dependent: :destroy
   has_many :campaigns, dependent: :destroy
-  has_many :subscription_plans, dependent: :destroy
+  has_one  :subscription_plan, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :event_histories, dependent: :destroy
   has_many :merchant_users, dependent: :destroy
+  has_many :subscribers, dependent: :destroy
+  has_many :members, :through => :subscribers
 
   
   validates :active, :inclusion => { :in => [ true, false ] }

@@ -1,0 +1,3 @@
+module Merchant::MerchantRootHelper
+
+end

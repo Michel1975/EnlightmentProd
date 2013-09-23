@@ -4,14 +4,14 @@ class User < ActiveRecord::Base
 	belongs_to :sub, :polymorphic => true
 
 	authenticates_with_sorcery!
-	
-	validates :password, presence: true, :length => { :in => 8..20 }
-	validates :password, :confirmation => true,
-    	:unless => Proc.new { |a| a.password.blank? }
 
+	#https://github.com/NoamB/sorcery/issues/125#issuecomment-18250206
+	#http://stackoverflow.com/questions/16617717/why-does-factorygirlbuild-work-with-sorcery-but-not-factorygirlcreate
+	validates :password, length:{ in: 8..20 }, if: ->{ crypted_password.blank? }
+    validates :password, :confirmation => true,
+    	:unless => Proc.new { |a| a.password.blank? }
   	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   	validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
     validates :active, :inclusion => { :in => [true, false] }
-    validates :sub_id, :sub_type, presence: true
 end

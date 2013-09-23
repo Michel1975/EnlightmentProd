@@ -1,5 +1,5 @@
 class SubscriptionPlan < ActiveRecord::Base
-  attr_accessible :start_date, :cancel_date :subscription_type_id
+  attr_accessible :start_date, :cancel_date, :subscription_type_id
 
   belongs_to :merchant_store
   belongs_to :subscription_type
