@@ -1,0 +1,88 @@
+<% provide(:title, "Tilbudsoversigt") %>
+
+<h3> Aktive tilbud </h3>
+<%= will_paginate @active_offers, class:"paging_bootstrap pagination"%>
+<div class="span10">
+  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Titel</th>
+        <th>Beskrivelse</th>        
+        <th>Gyldig fra</th>
+        <th>Gyldig til</th>
+        <th>SMS påmindelser</th>               
+        <th>Oprettet</th>
+        <th>Senest opdateret</th>
+        <th>Handling</th>        
+      </tr>
+    </thead>
+    <tbody>
+      <% @active_offers.each do |offer| %>
+        <tr>
+          <td> <%= link_to offer.title, [:merchant, offer] %></td>
+          <td> <%= offer.description %></td>
+          <td> <%= offer.valid_from %></td>
+          <td> <%= offer.valid_to %></td>  
+          <td>TBD</td>
+          <td><%= offer.created_at %></td>
+          <td><%= offer.updated_at %></td>
+          <td><%= link_to [:merchant, offer], method: :delete, data: { confirm: "Er du sikker?" } do %>
+              <button class="btn btn-mini btn-danger">
+                <i class="icon-trash bigger-120"></i>
+              </button>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<%= link_to "Opret nyt tilbud", new_merchant_offer_path, 
+                                class: "btn btn-medium btn-primary" %>
+
+<div class="hr hr-18 dotted hr-double"></div>
+
+
+<h3> Afsluttede tilbud </h3>
+
+<%= will_paginate @inactive_offers, class:"paging_bootstrap pagination"%>
+
+<div class="span10">
+  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+    <thead>
+       <tr>
+        <th>Titel</th>
+        <th>Beskrivelse</th>        
+        <th>Gyldig fra</th>
+        <th>Gyldig til</th>
+        <th>SMS påmindelser</th>               
+        <th>Oprettet</th>
+        <th>Senest opdateret</th>
+        <th>Handling</th>        
+      </tr>
+    </thead>
+    <tbody>
+      <% @active_offers.each do |offer| %>
+      <tr>
+        <td> <%= link_to offer.title, [:merchant, offer] %></td>
+        <td> <%= offer.description %></td>
+        <td> <%= offer.valid_from %></td>
+        <td> <%= offer.valid_to %></td>  
+        <td>TBD</td>
+        <td><%= offer.created_at %></td>
+        <td><%= offer.updated_at %></td>                
+        <td>
+          <%= link_to [:merchant, offer], method: :delete, data: { confirm: "Er du sikker?" } do %>
+            <button class="btn btn-mini btn-danger">
+              <i class="icon-trash bigger-120"></i>
+            </button>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+

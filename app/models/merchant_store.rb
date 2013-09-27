@@ -1,6 +1,6 @@
 class MerchantStore < ActiveRecord::Base
   attr_accessible :store_name, :description, :owner, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword
-
+  accepts_nested_attributes_for :business_hours
   has_one :welcome_offer, dependent: :destroy
   has_many :offers, dependent: :destroy
   has_many :business_hours, dependent: :destroy

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Merchant - Forside <%= current_merchant_store.store_name %></title>
+  <title><%= yield(:title)%></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -16,13 +16,14 @@
           <div class="navbar-inner">
             <div class="container">
               <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">DashBoard</a></li>
-                <li><a href="#">Medlemmer</a></li>
-                <li><a href="#">Rapporter</a></li>
+                <li ><a href="#">Home</a></li>
+                <li class="active"><a href="#">DashBoard</a></li>
+                <li><%= link_to "Medlemmer", merchant_subscribers_path %></li>
                 <li><a href="#">SMS kampagne</a></li>
-                <li><a href="#">Tilbud</a></li>
+                <li><%= link_to "Tilbud", merchant_offers_path %></li>
                 <li><a href="#">Indstillinger</a></li>
+                <li><%= link_to "Velkomsttilbud", merchant_welcome_offer_path(current_merchant_store.welcome_offer) %></li>
+                <li><%= link_to "Sms kampagner", merchant_campaigns_path %></li>
               </ul>
             </div>
           </div>
@@ -38,9 +39,12 @@
         <%= link_to "log in", shared_login_path %>.
       <% end %>
       </div>
-    <% flash.each do |name, msg| %>
-      <%= content_tag :div, msg, :id => "flash_#{name}" %>
-    <% end %>
+      <br />
+      <div>
+        <% flash.each do |name, msg| %>
+          <%= content_tag :div, msg, :id => "flash_#{name}" %>
+        <% end %>
+      </div>
 
       <div class="span9">
         <%= yield %>

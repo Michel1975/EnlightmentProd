@@ -3,6 +3,7 @@ class Subscriber < ActiveRecord::Base
 
   has_many :campaign_members #no dependent destroy due to historic campaign tracking for merchant
   belongs_to :merchant_store
+  belongs_to :member
 
   validates :merchant_store_id, :member_id, :start_date,  presence: true
   validates :active, :inclusion => { :in => [ true, false ] }

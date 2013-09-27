@@ -1,0 +1,9 @@
+<tr>        
+	<td> <%= link_to campaign.title, [:merchant, campaign] %> </td>        
+    <td> <%= campaign.activation_time %> </td>
+    <td> <%= campaign.status %> </td> 
+    <td> 
+    	<%= link_to "Slet sms kampagne", [:merchant, campaign], method: :delete,
+        	data: { confirm: "Er du sikker?" } %>         
+    </td>
+</tr>   

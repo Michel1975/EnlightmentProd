@@ -1,0 +1,52 @@
+<h1>Alle butikker</h1>
+<%= will_paginate @merchant_stores, class:"paging_bootstrap pagination"%>
+<% if @merchant_stores %>
+<div class="span11">
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Navn</th>
+                <th>Ejer</th>
+                <th>Gade</th>
+                <th>Husnummer</th>
+                <th>Etage</th>
+                <th>Side</th>
+                <th>Postnummer</th>
+                <th>By</th>
+                <th>Description</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @merchant_stores.each do |merchant_store| %>
+            <tr>
+                <td><%= merchant_store.store_name %></td>
+                <td><%= merchant_store.owner %></td>
+                <td><%= merchant_store.street %></td>
+                <td><%= merchant_store.house_number %></td>
+                <td><%= merchant_store.floor %></td>
+                <td><%= merchant_store.side %></td>
+                <td><%= merchant_store.postal_code %></td>
+                <td><%= merchant_store.city %></td>
+                <td><%= merchant_store.description %></td>
+                <td><%= merchant_store.active.to_s %></td>   
+                <td><%= link_to 'Vis butik', merchant_store %></td>
+                <td><%= link_to 'Ret', edit_merchant_store_path(merchant_store) %></td>
+                <td>
+                    <%= link_to merchant_store, method: :delete, data: { confirm: "Er du sikker?" } do %>
+                        <button class="btn btn-mini btn-danger">
+                            <i class="icon-trash bigger-120"></i>
+                        </button>
+                    <% end %>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+<% end %>
+
+
+
+
+

@@ -1,0 +1,16 @@
+<% provide(:title, 'Opdater oplysninger for butik') %>
+<div class="span10">
+	<div class="page-header position-relative">
+		<h1>
+		Stamdata
+		<small>
+		<i class="icon-double-angle-right"></i>
+		Administration af stamdata for butik
+		</small>
+		</h1>
+	</div><!--/.page-header-->
+	<%= render 'form' %>
+	<%= link_to 'Vis butik', @merchant_store %> |
+	<%= link_to 'Tilbage', merchant_stores_path %>	
+</div>
+<br/>

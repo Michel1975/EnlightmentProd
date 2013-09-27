@@ -1,0 +1,17 @@
+<% provide(:title, 'Send') %>
+<div class="container">
+  <% flash.each do |key, value| %>
+      <%= content_tag(:div, value, class: "alert alert-#{key}") %>
+  <% end %>
+  <div class="row-fluid">
+    <%= form_tag send_single_message_merchant_subscriber_path(@subscriber), :method => :post do %> 
+      <div class="controls">                  
+      	<%= label_tag :message %>
+        <%= text_area_tag :message %>                    
+      </div> 
+       <div class="controls form-inline">                    
+       	<%= button_tag "Send besked", type: "submit", class: "btn-u pull-right" %>
+       </div>
+    <% end %>
+    </div><!--/row-fluid-->
+</div><!--/container-->   

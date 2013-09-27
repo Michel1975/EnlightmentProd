@@ -1,0 +1,31 @@
+<% provide(:title, "Tilbudsdetaljer") %>
+<div class="span11">
+  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Titel</th>
+        <th>Beskrivelse</th>
+        <th>Gyldig fra</th>
+        <th>Gyldig til</th>        
+        <th>SMS påmindelser</th>
+        <th>Oprettet</th>
+        <th>Senest opdateret</th>
+      </tr>
+    </thead>
+    <tbody>     
+      <tr>
+        <td> <%= @offer.title %></td>
+        <td> <%= @offer.description %></td>
+        <td> <%= @offer.valid_from %></td>
+        <td> <%= @offer.valid_to %></td>
+        <td>TBD</td>
+        <td><%= @offer.created_at %></td>
+        <td><%= @offer.updated_at %></td>
+      </tr>      
+    </tbody>
+  </table>
+</div>
+ 
+<%= link_to 'Rediger', edit_merchant_offer_path(@offer) %> 
+<%= link_to 'Tilbage', merchant_offers_path %>
+

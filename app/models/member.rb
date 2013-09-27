@@ -2,6 +2,7 @@ class Member < ActiveRecord::Base
   attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service
 
   has_one :user, :as => :sub
+  has_many :subscribers
 
 
   validates :name, presence: true, length: { maximum: 40 }

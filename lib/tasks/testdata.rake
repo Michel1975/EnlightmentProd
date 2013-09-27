@@ -84,8 +84,7 @@ namespace :db do
         description = "Lorem ipsum Lorem ipsum Lorem ipsum"
         valid_from = (Time.now - 50.days)
         valid_to = (Time.now - 10.days)
-        offer = Offer.create(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
-        
+        store.offers.create!(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
       end 
       #Create active offers
       5.times do |n|
@@ -93,7 +92,7 @@ namespace :db do
         description = "Lorem ipsum Lorem ipsum Lorem ipsum"
         valid_from = (Time.now - 5.days)
         valid_to = (Time.now + 20.days)
-        offer = Offer.create(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
+        store.offers.create!(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
       end
 
       #Create business hours
@@ -105,6 +104,10 @@ namespace :db do
       7.times do |n|
         store.event_histories.create!(description: Faker::Lorem.words(10), type: "login")
       end 
+
+      #Create welcome offer
+      store.create_welcome_offer!(description: Faker::Lorem.words(10), active: true)
+       
 
     end#end loop
 

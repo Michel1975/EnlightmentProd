@@ -1,14 +1,35 @@
 EnlightmentProd::Application.routes.draw do
+  #get "password_resets/create"
+
+  #get "password_resets/edit"
+
+  #get "password_resets/update"
+
   root :to => "root#home"
   get "secret" => "root#secret", :as => "secret" 
   
   namespace :merchant do
     get "dashboard" => "merchant_root#home", :as => "dashboard"
+    
+    resources :subscribers, :only => [:index, :show, :destroy] do
+      get 'prepare_single_message', :on => :member
+      post 'send_single_message', :on => :member
+    end
+    resources :offers 
+    resources :welcome_offers
+    resources :campaigns
   end
 
   namespace :shared do
+    resources :members do
+      #Invoked from merchant backend
+      get 'new_manual_subscriber', :on => :member
+      post 'create_manual_subscriber', :on => :member
+    end
+
     resources :users
     resources :sessions
+    resources :password_resets
     get "logout" => "sessions#destroy", :as => "logout"
     get "login" => "sessions#new", :as => "login"
     get "signup" => "users#new", :as => "signup"

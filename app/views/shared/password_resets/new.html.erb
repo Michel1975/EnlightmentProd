@@ -1,0 +1,7 @@
+<% provide(:title, 'Nulstil password') %>
+<%= form_tag shared_password_resets_path, :method => :post do %>
+  <div class="field">
+    <%= label_tag :email %><br />
+    <%= text_field_tag :email %> <%= submit_tag "Nulstil mit password!" %>
+  </div>
+<% end %>

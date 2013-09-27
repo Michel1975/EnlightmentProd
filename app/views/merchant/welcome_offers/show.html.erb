@@ -1,0 +1,16 @@
+<% provide(:title, 'Velkomsttilbud') %>
+<h1>Velkomsttilbud</h1>
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Tilbudstekst</b>
+  <%= @welcome_offer.description %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @welcome_offer.active %>
+</p>
+
+<%= link_to 'Rediger', edit_merchant_welcome_offer_path(@welcome_offer) %>

@@ -1,0 +1,42 @@
+<% provide(:title, "Medlemsdetaljer #{@subscriber.member.name}") %>
+<div class="span8">
+  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+   		<thead>
+			<tr>
+				<th>Navn</th>
+				<th>Email</th>
+				<th>Telefon</th>
+				<th>Køn</th>
+				<th>Fødselsdag</th>
+				<th>Medlem fra</th>
+				<th>Send besked</th>
+				<th>Fjern medlem</th>
+			</tr>
+		</thead>
+    <tbody>
+		<tr>
+			<td> <%= @subscriber.member.name %></td>
+			<td> <%= @subscriber.member.user.email %></td>
+			<td> <%= @subscriber.member.phone %></td>
+			<td> <%= gender(@subscriber.member.gender)%></td>
+			<td> <%= @subscriber.member.birthday %></td>
+			<td> <%= @subscriber.start_date %></td>
+			<td> <%= link_to "Send besked", prepare_single_message_merchant_subscriber_path(@subscriber) %></td>
+			<td>
+				<%= link_to [:merchant, @subscriber], method: :delete, data: { confirm: "Er du sikker?" } do %>
+					<button class="btn btn-mini btn-danger">
+							<i class="icon-trash bigger-120"></i>
+					</button>
+				<% end %>
+			</td>
+		</tr>
+	</tbody>
+  </table>
+</div>
+<br />
+
+<%= link_to 'Tilbage', merchant_subscribers_path, class: "btn btn-medium btn-primary" %>
+
+
+
+

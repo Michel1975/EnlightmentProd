@@ -1,0 +1,64 @@
+<% provide(:title, 'Stamoplysninger for '  + @merchant_store.store_name) %>
+<h1>Vis oplysninger for butik</h1>
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Butik:</b>
+  <%= @merchant_store.store_name %>
+</p>
+
+<p>
+  <b>Ejer:</b>
+  <%= @merchant_store.owner %>
+</p>
+
+<%= image_tag "http://maps.google.com/maps/api/staticmap?size=450x300&sensor=false&zoom=16&markers=#{@merchant_store.latitude}%2C#{@merchant_store.longitude}" %>
+
+<div>
+  <%= image_tag @merchant_store.avatar.url(:square) %>
+</div>
+
+<p>
+  <b>Gade:</b>
+  <%= @merchant_store.street %>
+</p>
+
+<p>
+  <b>Husnummer:</b>
+  <%= @merchant_store.house_number %>
+</p>
+
+<p>
+  <b>Etage:</b>
+  <%= @merchant_store.floor %>
+</p>
+
+
+<p>
+  <b>Side:</b>
+  <%= @merchant_store.side %>
+</p>
+
+<p>
+  <b>Postnummer:</b>
+  <%= @merchant_store.postal_code %>
+</p> 
+
+<p>
+  <b>By:</b>
+  <%= @merchant_store.city %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @merchant_store.description %>
+</p>
+
+<p>
+  <b>Active:</b>
+  <%= @merchant_store.active %>
+</p>
+
+<%= link_to 'Ret', edit_merchant_store_path(@merchant_store) %> |
+<%= link_to 'Tilbage', merchant_stores_path %>

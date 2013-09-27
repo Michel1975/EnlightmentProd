@@ -1,7 +1,7 @@
-class Merchant::MerchantRootController < Shared::BaseController
-	layout 'merchant'
-	before_filter :require_login
-
+class Merchant::MerchantRootController < Merchant::BaseController
+	before_filter :require_login #man skal være merchantuser
+	layout :determine_layout
+	
 	def home
 
 	end

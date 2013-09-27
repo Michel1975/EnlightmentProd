@@ -1,3 +1,4 @@
+<% provide(:title, 'Log ind') %>
 <h1>Log in</h1>
 
 <%= form_tag shared_sessions_path do %>
@@ -15,3 +16,5 @@
   </div>
   <div class="actions"><%= submit_tag "Log in" %></div>
 <% end %>
+<h3>Glemt dit password ?</h3>
+<p>Klik <%= link_to "her", new_shared_password_reset_path, class: "color-green" %> for at nulstille dit password</p>
