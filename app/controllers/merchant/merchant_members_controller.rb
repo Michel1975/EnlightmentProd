@@ -1,5 +1,5 @@
 class Merchant::MerchantMembersController < Merchant::BaseController
-	before_filter :require_login, 
+	before_filter :require_login
 	layout :determine_layout
 
 	#To be used from merchant portal when manually creating new subscriber from scrath - more logic needed
