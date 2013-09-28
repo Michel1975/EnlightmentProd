@@ -1,6 +1,6 @@
 class MerchantStore < ActiveRecord::Base
-  attr_accessible :store_name, :description, :owner, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword
-  accepts_nested_attributes_for :business_hours
+  attr_accessible :store_name, :description, :owner, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
+  
   has_one :welcome_offer, dependent: :destroy
   has_many :offers, dependent: :destroy
   has_many :business_hours, dependent: :destroy
@@ -12,7 +12,7 @@ class MerchantStore < ActiveRecord::Base
   has_many :merchant_users, dependent: :destroy
   has_many :subscribers, dependent: :destroy
   has_many :members, :through => :subscribers
-
+  accepts_nested_attributes_for :business_hours
   
   validates :active, :inclusion => { :in => [ true, false ] }
   validates :store_name, presence: true, length: { maximum: 30 }

@@ -1,7 +1,7 @@
 class Member < ActiveRecord::Base
-  attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service
-
+  attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service, :user_attributes
   has_one :user, :as => :sub
+  accepts_nested_attributes_for :user
   has_many :subscribers
 
 

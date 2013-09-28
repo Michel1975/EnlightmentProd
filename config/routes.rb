@@ -9,30 +9,47 @@ EnlightmentProd::Application.routes.draw do
   get "secret" => "root#secret", :as => "secret" 
   
   namespace :merchant do
-    get "dashboard" => "merchant_root#home", :as => "dashboard"
+    get "dashboard" => "dashboards#store_dashboard", :as => "dashboard"
     
-    resources :subscribers, :only => [:index, :show, :destroy] do
+    resources :subscribers, :only => [:index, :show, :destroy, :new] do
       get 'prepare_single_message', :on => :member
       post 'send_single_message', :on => :member
     end
     resources :offers 
     resources :welcome_offers
     resources :campaigns
+    resources :merchant_users
+    resources :merchant_members
+
+    resources :merchant_stores do
+      #Kunne også være en match-rute uden id idet vi altid viser merchant-store fra session storage.
+      get 'active_subscription', :on => :member 
+    end
+
   end
 
   namespace :shared do
     resources :members do
-      #Invoked from merchant backend
+      #Invoked from merchant portal - layout valg skal tilpasses
       get 'new_manual_subscriber', :on => :member
       post 'create_manual_subscriber', :on => :member
     end
-
     resources :users
-    resources :sessions
     resources :password_resets
-    get "logout" => "sessions#destroy", :as => "logout"
-    get "login" => "sessions#new", :as => "login"
-    get "signup" => "users#new", :as => "signup"
+    resources :merchant_sessions, :only => [:new, :create, :destroy]
+    resources :member_sessions, :only => [:new, :create, :destroy]
+    resources :member_users
+
+    #Member session paths
+    get "login_member" => "member_sessions#new", :as => "login_member"
+    get "logout_member" => "member_sessions#destroy", :as => "logout_member"
+
+    #MerchantUser session paths
+    get "login_merchant" => "merchant_sessions#new", :as => "login_merchant"
+    get 'logout_merchant',  to: "merchant_sessions#destroy", :as => "logout_merchant"
+
+    #Member signup
+    get "signup_member" => "member_users#new", :as => "signup_member"
   end
 
   namespace :admin do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130919115645) do
+ActiveRecord::Schema.define(:version => 20130928095802) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20130919115645) do
     t.integer  "merchant_store_id"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
+    t.decimal  "total_cost"
   end
 
   add_index "campaigns", ["merchant_store_id"], :name => "index_campaigns_on_merchant_store_id"
@@ -61,7 +62,7 @@ ActiveRecord::Schema.define(:version => 20130919115645) do
 
   create_table "event_histories", :force => true do |t|
     t.text     "description"
-    t.string   "type"
+    t.string   "event_type"
     t.integer  "merchant_store_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
@@ -171,6 +172,7 @@ ActiveRecord::Schema.define(:version => 20130919115645) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.boolean  "active",            :default => true
+    t.date     "cancel_date"
   end
 
   add_index "subscribers", ["member_id"], :name => "index_subscribers_on_member_id"
@@ -211,8 +213,13 @@ ActiveRecord::Schema.define(:version => 20130919115645) do
     t.integer  "sub_id"
     t.string   "sub_type"
     t.boolean  "active",                          :default => true
+    t.datetime "last_login_at"
+    t.datetime "last_logout_at"
+    t.datetime "last_activity_at"
+    t.string   "last_login_from_ip_address"
   end
 
+  add_index "users", ["last_logout_at", "last_activity_at"], :name => "index_users_on_last_logout_at_and_last_activity_at"
   add_index "users", ["remember_me_token"], :name => "index_users_on_remember_me_token"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token"
   add_index "users", ["sub_id", "sub_type"], :name => "index_users_on_sub_id_and_sub_type", :unique => true

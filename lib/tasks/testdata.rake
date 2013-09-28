@@ -102,7 +102,7 @@ namespace :db do
 
       #Create event history
       7.times do |n|
-        store.event_histories.create!(description: Faker::Lorem.words(10), type: "login")
+        store.event_histories.create!(description: Faker::Lorem.words(10), event_type: "login") 
       end 
 
       #Create welcome offer
@@ -110,6 +110,28 @@ namespace :db do
        
 
     end#end loop
+
+    #Create one standalone member with unique email
+      1.times do |n| 
+        name = "Michel Hansen"
+        postal_code = "3360"
+        gender = "W"
+        email = "scoop751@hotmail.com"
+        phone = "42415210"
+        password  = "password"
+        
+        member_user = User.create!(
+                 email: email,
+                 password: password,
+                 password_confirmation: password)
+        member = Member.create!(  name: name,
+                                  postal_code: postal_code,
+                                  gender: gender,
+                                  birthday: Date.today,
+                                  phone: phone)
+        member_user.sub = member
+        member_user.save!
+      end #end creation of special standalone member
 
   end#end populate
 end#end namespace

@@ -24,16 +24,18 @@ class Merchant::CampaignsController < Merchant::BaseController
       #Step 1: Opret selve kampagnen først
       @campaign = current_merchant_store.campaigns.build(params[:campaign]) 
       @campaign.status = 'scheduled'
-
-      #Step 2: To-Do - opret grupper som brugeren har valgt at sende til. Disse data ligger i join-objektet      
-    	
+      #Default add all members for a store
+      @campaign.save!
+      current_merchant_store.subscribers.each do |subscriber| 
+        @campaign.campaign_members.create(subscriber_id: subscriber.id, status: 'new') 
+      end
+     
       #Step 2: Bestem om ordren sker omgående eller i fremtiden
       if(@campaign.instant_activation)
         #sendOfferReminderInstant?(@campaign, Array.new << Member.new(phone: '+4524600819')) #Member.find(1,10))         
       else
         #sendOfferReminderScheduled?(@campaign, Array.new << Member.new(phone: '+4524600819')) #Member.find(1,10))          
       end
-      @campaign.save!
       flash[:success] = "Kampagne er blevet oprettet"
 
       #Old: sendSingleMessageScheduled?('Test - Velkommen til Club Novus', '+4524600819','2013-08-03T15:55:00')

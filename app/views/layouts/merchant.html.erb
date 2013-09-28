@@ -17,13 +17,15 @@
             <div class="container">
               <ul class="nav">
                 <li ><a href="#">Home</a></li>
-                <li class="active"><a href="#">DashBoard</a></li>
+                <li><%= link_to "Dashboard", merchant_dashboard_path %></li>
                 <li><%= link_to "Medlemmer", merchant_subscribers_path %></li>
-                <li><a href="#">SMS kampagne</a></li>
                 <li><%= link_to "Tilbud", merchant_offers_path %></li>
                 <li><a href="#">Indstillinger</a></li>
-                <li><%= link_to "Velkomsttilbud", merchant_welcome_offer_path(current_merchant_store.welcome_offer) %></li>
                 <li><%= link_to "Sms kampagner", merchant_campaigns_path %></li>
+                <li><%= link_to "Velkomsttilbud", merchant_welcome_offer_path(current_merchant_store.welcome_offer) %></li>
+                <li><%= link_to "Indstillinger - stamdata", merchant_merchant_store_path(current_merchant_store) %></li>
+                <li><%= link_to "Indstillinger - Abonemment", active_subscription_merchant_merchant_store_path(current_merchant_store) %></li>
+                <li><%= link_to "Brugerprofil", merchant_merchant_user_path(current_merchant_user)%></li>
               </ul>
             </div>
           </div>
@@ -32,11 +34,10 @@
 
       <div class="span9">
       <% if current_user %>
-        Logged in as <%= current_user.email %>.
-        <%= link_to "Log out", shared_logout_path %>
+        Logget ind som butik<%= current_user.email %>. Last login at: <%= current_user.last_login_at %>
+        <%= link_to "Log out", shared_logout_merchant_path %>
       <% else %>
-        <%= link_to "Sign up", shared_signup_path %> or
-        <%= link_to "log in", shared_login_path %>.
+        <%= link_to "Log in", shared_login_merchant_path %>.
       <% end %>
       </div>
       <br />

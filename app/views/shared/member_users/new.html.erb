@@ -1,0 +1,50 @@
+<% provide(:title, 'Tilmelding') %>
+<h1>Opret nyt medlem</h1>
+
+<%= form_for(@member, url: shared_member_users_path) do |f| %>
+  <% if @member.errors.any? %>
+    <div class="error_messages">
+      <h2>Form is invalid</h2>
+      <ul>
+        <% for message in @member.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :phone %>
+    <%= f.text_field :phone %>
+  </div>
+  <div class="field">
+    <%= f.label :postal_code %>
+    <%= f.text_field :postal_code %>
+  </div>
+  <div class="field">
+    <%= f.label :gender %>
+    <%= f.text_field :gender %>
+  </div>
+  <div class="field">
+    <%= f.label :birthday %>
+    <%= f.date_select :birthday %>
+  </div>
+  <%= f.fields_for :user_attributes do |t| %>
+    <div class="field">
+      <%= t.label :email %>
+      <%= t.text_field :email %>
+    </div>
+    <div class="field">
+      <%= t.label :password %>
+      <%= t.password_field :password %>
+    </div>
+    <div class="field">
+      <%= t.label :password_confirmation %>
+      <%= t.password_field :password_confirmation %>
+    </div>
+  <% end %>
+  <div class="actions"><%= f.submit %></div>
+<% end %>

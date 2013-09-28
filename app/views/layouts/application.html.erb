@@ -20,6 +20,9 @@
                 <li><a href="#">Om Club Novus</a></li>
                 <li><a href="#">Find butikker</a></li>
                 <li><a href="#">Kontakt</a></li>
+                <li> <%= link_to "Log ind som butik", shared_login_merchant_path %> </li>
+                <li> <%= link_to "Log ind som medlem", shared_login_member_path %> </li>
+                <li> <%= link_to "Opret medlem", shared_signup_member_path %> </li>
               </ul>
             </div>
           </div>
@@ -28,12 +31,12 @@
 
 
       <div class="span9">
-      <% if current_user %>
-        Logged in as <%= current_user.email %>.
-        <%= link_to "Log out", shared_logout_path %>
-      <% else %>
-        <%= link_to "Sign up", shared_signup_path %> or
-        <%= link_to "log in", shared_login_path %>.
+      <% if current_user && current_user.sub_type == "MerchantUser" %>
+        Logget ind som butik <%= current_user.email %>.
+        <%= link_to "Log out", shared_logout_merchant_path %>
+      <% elsif current_user && current_user.sub_type == "Member" %>
+        Logget ind som Medlem <%= current_user.email %>.
+        <%= link_to "Log out", shared_logout_member_path %>
       <% end %>
       </div>
       <br />

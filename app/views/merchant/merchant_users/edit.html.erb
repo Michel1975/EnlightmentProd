@@ -1,0 +1,20 @@
+<% provide(:title, 'Rediger brugerprofil') %>
+<h1>Opdater din profil</h1>
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for [:merchant, @merchant_user] do |f| %>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+      <%= f.label :role %>
+      <%= f.text_field :role %>
+      <%= fields_for :user do |f| %>
+        <%= f.label :password %>
+        <%= f.password_field :password %>
+        <%= f.label :password_confirmation, "Bekræft password" %>
+        <%= f.password_field :password_confirmation %>
+      <% end %>
+
+      <%= f.submit "Gem ændringer", class: "btn btn-large btn-primary" %>
+    <% end %>    
+  </div>
+</div>

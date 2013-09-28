@@ -1,4 +1,4 @@
-<% provide(:title, 'Opdater oplysninger for butik') %>
+<% provide(:title, 'Rediger oplysninger for butik') %>
 <div class="span10">
 	<div class="page-header position-relative">
 		<h1>
@@ -10,7 +10,6 @@
 		</h1>
 	</div><!--/.page-header-->
 	<%= render 'form' %>
-	<%= link_to 'Vis butik', @merchant_store %> |
-	<%= link_to 'Tilbage', merchant_stores_path %>	
+	<%= link_to 'Tilbage', merchant_merchant_store_path(current_merchant_store) %>	
 </div>
 <br/>

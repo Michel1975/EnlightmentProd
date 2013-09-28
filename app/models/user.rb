@@ -1,9 +1,7 @@
 class User < ActiveRecord::Base
-	attr_accessible :email, :password, :password_confirmation
-
-	belongs_to :sub, :polymorphic => true
-
 	authenticates_with_sorcery!
+	attr_accessible :email, :password, :password_confirmation, :last_login_at, :last_logout_at, :last_activity_at
+	belongs_to :sub, :polymorphic => true
 
 	#https://github.com/NoamB/sorcery/issues/125#issuecomment-18250206
 	#http://stackoverflow.com/questions/16617717/why-does-factorygirlbuild-work-with-sorcery-but-not-factorygirlcreate

@@ -1,12 +1,14 @@
-class Shared::MembersController < Shared::BaseController
+class Merchant::MerchantMembersController < Merchant::BaseController
 	before_filter :require_login, 
 	layout :determine_layout
 
-	def new_manual_subscriber
+	#To be used from merchant portal when manually creating new subscriber from scrath - more logic needed
+	def new
 		@member = Member.new
 	end
 
-	def create_manual_subscriber
+	#To be used from merchant portal when manually creating new subscriber from scrath - more logic needed
+	def create
 		@member = Member.find_by_phone(params[:member][:phone])
 		if @member 
 			current_merchant_store.subscribers.build!(start_date: Date.today, member_id: @member.id )
@@ -17,11 +19,11 @@ class Shared::MembersController < Shared::BaseController
 		if @member.save
         	format.html { redirect_to merchant_subscriber_path(@member), notice: 'Medlem er blevet oprettet.' }
       	else
-        	format.html { render action: "create_manual_subscriber" }
+        	format.html { render action: 'new'}
       	end
     end
-	
-end#end controller
 
 
-
+    def show
+    end
+end

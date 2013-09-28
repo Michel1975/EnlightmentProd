@@ -1,5 +1,4 @@
-<%= form_for(@merchant_store, html: { class: "form-inline"}) do |f| %>                 
-  
+<%= form_for [:merchant, @merchant_store], html: { class: "form-inline"} do |f| %>
   <div class="control-group">
     <%= f.label :store_name, class: "control-label" %>
     <div class="controls">                  
@@ -10,6 +9,12 @@
     <%= f.label :owner, class: "control-label" %>                  
     <div class="controls">
       <%= f.text_field :owner %>
+    </div>                 
+  </div>
+  <div class="control-group">
+    <%= f.label :description, class: "control-label" %>                  
+    <div class="controls">
+      <%= f.text_area :description %>
     </div>                 
   </div>
   <div class="hr"></div>
@@ -26,18 +31,6 @@
     </div>                 
   </div>
   <div class="control-group">
-    <%= f.label :floor, class: "control-label" %>                  
-    <div class="controls">
-      <%= f.text_field :floor %>
-    </div>                 
-  </div>
-  <div class="control-group">
-    <%= f.label :side, class: "control-label" %>                  
-    <div class="controls">
-      <%= f.text_field :side %>
-    </div>                 
-  </div>
-  <div class="control-group">
     <%= f.label :postal_code, class: "control-label" %>                  
     <div class="controls">
       <%= f.text_field :postal_code %>
@@ -51,28 +44,30 @@
   </div>
   <div class="hr"></div>
   <div class="control-group">
-    <%= f.label :keyword, class: "control-label" %>  
+    <%= f.label :sms_keyword, class: "control-label" %>  
     <div class="controls">
-      <%= f.text_field :keyword, readonly: "true" %>
+      <%= f.text_field :sms_keyword, readonly: "true" %>
     </div>
-  </div> 
-  <div class="control-group">
-    <%= f.label :description, class: "control-label" %>                  
-    <div class="controls">
-      <%= f.text_area :description %>
-    </div>                 
   </div>
-  <div class="control-group">
-    <%= f.label :avatar, class: "control-label" %>                  
-    <div class="controls">
-      <%= f.file_field :avatar %>
-    </div>                 
-  </div>
+
+  <h4>Åbningstider</h4>
+  <%= f.fields_for :business_hours do |f| %>
+    <fieldset>
+      <%= f.label :day %><br />
+      <%= f.select(:day, [['Mandag', 1], ['Tirsdag', 2], ['Onsdag', 3], ['Torsdag', 4], ['Fredag', 5], ['Lørdag', 6], ['Søndag', 7]]) %>
+      <%= f.label :open_time %><br />
+      <%= f.time_select :open_time %><br /> 
+      <%= f.label :close_time %><br />
+      <%= f.time_select :close_time %><br />   
+    </fieldset>
+  <% end %>
+
   <div class="controls form-inline">                    
     <%= button_tag type: "submit", class: "btn btn-info" do %> 
     <i class="icon-ok bigger-110"> Gem oplysninger </i>
     <% end %>
   </div>
+
   <% end %>
 
 

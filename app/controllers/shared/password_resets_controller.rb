@@ -1,6 +1,5 @@
 
-# app/controllers/shared/password_resets_controller.rb
-class Shared::PasswordResetsController < ApplicationController
+class Shared::PasswordResetsController < Shared::BaseController
   skip_before_filter :require_login
     
   # request password reset.

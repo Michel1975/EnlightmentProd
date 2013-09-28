@@ -1,7 +1,7 @@
 <% provide(:title, 'Log ind') %>
-<h1>Log in</h1>
+<h1>Log ind for medlemmer</h1>
 
-<%= form_tag shared_sessions_path do %>
+<%= form_tag shared_member_sessions_path do %>
   <div class="field">
     <%= label_tag :email %>
     <%= text_field_tag :email, params[:email] %>

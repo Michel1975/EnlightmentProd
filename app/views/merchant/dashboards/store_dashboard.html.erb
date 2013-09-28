@@ -1,0 +1,82 @@
+<% provide(:title, 'Overblik') %>
+<h1>Overblik</h1>
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Aktive medlemmer: </b>
+  <%= @active_subscribers %>
+</p>
+
+<p>
+  <b>Nye medlemmer - 14 dage: </b>
+  <%= @new_subscribers_last_14_days %>
+</p>
+
+<p>
+  <b>Afmeldinger - 14 dage: </b>
+  <%= @opt_outs_last_14_days %>
+</p>
+
+<p>
+  <b>SMS kode: </b>
+  <%= @merchant_store.sms_keyword %>
+</p>
+
+<p>
+  <b>Pris pr. sms-bsked: </b>
+  0,25 kr.
+</p>
+
+<p>
+  <b>Aktive tilbud: </b>
+  <%= @active_offers %> 
+</p>
+
+<p>
+  <b>Planlagte tilbud: </b>
+  <%= @scheduled_offers  %> 
+</p>
+
+<p>
+  <b>Arkiverede tilbud: </b>
+  <%= @completed_offers %> 
+</p>
+
+<p>
+  <b>Antal planlagte kampagner: </b>
+  <%= @scheduled_campaigns %> 
+</p>
+
+<p>
+  <b>Afsluttede kampagner: </b>
+  <%= @completed_campaigns  %> 
+</p>
+
+<h4>Aktivitetsfeed</h4>
+<div class="span10">
+  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Tidspunkt</th>
+        <th>Beskrivelse</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @merchant_store.event_histories.order("created_at DESC").each do |event| %>
+      <tr>
+        <td><%= event.event_type %></td>
+        <td><%= event.created_at %></td>
+        <td><%= event.description %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
+
