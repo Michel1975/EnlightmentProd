@@ -16,10 +16,11 @@ class Merchant::MerchantMembersController < Merchant::BaseController
 			@member = Member.new(params[:member])
 		end
 		respond_to do |format|
-		if @member.save
-        	format.html { redirect_to merchant_subscriber_path(@member), notice: 'Medlem er blevet oprettet.' }
-      	else
-        	format.html { render action: 'new'}
+			if @member.save
+        		format.html { redirect_to merchant_subscriber_path(@member), notice: 'Medlem er blevet oprettet.' }
+      		else
+        		format.html { render action: 'new'}
+      		end
       	end
     end
 
