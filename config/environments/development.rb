@@ -1,3 +1,5 @@
+#God artikel om hvordan man sætter env variabler: http://railsapps.github.io/rails-environment-variables.html
+#https://github.com/laserlemon/figaro
 EnlightmentProd::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -39,13 +41,13 @@ EnlightmentProd::Application.configure do
   config.action_mailer.smtp_settings = {
     :address              => "smtp.gmail.com",
     :port                 => 587,
-    :domain               => "clubnovus.dk",
-    :user_name            => "michelhansen75@gmail.com",
-    :password             => "xheroM178?",
+    :domain               => ENV["GMAIL_USER_NAME"],
+    :user_name            => ENV["GMAIL_PASSWORD"],
+    :password             => ENV["DOMAIN"],
     :authentication        => "plain",
     :enable_starttls_auto => true
   }
 config.action_mailer.delivery_method = :smtp
-config.action_mailer.default_url_options = { host: "localhost:3000" }
+config.action_mailer.default_url_options = { host: ENV["DOMAIN"] }
 
 end

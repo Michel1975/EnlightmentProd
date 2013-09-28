@@ -10,11 +10,12 @@ gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.6'
 gem 'faker', '1.0.1'
 gem "sorcery"
+gem 'figaro'
+gem 'savon', '~> 2.0'
+gem 'htmlentities'
 
 #gem 'paperclip'
 #gem 'aws-sdk'
-#gem 'savon', '~> 2.0'
-#gem 'htmlentities'
 #gem 'geocoder'
 #gem 'rqrcode-rails3'
 

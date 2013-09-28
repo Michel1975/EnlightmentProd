@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://myblipz.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s1="http://myblipz.com/AbstractTypes" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://myblipz.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">sms2go SDK</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://myblipz.com">
+      <s:element name="Push">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sAlertXml" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PushResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="AuthHeader" type="tns:AuthHeader" />
+      <s:complexType name="AuthHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Login" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ProviderId" type="s:int" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="PushScheduled">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sAlertXml" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sDateTimeToSend" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="timeZone" type="tns:TimeZone" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="TimeZone">
+        <s:restriction base="s:string">
+          <s:enumeration value="Denmark" />
+          <s:enumeration value="Utc" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="PushScheduledResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="Reschedule">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="iMessageId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="sDateTimeToSend" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="timeZone" type="tns:TimeZone" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RescheduleResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="ReschedulePush">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sMessageId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sDateTimeToSend" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="timeZone" type="tns:TimeZone" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReschedulePushResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="RescheduleGroup">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sMessageGroupId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sDateTimeToSend" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="timeZone" type="tns:TimeZone" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RescheduleGroupResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="Cancel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="iMessageId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="CancelPush">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sMessageId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelPushResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="CancelGroup">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sMessageGroupId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelGroupResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="PushBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sAlertXml" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sSendAt" type="tns:ArrayOfString" />
+            <s:element minOccurs="1" maxOccurs="1" name="timeZone" type="tns:TimeZone" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PushBatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="PushBatchResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddRecurringBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sAlertXml" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sDateTimeToStart" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sDateTimeToFinish" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="timeZone" type="tns:TimeZone" />
+            <s:element minOccurs="1" maxOccurs="1" name="nRecurrenceType" type="tns:RecurrenceType" />
+            <s:element minOccurs="1" maxOccurs="1" name="iIntervalLength" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="WeekDays" type="tns:ArrayOfDayOfWeek" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="RecurrenceType">
+        <s:restriction base="s:string">
+          <s:enumeration value="RunOnce" />
+          <s:enumeration value="Daily" />
+          <s:enumeration value="Weekly" />
+          <s:enumeration value="Monthly" />
+          <s:enumeration value="Yearly" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfDayOfWeek">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DayOfWeek" type="tns:DayOfWeek" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="DayOfWeek">
+        <s:restriction base="s:string">
+          <s:enumeration value="Sunday" />
+          <s:enumeration value="Monday" />
+          <s:enumeration value="Tuesday" />
+          <s:enumeration value="Wednesday" />
+          <s:enumeration value="Thursday" />
+          <s:enumeration value="Friday" />
+          <s:enumeration value="Saturday" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="AddRecurringBatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddRecurringBatchResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelRecurringBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="iGatewayID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="iRecurringGroupId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelRecurringBatchResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="long" type="s:long" />
+    </s:schema>
+    <s:schema targetNamespace="http://myblipz.com/AbstractTypes">
+      <s:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <s:complexType name="StringArray">
+        <s:complexContent mixed="false">
+          <s:restriction base="soapenc:Array">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="String" type="s:string" />
+            </s:sequence>
+          </s:restriction>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="PushSoapIn">
+    <wsdl:part name="parameters" element="tns:Push" />
+  </wsdl:message>
+  <wsdl:message name="PushSoapOut">
+    <wsdl:part name="parameters" element="tns:PushResponse" />
+  </wsdl:message>
+  <wsdl:message name="PushAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="PushScheduledSoapIn">
+    <wsdl:part name="parameters" element="tns:PushScheduled" />
+  </wsdl:message>
+  <wsdl:message name="PushScheduledSoapOut">
+    <wsdl:part name="parameters" element="tns:PushScheduledResponse" />
+  </wsdl:message>
+  <wsdl:message name="PushScheduledAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleSoapIn">
+    <wsdl:part name="parameters" element="tns:Reschedule" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleSoapOut">
+    <wsdl:part name="parameters" element="tns:RescheduleResponse" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="ReschedulePushSoapIn">
+    <wsdl:part name="parameters" element="tns:ReschedulePush" />
+  </wsdl:message>
+  <wsdl:message name="ReschedulePushSoapOut">
+    <wsdl:part name="parameters" element="tns:ReschedulePushResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReschedulePushAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleGroupSoapIn">
+    <wsdl:part name="parameters" element="tns:RescheduleGroup" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleGroupSoapOut">
+    <wsdl:part name="parameters" element="tns:RescheduleGroupResponse" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleGroupAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="CancelSoapIn">
+    <wsdl:part name="parameters" element="tns:Cancel" />
+  </wsdl:message>
+  <wsdl:message name="CancelSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="CancelPushSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelPush" />
+  </wsdl:message>
+  <wsdl:message name="CancelPushSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelPushResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelPushAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="CancelGroupSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelGroup" />
+  </wsdl:message>
+  <wsdl:message name="CancelGroupSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelGroupResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelGroupAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="PushBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:PushBatch" />
+  </wsdl:message>
+  <wsdl:message name="PushBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:PushBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="PushBatchAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="AddRecurringBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:AddRecurringBatch" />
+  </wsdl:message>
+  <wsdl:message name="AddRecurringBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:AddRecurringBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddRecurringBatchAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="CancelRecurringBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelRecurringBatch" />
+  </wsdl:message>
+  <wsdl:message name="CancelRecurringBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelRecurringBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelRecurringBatchAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="PushHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PushHttpGetOut" />
+  <wsdl:message name="PushScheduledHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PushScheduledHttpGetOut" />
+  <wsdl:message name="RescheduleHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="iMessageId" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleHttpGetOut" />
+  <wsdl:message name="ReschedulePushHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageId" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ReschedulePushHttpGetOut" />
+  <wsdl:message name="RescheduleGroupHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageGroupId" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleGroupHttpGetOut" />
+  <wsdl:message name="CancelHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="iMessageId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelHttpGetOut" />
+  <wsdl:message name="CancelPushHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelPushHttpGetOut" />
+  <wsdl:message name="CancelGroupHttpGetIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageGroupId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelGroupHttpGetOut" />
+  <wsdl:message name="PushBatchHttpGetIn">
+    <wsdl:part name="iGatewayID" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+    <wsdl:part name="sSendAt" type="s1:StringArray" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PushBatchHttpGetOut">
+    <wsdl:part name="Body" element="tns:long" />
+  </wsdl:message>
+  <wsdl:message name="AddRecurringBatchHttpGetIn">
+    <wsdl:part name="iGatewayID" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+    <wsdl:part name="sDateTimeToStart" type="s:string" />
+    <wsdl:part name="sDateTimeToFinish" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+    <wsdl:part name="nRecurrenceType" type="s:string" />
+    <wsdl:part name="iIntervalLength" type="s:string" />
+    <wsdl:part name="WeekDays" type="s1:StringArray" />
+  </wsdl:message>
+  <wsdl:message name="AddRecurringBatchHttpGetOut">
+    <wsdl:part name="Body" element="tns:long" />
+  </wsdl:message>
+  <wsdl:message name="CancelRecurringBatchHttpGetIn">
+    <wsdl:part name="iGatewayID" type="s:string" />
+    <wsdl:part name="iRecurringGroupId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelRecurringBatchHttpGetOut" />
+  <wsdl:message name="PushHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PushHttpPostOut" />
+  <wsdl:message name="PushScheduledHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PushScheduledHttpPostOut" />
+  <wsdl:message name="RescheduleHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="iMessageId" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleHttpPostOut" />
+  <wsdl:message name="ReschedulePushHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageId" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ReschedulePushHttpPostOut" />
+  <wsdl:message name="RescheduleGroupHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageGroupId" type="s:string" />
+    <wsdl:part name="sDateTimeToSend" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RescheduleGroupHttpPostOut" />
+  <wsdl:message name="CancelHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="iMessageId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelHttpPostOut" />
+  <wsdl:message name="CancelPushHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelPushHttpPostOut" />
+  <wsdl:message name="CancelGroupHttpPostIn">
+    <wsdl:part name="iGatewayId" type="s:string" />
+    <wsdl:part name="sMessageGroupId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelGroupHttpPostOut" />
+  <wsdl:message name="PushBatchHttpPostIn">
+    <wsdl:part name="iGatewayID" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+    <wsdl:part name="sSendAt" type="s1:StringArray" />
+    <wsdl:part name="timeZone" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PushBatchHttpPostOut">
+    <wsdl:part name="Body" element="tns:long" />
+  </wsdl:message>
+  <wsdl:message name="AddRecurringBatchHttpPostIn">
+    <wsdl:part name="iGatewayID" type="s:string" />
+    <wsdl:part name="sAlertXml" type="s:string" />
+    <wsdl:part name="sDateTimeToStart" type="s:string" />
+    <wsdl:part name="sDateTimeToFinish" type="s:string" />
+    <wsdl:part name="timeZone" type="s:string" />
+    <wsdl:part name="nRecurrenceType" type="s:string" />
+    <wsdl:part name="iIntervalLength" type="s:string" />
+    <wsdl:part name="WeekDays" type="s1:StringArray" />
+  </wsdl:message>
+  <wsdl:message name="AddRecurringBatchHttpPostOut">
+    <wsdl:part name="Body" element="tns:long" />
+  </wsdl:message>
+  <wsdl:message name="CancelRecurringBatchHttpPostIn">
+    <wsdl:part name="iGatewayID" type="s:string" />
+    <wsdl:part name="iRecurringGroupId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CancelRecurringBatchHttpPostOut" />
+  <wsdl:portType name="GatewaySoap">
+    <wsdl:operation name="Push">
+      <wsdl:input message="tns:PushSoapIn" />
+      <wsdl:output message="tns:PushSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PushScheduled">
+      <wsdl:input message="tns:PushScheduledSoapIn" />
+      <wsdl:output message="tns:PushScheduledSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Reschedule">
+      <wsdl:input message="tns:RescheduleSoapIn" />
+      <wsdl:output message="tns:RescheduleSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReschedulePush">
+      <wsdl:input message="tns:ReschedulePushSoapIn" />
+      <wsdl:output message="tns:ReschedulePushSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RescheduleGroup">
+      <wsdl:input message="tns:RescheduleGroupSoapIn" />
+      <wsdl:output message="tns:RescheduleGroupSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Cancel">
+      <wsdl:input message="tns:CancelSoapIn" />
+      <wsdl:output message="tns:CancelSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelPush">
+      <wsdl:input message="tns:CancelPushSoapIn" />
+      <wsdl:output message="tns:CancelPushSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelGroup">
+      <wsdl:input message="tns:CancelGroupSoapIn" />
+      <wsdl:output message="tns:CancelGroupSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PushBatch">
+      <wsdl:input message="tns:PushBatchSoapIn" />
+      <wsdl:output message="tns:PushBatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddRecurringBatch">
+      <wsdl:input message="tns:AddRecurringBatchSoapIn" />
+      <wsdl:output message="tns:AddRecurringBatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelRecurringBatch">
+      <wsdl:input message="tns:CancelRecurringBatchSoapIn" />
+      <wsdl:output message="tns:CancelRecurringBatchSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="GatewayHttpGet">
+    <wsdl:operation name="Push">
+      <wsdl:input message="tns:PushHttpGetIn" />
+      <wsdl:output message="tns:PushHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PushScheduled">
+      <wsdl:input message="tns:PushScheduledHttpGetIn" />
+      <wsdl:output message="tns:PushScheduledHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Reschedule">
+      <wsdl:input message="tns:RescheduleHttpGetIn" />
+      <wsdl:output message="tns:RescheduleHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReschedulePush">
+      <wsdl:input message="tns:ReschedulePushHttpGetIn" />
+      <wsdl:output message="tns:ReschedulePushHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RescheduleGroup">
+      <wsdl:input message="tns:RescheduleGroupHttpGetIn" />
+      <wsdl:output message="tns:RescheduleGroupHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Cancel">
+      <wsdl:input message="tns:CancelHttpGetIn" />
+      <wsdl:output message="tns:CancelHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelPush">
+      <wsdl:input message="tns:CancelPushHttpGetIn" />
+      <wsdl:output message="tns:CancelPushHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelGroup">
+      <wsdl:input message="tns:CancelGroupHttpGetIn" />
+      <wsdl:output message="tns:CancelGroupHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PushBatch">
+      <wsdl:input message="tns:PushBatchHttpGetIn" />
+      <wsdl:output message="tns:PushBatchHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddRecurringBatch">
+      <wsdl:input message="tns:AddRecurringBatchHttpGetIn" />
+      <wsdl:output message="tns:AddRecurringBatchHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelRecurringBatch">
+      <wsdl:input message="tns:CancelRecurringBatchHttpGetIn" />
+      <wsdl:output message="tns:CancelRecurringBatchHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="GatewayHttpPost">
+    <wsdl:operation name="Push">
+      <wsdl:input message="tns:PushHttpPostIn" />
+      <wsdl:output message="tns:PushHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PushScheduled">
+      <wsdl:input message="tns:PushScheduledHttpPostIn" />
+      <wsdl:output message="tns:PushScheduledHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Reschedule">
+      <wsdl:input message="tns:RescheduleHttpPostIn" />
+      <wsdl:output message="tns:RescheduleHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReschedulePush">
+      <wsdl:input message="tns:ReschedulePushHttpPostIn" />
+      <wsdl:output message="tns:ReschedulePushHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RescheduleGroup">
+      <wsdl:input message="tns:RescheduleGroupHttpPostIn" />
+      <wsdl:output message="tns:RescheduleGroupHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Cancel">
+      <wsdl:input message="tns:CancelHttpPostIn" />
+      <wsdl:output message="tns:CancelHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelPush">
+      <wsdl:input message="tns:CancelPushHttpPostIn" />
+      <wsdl:output message="tns:CancelPushHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelGroup">
+      <wsdl:input message="tns:CancelGroupHttpPostIn" />
+      <wsdl:output message="tns:CancelGroupHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PushBatch">
+      <wsdl:input message="tns:PushBatchHttpPostIn" />
+      <wsdl:output message="tns:PushBatchHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddRecurringBatch">
+      <wsdl:input message="tns:AddRecurringBatchHttpPostIn" />
+      <wsdl:output message="tns:AddRecurringBatchHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelRecurringBatch">
+      <wsdl:input message="tns:CancelRecurringBatchHttpPostIn" />
+      <wsdl:output message="tns:CancelRecurringBatchHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GatewaySoap" type="tns:GatewaySoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Push">
+      <soap:operation soapAction="http://myblipz.com/Push" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PushAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PushScheduled">
+      <soap:operation soapAction="http://myblipz.com/PushScheduled" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PushScheduledAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Reschedule">
+      <soap:operation soapAction="http://myblipz.com/Reschedule" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:RescheduleAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReschedulePush">
+      <soap:operation soapAction="http://myblipz.com/ReschedulePush" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ReschedulePushAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RescheduleGroup">
+      <soap:operation soapAction="http://myblipz.com/RescheduleGroup" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:RescheduleGroupAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Cancel">
+      <soap:operation soapAction="http://myblipz.com/Cancel" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CancelAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelPush">
+      <soap:operation soapAction="http://myblipz.com/CancelPush" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CancelPushAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelGroup">
+      <soap:operation soapAction="http://myblipz.com/CancelGroup" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CancelGroupAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PushBatch">
+      <soap:operation soapAction="http://myblipz.com/PushBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PushBatchAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddRecurringBatch">
+      <soap:operation soapAction="http://myblipz.com/AddRecurringBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:AddRecurringBatchAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelRecurringBatch">
+      <soap:operation soapAction="http://myblipz.com/CancelRecurringBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CancelRecurringBatchAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GatewaySoap12" type="tns:GatewaySoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Push">
+      <soap12:operation soapAction="http://myblipz.com/Push" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:PushAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PushScheduled">
+      <soap12:operation soapAction="http://myblipz.com/PushScheduled" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:PushScheduledAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Reschedule">
+      <soap12:operation soapAction="http://myblipz.com/Reschedule" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:RescheduleAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReschedulePush">
+      <soap12:operation soapAction="http://myblipz.com/ReschedulePush" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ReschedulePushAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RescheduleGroup">
+      <soap12:operation soapAction="http://myblipz.com/RescheduleGroup" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:RescheduleGroupAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Cancel">
+      <soap12:operation soapAction="http://myblipz.com/Cancel" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CancelAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelPush">
+      <soap12:operation soapAction="http://myblipz.com/CancelPush" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CancelPushAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelGroup">
+      <soap12:operation soapAction="http://myblipz.com/CancelGroup" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CancelGroupAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PushBatch">
+      <soap12:operation soapAction="http://myblipz.com/PushBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:PushBatchAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddRecurringBatch">
+      <soap12:operation soapAction="http://myblipz.com/AddRecurringBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:AddRecurringBatchAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelRecurringBatch">
+      <soap12:operation soapAction="http://myblipz.com/CancelRecurringBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CancelRecurringBatchAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GatewayHttpGet" type="tns:GatewayHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Push">
+      <http:operation location="/Push" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="PushScheduled">
+      <http:operation location="/PushScheduled" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Reschedule">
+      <http:operation location="/Reschedule" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="ReschedulePush">
+      <http:operation location="/ReschedulePush" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="RescheduleGroup">
+      <http:operation location="/RescheduleGroup" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Cancel">
+      <http:operation location="/Cancel" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="CancelPush">
+      <http:operation location="/CancelPush" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="CancelGroup">
+      <http:operation location="/CancelGroup" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="PushBatch">
+      <http:operation location="/PushBatch" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddRecurringBatch">
+      <http:operation location="/AddRecurringBatch" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelRecurringBatch">
+      <http:operation location="/CancelRecurringBatch" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GatewayHttpPost" type="tns:GatewayHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Push">
+      <http:operation location="/Push" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="PushScheduled">
+      <http:operation location="/PushScheduled" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Reschedule">
+      <http:operation location="/Reschedule" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="ReschedulePush">
+      <http:operation location="/ReschedulePush" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="RescheduleGroup">
+      <http:operation location="/RescheduleGroup" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="Cancel">
+      <http:operation location="/Cancel" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="CancelPush">
+      <http:operation location="/CancelPush" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="CancelGroup">
+      <http:operation location="/CancelGroup" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="PushBatch">
+      <http:operation location="/PushBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddRecurringBatch">
+      <http:operation location="/AddRecurringBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelRecurringBatch">
+      <http:operation location="/CancelRecurringBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Gateway">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">sms2go SDK</wsdl:documentation>
+    <wsdl:port name="GatewaySoap" binding="tns:GatewaySoap">
+      <soap:address location="https://sdk.ecmr.biz/src/gateway.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GatewaySoap12" binding="tns:GatewaySoap12">
+      <soap12:address location="https://sdk.ecmr.biz/src/gateway.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GatewayHttpGet" binding="tns:GatewayHttpGet">
+      <http:address location="https://sdk.ecmr.biz/src/gateway.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GatewayHttpPost" binding="tns:GatewayHttpPost">
+      <http:address location="https://sdk.ecmr.biz/src/gateway.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
