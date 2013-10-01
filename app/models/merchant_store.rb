@@ -21,4 +21,13 @@ class MerchantStore < ActiveRecord::Base
   validates :street, presence: true, length: { maximum: 30 }
   validates :house_number, :postal_code, numericality: { only_integer: true }, length: { maximum: 4 } 
   validates :sms_keyword, presence: true, uniqueness: { case_sensitive: false }
+
+
+  geocoded_by :address
+  after_validation :geocode
+  
+  def address
+    return street + " " + house_number + " " + postal_code + " " + city + " Denmark"
+  end
+  
 end

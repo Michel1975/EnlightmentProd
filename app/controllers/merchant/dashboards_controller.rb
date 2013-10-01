@@ -1,6 +1,7 @@
 class Merchant::DashboardsController < Merchant::BaseController
-	
-	#Note om tidszoner: http://www.elabs.se/blog/36-working-with-time-zones-in-ruby-on-rails
+	#If-override-from-base: layout "merchant", except: [:index]
+    
+    #Note om tidszoner: http://www.elabs.se/blog/36-working-with-time-zones-in-ruby-on-rails
 	def store_dashboard
     	@merchant_store = current_merchant_store
     	@active_subscribers = @merchant_store.subscribers.active.count

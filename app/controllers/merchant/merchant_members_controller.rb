@@ -1,7 +1,6 @@
 class Merchant::MerchantMembersController < Merchant::BaseController
-	before_filter :require_login
-	layout :determine_layout
-
+	#If-override-from-base: layout "merchant", except: [:index]
+	
 	#To be used from merchant portal when manually creating new subscriber from scrath - more logic needed
 	def new
 		@member = Member.new
@@ -10,21 +9,21 @@ class Merchant::MerchantMembersController < Merchant::BaseController
 	#To be used from merchant portal when manually creating new subscriber from scrath - more logic needed
 	def create
 		@member = Member.find_by_phone(params[:member][:phone])
-		if @member 
-			current_merchant_store.subscribers.build!(start_date: Date.today, member_id: @member.id )
-		else
+		if @member.nil?
 			@member = Member.new(params[:member])
+			@member.validation_mode = 'store'
+			@member.origin = 'store'
+			if !@member.save
+				return render action: 'new'
+			end
 		end
-		respond_to do |format|
-			if @member.save
-        		format.html { redirect_to merchant_subscriber_path(@member), notice: 'Medlem er blevet oprettet.' }
-      		else
-        		format.html { render action: 'new'}
-      		end
-      	end
+		if current_merchant_store.subscribers.find_by_member_id(@member)
+			flash.now[:alert] = "Medlemmet er allerede medlem i din kundeklub"
+			render action: 'new'
+		else
+			current_merchant_store.subscribers.create!(start_date: Date.today, member_id: @member.id )
+			flash[:success] = "Medlemmet er nu oprettet i din kundeklub"
+			redirect_to merchant_subscribers_path
+		end
     end
-
-
-    def show
-    end
-end
+end#end class

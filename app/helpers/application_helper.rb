@@ -26,6 +26,14 @@ module ApplicationHelper
       		Member.find(session[:current_user_id])
 	end
 
+	def member_user?
+    	return current_user && current_user.sub_type == 'Member' ? true : false
+  	end
+
+  	def merchant_user?
+    	return current_user && current_user.sub_type == 'MerchantUser' ? true : false
+  	end
+
 	def store_session_variables(user)
 		session[:current_user_id] = user.sub_id
 		session[:current_user_type] = user.sub_type

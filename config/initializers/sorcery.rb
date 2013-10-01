@@ -44,7 +44,7 @@ Rails.application.config.sorcery.configure do |config|
   # What realm to display for which controller name. For example {"My App" => "Application"}
   # Default: `{"application" => "Application"}`
   #
-  # config.controller_to_realm_map =
+  #config.controller_to_realm_map = {"application" => "Enlightment!"}
 
 
   # -- activity logging --

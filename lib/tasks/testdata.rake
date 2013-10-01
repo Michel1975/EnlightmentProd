@@ -2,6 +2,12 @@
 namespace :db do
   desc "Fill database with sample data"
   task populate: :environment do
+
+    #Create address array
+
+
+
+
     #Setup independent lookup tables
 
     subscription_basic = SubscriptionType.create!(name: "Basis", monthly_price: '149.95')
@@ -72,7 +78,8 @@ namespace :db do
                                   postal_code: postal_code,
                                   gender: gender,
                                   birthday: Date.today,
-                                  phone: phone)
+                                  phone: phone,
+                                  origin:'store')
         member_user.sub = member
         member_user.save!
         store.subscribers.create!(start_date: Date.today, member_id: member.id)              
@@ -128,7 +135,8 @@ namespace :db do
                                   postal_code: postal_code,
                                   gender: gender,
                                   birthday: Date.today,
-                                  phone: phone)
+                                  phone: phone,
+                                  origin: 'store')
         member_user.sub = member
         member_user.save!
       end #end creation of special standalone member

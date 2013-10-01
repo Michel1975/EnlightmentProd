@@ -1,6 +1,5 @@
 class Merchant::WelcomeOffersController < Merchant::BaseController
-	before_filter :require_login #man skal være merchantuser
-  	layout :determine_layout
+	#If-override-from-base: layout "merchant", except: [:index]
 	
 	def show
     	@welcome_offer = current_merchant_store.welcome_offer

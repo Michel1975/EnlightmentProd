@@ -1,7 +1,6 @@
 class Merchant::OffersController < Merchant::BaseController
-  before_filter :require_login #man skal være merchantuser
-  layout :determine_layout
-
+  #If-override-from-base: layout "merchant", except: [:index]
+  
   def index    
     @active_offers = current_merchant_store.offers.where(":date_now >= valid_from AND :date_now <= valid_to",
       {:date_now => Time.zone.now }).paginate(page: params[:page], :per_page => 20) 

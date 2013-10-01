@@ -1,7 +1,6 @@
 class Merchant::SubscribersController < Merchant::BaseController
-	before_filter :require_login #man skal være merchantuser
-	layout :determine_layout
-
+	#If-override-from-base: layout "merchant", except: [:index]
+	
 	def index
     	@subscribers = current_merchant_store.subscribers.paginate(page: params[:page])
 	end

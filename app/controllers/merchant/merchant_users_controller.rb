@@ -1,6 +1,5 @@
 class Merchant::MerchantUsersController < Merchant::BaseController
-	before_filter :require_login #man skal være merchantuser
-	layout :determine_layout
+	#If-override-from-base: layout "merchant", except: [:index]
 	
 	def show
 		@merchant_user = current_merchant_user

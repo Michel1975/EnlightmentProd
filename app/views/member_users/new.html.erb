@@ -1,7 +1,7 @@
 <% provide(:title, 'Tilmelding') %>
 <h1>Opret nyt medlem</h1>
 
-<%= form_for(@member, url: shared_member_users_path) do |f| %>
+<%= form_for @member, as: :member, :url => member_users_path do |f| %>
   <% if @member.errors.any? %>
     <div class="error_messages">
       <h2>Form is invalid</h2>
@@ -32,7 +32,7 @@
     <%= f.label :birthday %>
     <%= f.date_select :birthday %>
   </div>
-  <%= f.fields_for :user_attributes do |t| %>
+  <%= f.fields_for :user do |t| %>
     <div class="field">
       <%= t.label :email %>
       <%= t.text_field :email %>
@@ -48,3 +48,5 @@
   <% end %>
   <div class="actions"><%= f.submit %></div>
 <% end %>
+
+<%= link_to 'Tilbage', root_path %>

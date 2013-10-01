@@ -1,7 +1,6 @@
 class Merchant::CampaignsController < Merchant::BaseController
-	before_filter :require_login #man skal være merchantuser
-	layout :determine_layout
-  
+  #If-override-from-base: layout "merchant", except: [:index]
+
   def index
     @active_campaigns = Campaign.where("activation_time > :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)
     @completed_campaigns = Campaign.where("activation_time < :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)

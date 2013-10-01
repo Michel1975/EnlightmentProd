@@ -19,7 +19,7 @@
 			<% @subscribers.each do |subscriber| %>
 			<tr>
 				<td> <%= subscriber.member.name %></td>
-				<td> <%= subscriber.member.user.email %></td>
+				<td> <%= subscriber.member.user.try(:email)%></td>
 				<td> <%= subscriber.member.phone %></td>
 				<td> <%= gender(subscriber.member.gender)%></td>
 				<td> <%= subscriber.member.birthday %></td>
@@ -37,5 +37,5 @@
 		</tbody>
 	</table>
 </div>
-<%= link_to "Opret nyt medlem", new_merchant_subscriber_path, 
+<%= link_to "Opret nyt medlem", new_merchant_merchant_member_path, 
                                 class: "btn btn-medium btn-primary" %>

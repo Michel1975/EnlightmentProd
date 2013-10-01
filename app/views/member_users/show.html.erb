@@ -1,0 +1,16 @@
+<% provide(:title, 'Brugerprofil - medlem') %>
+
+<h4>Medlemsdetaljer</h4>
+<div class="row">
+	<p>Navn: <%= @member_user.name %></p> 
+	<p>Telefon: <%= @member_user.phone %></p>
+	<p>Email: <%= @member_user.user.email %></p>
+	<p>Postnummer: <%= @member_user.postal_code %></p>
+    <p>Køn: <%= @member_user.gender %></p>
+    <p>Fødselsdag <%= @member_user.birthday %></p>
+</div>
+
+<%= link_to 'Rediger', edit_member_user_path(@member_user) %>
+<%= link_to "Slet medlem", member_user_path(@member_user), method: :delete,
+        	data: { confirm: "Er du sikker?" } %> 
+<%= link_to 'Tilbage', root_path %>

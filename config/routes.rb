@@ -7,6 +7,12 @@ EnlightmentProd::Application.routes.draw do
 
   root :to => "root#home"
   get "secret" => "root#secret", :as => "secret" 
+
+  #Frontend resources
+  resources :member_users
+
+  #Member signup
+  get "signup_member" => "member_users#new", :as => "signup_member"
   
   namespace :merchant do
     get "dashboard" => "dashboards#store_dashboard", :as => "dashboard"
@@ -19,7 +25,7 @@ EnlightmentProd::Application.routes.draw do
     resources :welcome_offers
     resources :campaigns
     resources :merchant_users
-    resources :merchant_members
+    resources :merchant_members, :only => [:new, :create]
 
     resources :merchant_stores do
       #Kunne også være en match-rute uden id idet vi altid viser merchant-store fra session storage.
@@ -38,7 +44,6 @@ EnlightmentProd::Application.routes.draw do
     resources :password_resets
     resources :merchant_sessions, :only => [:new, :create, :destroy]
     resources :member_sessions, :only => [:new, :create, :destroy]
-    resources :member_users
 
     #Member session paths
     get "login_member" => "member_sessions#new", :as => "login_member"
@@ -47,9 +52,7 @@ EnlightmentProd::Application.routes.draw do
     #MerchantUser session paths
     get "login_merchant" => "merchant_sessions#new", :as => "login_merchant"
     get 'logout_merchant',  to: "merchant_sessions#destroy", :as => "logout_merchant"
-
-    #Member signup
-    get "signup_member" => "member_users#new", :as => "signup_member"
+    
   end
 
   namespace :admin do

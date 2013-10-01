@@ -33,7 +33,7 @@
       </div>
 
       <div class="span9">
-      <% if current_user %>
+      <% if current_user && current_user.sub_type == "MerchantUser" %>
         Logget ind som butik<%= current_user.email %>. Last login at: <%= current_user.last_login_at %>
         <%= link_to "Log out", shared_logout_merchant_path %>
       <% else %>

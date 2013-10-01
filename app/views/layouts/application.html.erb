@@ -20,9 +20,13 @@
                 <li><a href="#">Om Club Novus</a></li>
                 <li><a href="#">Find butikker</a></li>
                 <li><a href="#">Kontakt</a></li>
-                <li> <%= link_to "Log ind som butik", shared_login_merchant_path %> </li>
-                <li> <%= link_to "Log ind som medlem", shared_login_member_path %> </li>
-                <li> <%= link_to "Opret medlem", shared_signup_member_path %> </li>
+                 <% if logged_in? && current_member_user %>
+                  <li><%= link_to "Brugerprofil", member_user_path(current_member_user)%></li>
+                <% else !logged_in? %>
+                  <li> <%= link_to "Log ind som butik", shared_login_merchant_path %> </li>
+                  <li> <%= link_to "Log ind som medlem", shared_login_member_path %> </li>
+                  <li> <%= link_to "Opret medlem", signup_member_path %> </li>
+                <% end %>
               </ul>
             </div>
           </div>
@@ -49,6 +53,7 @@
         <%= yield %>
       </div>
 </div><!-- /container -->
+%= debug(params) if Rails.env.development? %>
 <div class="footer">
         <p>&copy; Company 2013</p>
       </div>

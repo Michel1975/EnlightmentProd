@@ -1,4 +1,3 @@
-
 class Shared::PasswordResetsController < Shared::BaseController
   skip_before_filter :require_login
     
