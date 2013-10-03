@@ -11,7 +11,7 @@ class Member < ActiveRecord::Base
   validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :unless => "validation_mode == 'store'"
   validates :gender, :inclusion => { :in => %w( W M ) }, :unless => "validation_mode == 'store'"
   validates :birthday, presence: true, :unless => "validation_mode == 'store'"
-  validates :phone, numericality: { only_integer: true }, length: { maximum: 8 }
+  validates :phone, presence: true, length: { maximum: 8 }
   validates :terms_of_service, :inclusion => { :in => [true, false] }, :unless => "validation_mode == 'store'"
   validates :complete, :inclusion => { :in => [true, false] }
   validates :origin, :inclusion => { :in => %w( web store ) }

@@ -35,7 +35,7 @@ class Merchant::CampaignsController < Merchant::BaseController
       else
         #sendOfferReminderScheduled?(@campaign, Array.new << Member.new(phone: '+4524600819')) #Member.find(1,10))          
       end
-      flash[:success] = "Kampagne er blevet oprettet"
+      flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
 
       #Old: sendSingleMessageScheduled?('Test - Velkommen til Club Novus', '+4524600819','2013-08-03T15:55:00')
       redirect_to merchant_campaigns_path
@@ -46,7 +46,7 @@ class Merchant::CampaignsController < Merchant::BaseController
     @campaign = Campaign.find(params[:id])
     #cancelScheduledOfferReminder?(@campaign)    	
     @campaign.destroy
-    flash[:success] = "Kampagne er nu slettet"
+    flash[:success] = t(:campaign_deleted, :scope => [:business_validations, :campaign])
     redirect_to merchant_campaigns_path
   end
 
@@ -54,7 +54,7 @@ class Merchant::CampaignsController < Merchant::BaseController
     @campaign = Campaign.find(params[:id])    
     @campaign.update_attributes(params[:campaign])
     #reschduleOfferReminder?(@campaign)
-    flash[:success] = "Kampagne er blevet opdateret"
+    flash[:success] = t(:campaign_updated, :scope => [:business_validations, :campaign])
 
     redirect_to [:merchant, @campaign]
   end

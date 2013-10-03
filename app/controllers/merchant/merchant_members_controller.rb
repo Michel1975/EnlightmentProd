@@ -18,11 +18,11 @@ class Merchant::MerchantMembersController < Merchant::BaseController
 			end
 		end
 		if current_merchant_store.subscribers.find_by_member_id(@member)
-			flash.now[:alert] = "Medlemmet er allerede medlem i din kundeklub"
+			flash.now[:alert] = t(:member_already_exists, :scope => [:business_validations, :merchant_member]) 
 			render action: 'new'
 		else
 			current_merchant_store.subscribers.create!(start_date: Date.today, member_id: @member.id )
-			flash[:success] = "Medlemmet er nu oprettet i din kundeklub"
+			flash[:success] = t(:member_added, :scope => [:business_validations, :merchant_member])
 			redirect_to merchant_subscribers_path
 		end
     end

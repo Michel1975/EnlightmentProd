@@ -7,10 +7,10 @@ class Shared::MerchantSessionsController < Shared::BaseController
         	if user.sub_type == 'MerchantUser'
           		name = MerchantUser.find(user.sub_id)
           		update_eventhistory("login", "Test")
-          		redirect_back_or_to merchant_dashboard_url, :notice => "Logget ind som butik!"
+          		redirect_back_or_to merchant_dashboard_url, :notice => t(:logged_in, :scope => [:business_validations, :session_merchant])
         	end
   		else
-    		flash.now.alert = "Email eller password var ugyldigt"
+    		flash.now.alert = t(:invalid_login, :scope => [:business_validations, :session_merchant])
     	  	render :new
   		end
 	end
@@ -18,6 +18,6 @@ class Shared::MerchantSessionsController < Shared::BaseController
 	def destroy
   		logout
       	delete_session_variables
-  		redirect_to root_url, :notice => "Logget ud som butik!"
+  		redirect_to root_url, :notice => t(:logged_out, :scope => [:business_validations, :session_merchant])
 	end
 end

@@ -12,7 +12,7 @@ class Merchant::MerchantUsersController < Merchant::BaseController
 	def update
 		@merchant_user = MerchantUser.find(params[:id])
     	if @merchant_user.update_attributes(params[:merchant_user])
-      		flash[:success] = "Profil er opdateret"
+      		flash[:success] = t(:profile_updated, :scope => [:business_validations, :merchant_user])
       		redirect_to [:merchant, @merchant_user]
     	else
       		render 'edit'

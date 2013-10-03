@@ -2,3 +2,40 @@
 <h1>Welcome</h1>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 <p><%= link_to "Visit secret page", secret_path %></p>
+
+<div style="width:100%;height:100%"><%= gmaps("markers" => {"data" => @json, "options" => {"custom_infowindow_class" => "infobox-wrapper", 
+	"list_container" => "list_items" } }) %> </div>
+
+<% content_for :scripts do %>
+<script type="text/javascript">
+   Gmaps.map.infobox = function(boxText) {
+  return {
+     content: boxText
+    ,disableAutoPan: false
+    ,maxWidth: 0
+    ,pixelOffset: new google.maps.Size(-140, 0)
+    ,zIndex: null
+    ,boxStyle: {
+      background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
+      ,opacity: 1.0
+      ,width: "300px"
+       }
+    ,closeBoxMargin: "10px 2px 2px 2px"
+    ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
+    ,infoBoxClearance: new google.maps.Size(1, 1)
+    ,isHidden: false
+    ,pane: "floatPane"
+    ,enableEventPropagation: false
+ }};
+</script> 
+<% end %>
+
+<br/>
+<div>
+<ul id="list_items">
+
+</ul>
+</div>
+
+
+

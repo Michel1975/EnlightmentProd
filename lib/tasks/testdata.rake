@@ -5,18 +5,21 @@ namespace :db do
 
     #Create address array
 
-
-
+    house_numbers = Array.new
+    house_numbers.push("14")
+    house_numbers.push("10")
+    house_numbers.push("1")
+    house_numbers.push("32")
+    house_numbers.push("16")
 
     #Setup independent lookup tables
-
     subscription_basic = SubscriptionType.create!(name: "Basis", monthly_price: '149.95')
     subscription_basic.features.create!(title: "Sms kampagner", description: "Gør det muligt at udføre sms kampagner for sine kunder")
 
     
     5.times do |s|
       if s == 1#!MerchantStore.all.any?
-        store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', street: 'Klostervangen', house_number: '34', 
+        store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', short_description: 'Michels karameller er bare dejlige', phone: "48391754", street: 'Klostervangen', house_number: '34', 
             postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "CN#{s+1}" )
     
         store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_basic.id)
@@ -32,15 +35,17 @@ namespace :db do
         user.save!
       else
         description = 'Lorem Ipsum Lorem Ipsum Lorem Ipsum'
+        short_description =  'Lorem Ipsum Lorem Ipsum Lorem Ipsum'
         street = 'Nørregade'
-        house_number = '29'
+        house_number = house_numbers[s]
         postal_code = '3300'
         city = 'Frederiksværk'
         country = 'Denmark'
         owner = Faker::Name.name
         store_name = "Cafe & Steakhouse #{s+1}"
+        phone = "41415210"
         sms_keyword = "CN#{s+1}"  
-        store = MerchantStore.create(description: description, street: street, house_number: house_number, 
+        store = MerchantStore.create(description: description, short_description: short_description, phone: phone, street: street, house_number: house_number, 
           postal_code: postal_code, city: city, country:'Denmark', owner: owner, store_name: store_name, sms_keyword: sms_keyword)
 
         #Create average user record for merchant user
@@ -139,6 +144,8 @@ namespace :db do
                                   origin: 'store')
         member_user.sub = member
         member_user.save!
+        #Associate standalone member with one store
+        MerchantStore.first.subscribers.create!(start_date: Date.today, member_id: member.id)
       end #end creation of special standalone member
 
   end#end populate

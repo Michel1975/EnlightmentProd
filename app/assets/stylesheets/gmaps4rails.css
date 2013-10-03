@@ -1,0 +1,73 @@
+.map_container {
+  padding: 6px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc #ccc #999 #ccc;
+  -webkit-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+  -moz-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+  box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
+  width: 800px;
+}
+
+.gmaps4rails_map {
+  width: 1100px;
+  height: 500px;
+}
+
+.bing_map {
+   position: absolute;
+   top: 20;
+   left: 10;
+   width: 400px;
+   height: 400px;
+   border:#555555 2px solid;
+}
+
+/* Google Map Fix start - Michel: Der findes en konflikt mellem Twitter Bootstrap og Gmaps4Rails. */
+/* http://stackoverflow.com/questions/9141249/twitter-bootstrap-css-affecting-google-maps */
+.map_container img {
+    max-width: none;
+}
+
+.map_container label {
+    width: auto; display:inline;
+}
+/* Google Map Fix slut */
+
+.infobox-wrapper {
+    display:block;
+}
+
+#infobox {
+    border:5px solid #85ADFF;
+    margin-top: 8px;
+    background:#FFFFFF;
+    color:#000000;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    padding: .5em 1em;
+   
+    border-radius: 2px;
+}
+
+#infobox .title{
+  font-weight: bold;
+  margin-bottom: 1px;
+}
+
+#infobox .address{
+  font-size: 13px;
+  text-decoration: none;
+}
+
+#infobox .signup{
+  float:right;
+  margin-top: 5px;
+  font-weight: bold;
+  text-align:right;
+}
+
+
+
+
+

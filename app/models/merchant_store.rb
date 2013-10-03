@@ -1,5 +1,5 @@
 class MerchantStore < ActiveRecord::Base
-  attr_accessible :store_name, :description, :owner, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
+  attr_accessible :store_name, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
   
   has_one :welcome_offer, dependent: :destroy
   has_many :offers, dependent: :destroy
@@ -16,18 +16,30 @@ class MerchantStore < ActiveRecord::Base
   
   validates :active, :inclusion => { :in => [ true, false ] }
   validates :store_name, presence: true, length: { maximum: 30 }
-  validates :description, :city, :country, presence: true
+  validates :description, :short_description, :city, :country, presence: true
   validates :owner, presence: true, length: { maximum: 30 }
   validates :street, presence: true, length: { maximum: 30 }
   validates :house_number, :postal_code, numericality: { only_integer: true }, length: { maximum: 4 } 
   validates :sms_keyword, presence: true, uniqueness: { case_sensitive: false }
+  validates :phone, presence: true, length: { maximum: 8 }
 
 
   geocoded_by :address
   after_validation :geocode
   
+  #Used by GeoCoder
   def address
     return street + " " + house_number + " " + postal_code + " " + city + " Denmark"
   end
-  
+
+  def map_address
+    return street + " " + house_number + ", " + postal_code + " " + city
+  end
+
+  #Used by Gmaps4Rails
+  def gmaps4rails_address
+    address
+  end
+
+  acts_as_gmappable :address => "address", :process_geocoding => false
 end

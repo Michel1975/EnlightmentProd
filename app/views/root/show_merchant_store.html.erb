@@ -1,13 +1,22 @@
-<% provide(:title, 'Stamdata for butik') %>
-<h1>Stamdata for butik</h1>
-<% if logged_in? && current_member_user && %>
-  <%= form_for @merchant_store.subscribers.build(member_id: current_member_user.id), :url =>  do |f| %>
-  <div><%= f.hidden_field :member_id %></div>
-  <div><%= f.hidden_field :merchant_store %></div>
-  <%= f.submit "Tilmeld", class: "btn btn-large btn-primary" %>
-<% end %>
+<% provide(:title, @merchant_store.store_name) if @merchant_store %>
 
 <p id="notice"><%= notice %></p>
+
+<% if logged_in? && current_member_user && %>
+  <% if @subscribed %>
+    <%= form_for(@merchant_store.subscribers.find_by_member_id(current_member_user.id), :url => unsubscribe_member_path(current_member_user.id),
+             html: { method: :delete }, data: { confirm: "Er du sikker?" }) do |f| %>
+      <%= f.submit "Afmeld", class: "btn btn-large btn-primary" %>
+    <% end %>
+  <% else %>
+    <%= form_for @merchant_store.subscribers.build(member_id: current_member_user.id), :url => signup_member_path do |f| %>
+      <div><%= f.hidden_field :member_id %></div>
+      <div><%= f.hidden_field :merchant_store_id %></div>
+      <%= f.submit "Tilmeld", class: "btn btn-large btn-primary" %>
+    <% end %>
+  <% end %>
+<% end %>
+
 
 <p>
   <b>Butik:</b>
@@ -65,7 +74,3 @@
     </tbody>
   </table>
 </div>
-
-<%= link_to 'Rediger', edit_merchant_merchant_store_path(current_merchant_store) %>
-<%= link_to 'Tilbage', merchant_merchant_store_path(current_merchant_store) %>
-

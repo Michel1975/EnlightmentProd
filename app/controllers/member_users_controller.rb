@@ -20,9 +20,10 @@ class MemberUsersController < ApplicationController
 		#link: http://stackoverflow.com/questions/10701662/rails-cant-mass-assign-protected-attributes-error-when-using-accepts-nested-att
 		#Husk at bygge tilknyttede objekter ved oprettelse:http://stackoverflow.com/questions/4729672/accepts-nested-attributes-for-keeps-form-fields-from-showing
   		@member = Member.new(params[:member])
+      @member.origin = 'web'
   		if @member.save
   			#virker ikke helt efter hensigten: auto_login(@member.user)
-    		redirect_to root_path, :notice => "Du er nu registreret som medlem!"
+    		redirect_to root_path, :notice => t(:member_created, :scope => [:business_validations, :frontend, :member_user])
   		else
     		render :new
   		end
@@ -40,7 +41,7 @@ class MemberUsersController < ApplicationController
   def update
   	@member_user = Member.find(params[:id])
     if @member_user.update_attributes(params[:member])
-    	flash[:success] = "Profil er opdateret"
+    	flash[:success] = t(:member_updated, :scope => [:business_validations, :frontend, :member_user])
     	redirect_to member_user_path(@member_user)
     else
     	render 'edit'

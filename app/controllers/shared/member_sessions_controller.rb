@@ -5,17 +5,17 @@ class Shared::MemberSessionsController < Shared::BaseController
   		user = login(params[:email], params[:password], params[:remember_me])
   		if user
         	store_session_variables(user)
-          redirect_back_or_to root_url, :notice => "Logget ind som medlem!"
+          redirect_back_or_to root_url, :notice => t(:logged_in, :scope => [:business_validations, :session_member])
   		else
-    		flash.now.alert = "Email eller password var ugyldigt"
-    	  	render :new
+    		flash.now.alert = t(:invalid_login, :scope => [:business_validations, :session_member])
+    	  render :new
   		end
 	end
 
 	def destroy
   	logout
     delete_session_variables
-  	redirect_to root_url, :notice => "Logget ud som medlem!"
+  	redirect_to root_url, :notice => t(:logged_out, :scope => [:business_validations, :session_member])
 	end
 
 end

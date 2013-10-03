@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_authenticated
-    redirect_to root_path, :alert => "Foretag venligst login."
+    redirect_to root_path, :alert => t(:not_authenticated, :scope => [:business_validations, :generic])
     #if current_user.sub_type == "MerchantUser"
   	   #redirect_to shared_login_merchant_url, :alert => "First login to access this page."
     #elsif current_user.sub_type == "Member"

@@ -14,7 +14,7 @@ class Merchant::WelcomeOffersController < Merchant::BaseController
 
     	respond_to do |format|
       		if @welcome_offer.update_attributes(params[:welcome_offer])
-        		format.html { redirect_to [:merchant, @welcome_offer], notice: 'Velkomsttilbud er blevet opdateret' }
+        		format.html { redirect_to [:merchant, @welcome_offer], notice: t(:offer_updated, :scope => [:business_validations, :welcome_offer]) }
       		else
         		format.html { render action: "edit" }
       		end

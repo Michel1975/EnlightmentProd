@@ -13,6 +13,11 @@ EnlightmentProd::Application.routes.draw do
 
   #Member signup
   get "signup_member" => "member_users#new", :as => "signup_member"
+
+  #Member joining specific merchantstore on Map
+  match '/display_store/:id',  to: 'root#show_merchant_store', :as => "display_store"
+  match '/signup_member',  to: 'root#subscribe', :as => "signup_member", via: :post
+  match '/unsubscribe_member/:id',  to: 'root#unsubscribe', :as => "unsubscribe_member", via: :delete
   
   namespace :merchant do
     get "dashboard" => "dashboards#store_dashboard", :as => "dashboard"

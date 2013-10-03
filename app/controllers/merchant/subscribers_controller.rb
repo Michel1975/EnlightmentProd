@@ -11,7 +11,7 @@ class Merchant::SubscribersController < Merchant::BaseController
 
 	def destroy
   		Subscriber.find(params[:id]).destroy
-    	flash[:success] = "Medlem er fjernet fra kundeklubben."
+    	flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
     	redirect_to merchant_subscribers_url
 	end
 
@@ -22,7 +22,7 @@ class Merchant::SubscribersController < Merchant::BaseController
 	def send_single_message
 		@subscriber = Subscriber.find(params[:id])
 		message = params[:message]
-		flash[:success] = "Besked er afsendt"
+		flash[:success] = t(:subscriber_message_sent, :scope => [:business_validations, :subscriber])
 		redirect_to [:merchant, @subscriber]
 		#To-do: kald sms-handler m.v.
 	end

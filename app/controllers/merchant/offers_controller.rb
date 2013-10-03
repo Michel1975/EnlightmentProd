@@ -23,8 +23,8 @@ class Merchant::OffersController < Merchant::BaseController
   def create
   	@offer = current_merchant_store.offers.build(params[:offer])
     respond_to do |format|
-      if @offer.save
-        format.html { redirect_to [:merchant, @offer], notice: 'Tilbud er blevet oprettet.' }
+      if @offer.save 
+        format.html { redirect_to [:merchant, @offer], notice: t(:offer_created, :scope => [:business_validations, :offer]) }
       else
         format.html { render action: "new" }
       end
@@ -36,7 +36,7 @@ class Merchant::OffersController < Merchant::BaseController
 
     respond_to do |format|
       if @offer.update_attributes(params[:offer])
-        format.html { redirect_to [:merchant, @offer], notice: 'Tilbud er blevet opdateret' }
+        format.html { redirect_to [:merchant, @offer], notice: t(:offer_updated, :scope => [:business_validations, :offer]) }
       else
         format.html { render action: "edit" }
       end
@@ -48,7 +48,7 @@ class Merchant::OffersController < Merchant::BaseController
     @offer.destroy
 
     respond_to do |format|
-      format.html { redirect_to merchant_offers_url }
+      format.html { redirect_to merchant_offers_url, t(:offer_deleted, :scope => [:business_validations, :offer]) }
     end
   end
 end

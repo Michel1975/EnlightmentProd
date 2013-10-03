@@ -203,3 +203,171 @@ da:
   activerecord:
     errors:
       <<: *errors
+    models:
+      merchant_store: Butik
+      invoice: Faktura
+      offer: Tilbud
+      welcome_offer: Velkomsttilbud
+      feature: Funktion
+      subscription_type: Abonnementstype
+      subscription_plan: Abonnement
+      business_hour: Åbningstid
+      status_code: Statuskode
+      message_notification: Besked-status
+      campaign: Kampagne
+      subscriber: Medlem
+      member: Medlem
+      user: Bruger
+      merchant_user: Bruger
+      eventhistory: Aktivitetsfeed
+      campaign_member: Kampagne medlem
+    attributes:
+      merchant_store:
+        active: Aktiv
+        store_name: Butiksnavn
+        description: Beskrivelse
+        short_description: Beskrivelse (forkortet)
+        owner: Ejer
+        street: Gade
+        house_number: Husnr.
+        postal_code: Postnr.
+        city: By
+        country: Land
+        sms_keyword: Sms kode
+      member:
+        name: Navn
+        postal_code: Postnr.
+        gender: Køn
+        birthday: Fødselsdag
+        phone: Telefon
+        terms_of_service: Salgs og leveringsbetingelser
+        origin: Oprindelse
+      user:
+        email: E-mail
+        password: Kodeord
+        password_confirmation: Gentag kodeord
+      merchant_user:
+        name: Navn
+        role: Rolle
+        admin: Administrator
+      offer:
+        title: Overskrift
+        description: Beskrivelse
+        valid_from: Gyldig fra
+        valid_to: Gyldig til
+      business_hour:
+        day: Dag
+        open_time: Åbner kl.
+        close_time: Lukker kl.
+      invoice:
+        period_start: Start
+        period_end: Slut
+        amount_ex_moms: Beløb eksl. moms
+        amount_incl_moms: Beløb incl. moms
+        comment: Kommentar
+      event_history:
+        description: Beskrivelse
+        type: Handling
+      subscription_plan:
+        start_date: Startdato
+        cancel_date: Ophørsdato
+        active: Aktiv abonnement
+      subscription_type:
+        name: Navn
+        monthly_price: Månedlig pris
+      feature:
+        title: Navn
+        description: Beskrivelse
+      campaign:
+        title: Overskrift
+        message: Besked
+        status: Status
+        activation_time: Tidspunkt
+        instance_activation: Aktiver nu
+      message_notifcation:
+        recipient: Modtager
+        type: Kampagne type
+      status_code: 
+        name: Navn
+        description: Beskrivelse
+      campaign_member:
+        status: Status
+      subscriber:
+        active: Aktivt medlem
+        start_date: Medlem fra
+      backend_admin:
+        name: Navn
+        role: Rolle
+        admin: Administrator
+      welcome_offer:
+        active: Aktiv
+        description: Beskrivelse
+  business_validations:
+    generic:
+      not_authenticated: Login er påkrævet!
+    frontend:
+      member_user:
+        member_created: Du er nu registreret som medlem!
+        member_updated: Din profil er nu opdateret!
+    session_merchant:
+      logged_in: Du er nu logget ind som partnerbutik!
+      logged_out: Du er logget ud som partnerbutik!
+      invalid_login: E-mail og/eller kodeord er ugyldigt!
+    session_member:
+      logged_in: Du er nu logget ind som medlem!
+      logged_out: Du er logget ud som medlem!
+      invalid_login: E-mail og/eller kodeord er ugyldigt!
+    password_reset:
+      email_sent: Du vil snarest modtage en email med instruktioner til at nulstille dit password!
+      password_reset_confirmation: Dit kodeord er nu nulstillet!
+    campaign:
+      campaign_created: Kampagne er oprettet og udføres på det angivne tidspunkt!
+      campaign_deleted: Kampagne er nu slettet!
+      campaign_updated: Kampagne er nu opdateret!
+    merchant_member: 
+      member_already_exists: Personen er allerede registreret som medlem i din kundeklub!
+      member_added: Medlemmet er nu oprettet og tilføjet din kundeklub!
+    merchant_store:
+      information_updated: Oplysninger er nu opdateret!
+    merchant_user:
+      profile_updated: Din brugerprofil er nu opdateret!
+    offer:
+      offer_created: Tilbud er oprettet og synligt på clubnovus.dk!
+      offer_updated: Tilbud er opdateret!
+      offer_deleted: Tilbud er slettet!
+    subscriber:
+      subscriber_removed: Medlem er nu fjernet fra kundeklubben!
+      subscriber_message_sent: Besked er afsendt til medlemmet!
+    welcome_offer:
+      offer_updated: Velkomsttilbud er opdateret!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

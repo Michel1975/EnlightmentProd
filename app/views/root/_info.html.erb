@@ -1,0 +1,21 @@
+
+<div class="infobox-wrapper">
+    <div id="infobox">
+    		<div class="signup">
+    		<%= link_to display_store_path(merchant.id) do %>
+              <button class="btn btn-mini btn btn-success">Se detaljer</button>
+            <% end %>
+    		</div>
+        <div class="title"><%= merchant.store_name %></div>
+    	
+    	<div class="address"><%= merchant.short_description %></div><br/>
+    	<div class="address"><%= merchant.map_address %></div>
+    	<div>+45 <%= merchant.phone %></div>
+
+    	<div><span style="font-weight:bold">Medlemsstatus</span><br/>
+    		<%= status ? "Du er medlem" : "Ikke medlem" %>
+    	</div>
+    	<div><%= image_tag "http://www.makeathumbnail.com/thumbnails/image206333.jpg"%></div>
+    </div>
+</div>
+
