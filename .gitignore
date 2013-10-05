@@ -25,3 +25,5 @@ doc/
 /config/initializers/env.rb
 # Ignore application configuration
 /config/application.yml
+
+/public/assets
