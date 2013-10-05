@@ -1,0 +1,5 @@
+<%= form_for @merchant_store.subscribers.build(member_id: current_member_user.id), :url => signup_member_path, remote: true do |f| %>
+	<div><%= f.hidden_field :member_id %></div>
+    <div><%= f.hidden_field :merchant_store_id %></div>
+    <%= f.submit "Tilmeld", class: "btn btn-large btn-primary" %>
+<% end %>

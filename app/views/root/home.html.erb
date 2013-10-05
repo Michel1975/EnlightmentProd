@@ -6,6 +6,42 @@
 <div style="width:100%;height:100%"><%= gmaps("markers" => {"data" => @json, "options" => {"custom_infowindow_class" => "infobox-wrapper", 
 	"list_container" => "list_items" } }) %> </div>
 
+<br/>
+
+<div>
+<ul id="list_items">
+</ul>
+
+<h1>Alternativ liste</h1>
+<div class="span11">
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Butik</th>
+                <th>Ejer</th>
+                <th>Gade</th>
+                <th>Husnummer</th>
+                <th>Postnummer</th>
+                <th>By</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @merchant_stores.each do |merchant_store| %>
+            <tr>
+                <td ><%= link_to merchant_store.store_name, "javascript:void(0)", id: "merchant-" + merchant_store.id.to_s %></td>
+                <td><%= merchant_store.owner %></td>
+                <td><%= merchant_store.street %></td>
+                <td><%= merchant_store.house_number %></td>
+                <td><%= merchant_store.postal_code %></td>
+                <td><%= merchant_store.city %></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+</div>
+
 <% content_for :scripts do %>
 <script type="text/javascript">
    Gmaps.map.infobox = function(boxText) {
@@ -27,15 +63,12 @@
     ,pane: "floatPane"
     ,enableEventPropagation: false
  }};
+
+ 
 </script> 
 <% end %>
 
-<br/>
-<div>
-<ul id="list_items">
 
-</ul>
-</div>
 
 
 

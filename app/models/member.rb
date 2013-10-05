@@ -2,7 +2,7 @@ class Member < ActiveRecord::Base
   attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
   has_one :user, :as => :sub
   accepts_nested_attributes_for :user
-  has_many :subscribers
+  has_many :subscribers 
 
   #Used to determine current validation_mode
   attr_accessor :validation_mode

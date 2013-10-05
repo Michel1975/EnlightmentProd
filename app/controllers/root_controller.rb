@@ -11,7 +11,10 @@ class RootController < ApplicationController
 		end	
 		#http://jsfiddle.net/jEhJ3/597/
 		#http://t3923.codeinpro.us/q/51502208e8432c04261eb26e
-		@json = MerchantStore.all.to_gmaps4rails do |merchant, marker|
+		#Note: Vi bliver nødt til at lave vores egen sidebar med markers. Vi skal bare finde linket til hver kort.
+		#link til kort markør: http://stackoverflow.com/questions/8608602/make-map-marker-direct-link-onclick-for-gmaps4rails
+		@merchant_stores = MerchantStore.all 
+		@json = @merchant_stores.to_gmaps4rails do |merchant, marker|
 			member_status = !member_ships.empty? && member_ships.has_key?(merchant.id)
   			marker.infowindow render_to_string(:partial => "info", :locals => { :merchant => merchant, status: member_status} )
   			if member_status
@@ -28,8 +31,8 @@ class RootController < ApplicationController
                  })		
   			end
   			marker.title merchant.store_name
-  			marker.sidebar merchant.store_name
-  			marker.json({ :id => merchant.id})
+  			marker.sidebar merchant.store_name + ", " + merchant.map_address
+  			marker.json({ :merchant_id => merchant.id})
 		end
 	end
 
@@ -44,18 +47,37 @@ class RootController < ApplicationController
 	def subscribe
 		@member = Member.find(params[:subscriber][:member_id])
 		@merchant_store = MerchantStore.find(params[:subscriber][:merchant_store_id])
-		@merchant_store.subscribers.create!(member_id: @member.id, start_date: Date.today)
-      	redirect_to root_path
+    if @merchant_store.subscribers.find_by_member_id(@member.id).nil?
+		  @merchant_store.subscribers.create!(member_id: @member.id, start_date: Date.today)
     end
-
-    def unsubscribe
-    	@subscriber = Subscriber.find_by_member_id(params[:id])
-    	@merchant_store = MerchantStore.find(@subscriber.merchant_store_id)
-    	@merchant_store.subscribers.find(@subscriber.id).destroy
-    	redirect_to root_path
+    #else
+      #render :nothing => true
+		#
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.js  
     end
+  end
 
-    
+  def unsubscribe
+    @subscriber = Subscriber.find_by_member_id(params[:id])
+    if @subscriber.present?
+      @merchant_store = MerchantStore.find(@subscriber.merchant_store_id)
+      @merchant_store.subscribers.find(@subscriber.id).destroy
+    end
+    #else
+      #render :nothing => true
+    #redirect_to root_path
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.js  
+    end
+  end
+
+    def favorites
+    	@member_user = current_member_user
+    	@favorite_stores = @member_user.subscribers.paginate(page: params[:page], :per_page => 20)  
+    end
 end
 
 

@@ -22,6 +22,7 @@
                 <li><a href="#">Kontakt</a></li>
                  <% if logged_in? && current_member_user %>
                   <li><%= link_to "Brugerprofil", member_user_path(current_member_user)%></li>
+                  <li><%= link_to "Mine favorittter", favorites_path %></li>
                 <% else !logged_in? %>
                   <li> <%= link_to "Log ind som butik", shared_login_merchant_path %> </li>
                   <li> <%= link_to "Log ind som medlem", shared_login_member_path %> </li>

@@ -18,6 +18,9 @@ EnlightmentProd::Application.routes.draw do
   match '/display_store/:id',  to: 'root#show_merchant_store', :as => "display_store"
   match '/signup_member',  to: 'root#subscribe', :as => "signup_member", via: :post
   match '/unsubscribe_member/:id',  to: 'root#unsubscribe', :as => "unsubscribe_member", via: :delete
+
+  #Member links
+  get "favorites" => "root#favorites", :as => "favorites"
   
   namespace :merchant do
     get "dashboard" => "dashboards#store_dashboard", :as => "dashboard"

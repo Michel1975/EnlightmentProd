@@ -1,12 +1,5 @@
 <% provide(:title, 'Stamdata for butik') %>
 <h1>Stamdata for butik</h1>
-<% if logged_in? && current_member_user && %>
-  <%= form_for @merchant_store.subscribers.build(member_id: current_member_user.id), :url =>  do |f| %>
-  <div><%= f.hidden_field :member_id %></div>
-  <div><%= f.hidden_field :merchant_store %></div>
-  <%= f.submit "Tilmeld", class: "btn btn-large btn-primary" %>
-<% end %>
-
 <p id="notice"><%= notice %></p>
 
 <p>
