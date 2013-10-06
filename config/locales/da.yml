@@ -226,6 +226,7 @@ da:
         active: Aktiv
         store_name: Butiksnavn
         description: Beskrivelse
+        store_picture: Billede
         short_description: Beskrivelse (forkortet)
         owner: Ejer
         street: Gade
@@ -255,6 +256,7 @@ da:
         description: Beskrivelse
         valid_from: Gyldig fra
         valid_to: Gyldig til
+        offer_picture: Billede
       business_hour:
         day: Dag
         open_time: Åbner kl.

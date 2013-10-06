@@ -1,5 +1,7 @@
 class MerchantStore < ActiveRecord::Base
-  attr_accessible :store_name, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
+  attr_accessible :store_name, :store_picture, :store_picture_size, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
+  
+  mount_uploader :store_picture, ImageUploader
   
   has_one :welcome_offer, dependent: :destroy
   has_many :offers, dependent: :destroy

@@ -11,7 +11,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131002160211) do
+ActiveRecord::Schema.define(:version => 20131006140114) do
+
+  create_table "attachinary_files", :force => true do |t|
+    t.integer  "attachinariable_id"
+    t.string   "attachinariable_type"
+    t.string   "scope"
+    t.string   "public_id"
+    t.string   "version"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "format"
+    t.string   "resource_type"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
+  add_index "attachinary_files", ["attachinariable_type", "attachinariable_id", "scope"], :name => "by_scoped_parent"
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -107,7 +123,7 @@ ActiveRecord::Schema.define(:version => 20131002160211) do
   end
 
   create_table "merchant_stores", :force => true do |t|
-    t.boolean  "active",            :default => false
+    t.boolean  "active",             :default => false
     t.string   "store_name"
     t.text     "description"
     t.string   "owner"
@@ -119,10 +135,12 @@ ActiveRecord::Schema.define(:version => 20131002160211) do
     t.string   "latitude"
     t.string   "longitude"
     t.string   "sms_keyword"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.string   "phone"
     t.text     "short_description"
+    t.string   "store_picture"
+    t.integer  "store_picture_size"
   end
 
   add_index "merchant_stores", ["sms_keyword"], :name => "index_merchant_stores_on_sms_keyword", :unique => true
@@ -156,8 +174,10 @@ ActiveRecord::Schema.define(:version => 20131002160211) do
     t.date     "valid_from"
     t.date     "valid_to"
     t.integer  "merchant_store_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "offer_picture"
+    t.integer  "offer_picture_size"
   end
 
   add_index "offers", ["merchant_store_id"], :name => "index_offers_on_merchant_store_id"

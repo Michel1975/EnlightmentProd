@@ -15,8 +15,11 @@ gem 'savon', '~> 2.0'
 gem 'htmlentities'
 gem 'gmaps4rails' # Vi bruger dette til at vise kortet
 gem 'geocoder' # vi bruger dette til at indkode adresser i raw-format
-#gem 'paperclip'
-#gem 'aws-sdk'
+gem 'cloudinary'
+gem 'carrierwave' #Bruges sammen med clodinary på en mærkelig måde..via en uploader klasse
+#gem 'railties' #for heroku deploy. Følg op på versionen ved næste deploy til heroku.
+
+
 #gem 'rqrcode-rails3'
 
 group :development, :test do

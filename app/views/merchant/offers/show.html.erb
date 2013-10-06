@@ -10,6 +10,7 @@
         <th>SMS påmindelser</th>
         <th>Oprettet</th>
         <th>Senest opdateret</th>
+        <th>Handling</th>
       </tr>
     </thead>
     <tbody>     
@@ -21,10 +22,21 @@
         <td>TBD</td>
         <td><%= @offer.created_at %></td>
         <td><%= @offer.updated_at %></td>
+        <td><%= link_to [:merchant, @offer], method: :delete, data: { confirm: "Er du sikker?" } do %>
+              <button class="btn btn-mini btn-danger">
+                <i class="icon-trash bigger-120"></i>
+              </button>
+            <% end %>
+        </td>
       </tr>      
     </tbody>
   </table>
 </div>
+
+<p>
+  <b>Billede:</b>
+  <%= cl_image_tag(@offer.offer_picture, :width => 150, :height => 150, :crop => :fit) %>
+</p>
  
 <%= link_to 'Rediger', edit_merchant_offer_path(@offer) %> 
 <%= link_to 'Tilbage', merchant_offers_path %>

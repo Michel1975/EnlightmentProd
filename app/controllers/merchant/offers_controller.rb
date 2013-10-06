@@ -22,6 +22,13 @@ class Merchant::OffersController < Merchant::BaseController
 
   def create
   	@offer = current_merchant_store.offers.build(params[:offer])
+    #File handling
+    if params[:offer][:offer_picture].present? 
+      preloaded = Cloudinary::PreloadedFile.new(params[:offer][:offer_picture])         
+      raise "Invalid upload signature" if !preloaded.valid?
+      @offer.offer_picture = preloaded.identifier
+    end
+
     respond_to do |format|
       if @offer.save 
         format.html { redirect_to [:merchant, @offer], notice: t(:offer_created, :scope => [:business_validations, :offer]) }
@@ -33,6 +40,14 @@ class Merchant::OffersController < Merchant::BaseController
 
   def update
     @offer = Offer.find(params[:id])
+
+    if params[:offer][:offer_picture].present? 
+      preloaded = Cloudinary::PreloadedFile.new(params[:offer][:offer_picture])         
+      raise "Invalid upload signature" if !preloaded.valid?
+      @offer.offer_picture = preloaded.identifier
+    else
+       @offer.offer_picture = nil
+    end
 
     respond_to do |format|
       if @offer.update_attributes(params[:offer])
@@ -48,7 +63,7 @@ class Merchant::OffersController < Merchant::BaseController
     @offer.destroy
 
     respond_to do |format|
-      format.html { redirect_to merchant_offers_url, t(:offer_deleted, :scope => [:business_validations, :offer]) }
+      format.html { redirect_to merchant_offers_url, notice: t(:offer_deleted, :scope => [:business_validations, :offer]) }
     end
   end
 end

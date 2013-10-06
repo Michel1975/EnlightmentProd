@@ -19,6 +19,23 @@
     <%= f.label :description %><br />
     <%= f.text_area :description %>
   </div>
+
+  <div class="control-group">
+    <%= f.label :offer_picture %>
+      <div class="form_controls">
+        <div class="upload_button_holder">
+          <%= link_to("Upload", "#", :class => "upload_button") %>
+          <%= f.cl_image_upload(:offer_picture) %>
+        </div>
+        <span class="status"></span>
+      </div>
+  </div>
+  <div class="control-group">
+    <div class="form_controls">
+      <div class="preview"></div>
+    </div>
+  </div>
+
   <div class="field">
     <%= f.label :valid_from %><br />
     <%= f.date_select :valid_from %>
@@ -30,4 +47,5 @@
   <div class="actions">
     <%= f.submit %>
   </div>
+  <%= f.hidden_field :offer_picture_size %>
 <% end %>
