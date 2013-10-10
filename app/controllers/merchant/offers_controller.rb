@@ -41,12 +41,16 @@ class Merchant::OffersController < Merchant::BaseController
   def update
     @offer = Offer.find(params[:id])
 
-    if params[:offer][:offer_picture].present? 
-      preloaded = Cloudinary::PreloadedFile.new(params[:offer][:offer_picture])         
+    picture = params[:offer][:offer_picture]
+    if picture.present? 
+      preloaded = Cloudinary::PreloadedFile.new(picture)
       raise "Invalid upload signature" if !preloaded.valid?
+      #Determine if existing picture is beng overwritten. In that case, existing picture on server must be manually deleted.
+      if picture != @offer.offer_picture
+        #New picture present
+        @offer.remove_offer_picture!
+      end
       @offer.offer_picture = preloaded.identifier
-    else
-       @offer.offer_picture = nil
     end
 
     respond_to do |format|

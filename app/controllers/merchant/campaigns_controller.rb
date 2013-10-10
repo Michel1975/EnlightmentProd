@@ -1,4 +1,5 @@
 class Merchant::CampaignsController < Merchant::BaseController
+  #require 'lib/utility/SMSFactory'
   #If-override-from-base: layout "merchant", except: [:index]
 
   def index
@@ -20,6 +21,11 @@ class Merchant::CampaignsController < Merchant::BaseController
 
   #Eftersom oprettelsen af ordren i gateway sker asynkront, så vil vi oprette selve kampagnen først
   def create
+      #
+      #SMSFactory::Metode-navn
+
+
+
       #Step 1: Opret selve kampagnen først
       @campaign = current_merchant_store.campaigns.build(params[:campaign]) 
       @campaign.status = 'scheduled'

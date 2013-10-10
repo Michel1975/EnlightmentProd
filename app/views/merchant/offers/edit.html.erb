@@ -7,9 +7,8 @@
 <%= link_to 'Tilbage', merchant_offers_path %>
 
 <script>
-
   $(document).ready(function() {
-    // Cloudinary jQuery integration library uses jQuery File Upload widget
+   // Cloudinary jQuery integration library uses jQuery File Upload widget
     // (see http://blueimp.github.io/jQuery-File-Upload/).
     // Any file input field with cloudinary-fileupload class is automatically
     // wrapped using the File Upload widget and configured for Cloudinary uploads.
@@ -40,7 +39,7 @@
       })
       .off("cloudinarydone").on("cloudinarydone", function (e, data) {
         $("#offer_offer_picture_size").val(data.result.bytes);
-        $(".status").text("Færdig");
+        $(".status").text("");
         $(".preview").html(
           $.cloudinary.image(data.result.public_id, {
             format: data.result.format, width: 200, height: 200, crop: "fit"
@@ -48,4 +47,5 @@
         );
       });
     });
+
 </script>

@@ -19,13 +19,13 @@ class RootController < ApplicationController
   			marker.infowindow render_to_string(:partial => "info", :locals => { :merchant => merchant, status: member_status} )
   			if member_status
   				marker.picture({
-                  :picture => "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                  :picture => ActionController::Base.helpers.asset_path("map_signed_up.png"),
                   :width   => 32,
                   :height  => 32
                  })	
   			else
   				marker.picture({
-                  :picture => "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                  :picture => ActionController::Base.helpers.asset_path("map_not_signed_up.png"),
                   :width   => 32,
                   :height  => 32
                  })		
