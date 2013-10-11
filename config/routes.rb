@@ -23,12 +23,17 @@ EnlightmentProd::Application.routes.draw do
   get "favorites" => "root#favorites", :as => "favorites"
   
   namespace :merchant do
+    #Callback sms-handling
+    match '/processMessage',  to: 'sms_handler#processMessage', via: :get
+    match '/callbackMessage',  to: 'sms_handler#callbackMessage', via: :get
+
     get "dashboard" => "dashboards#store_dashboard", :as => "dashboard"
     
     resources :subscribers, :only => [:index, :show, :destroy, :new] do
       get 'prepare_single_message', :on => :member
       post 'send_single_message', :on => :member
     end
+    
     resources :offers 
     resources :welcome_offers
     resources :campaigns
@@ -48,10 +53,12 @@ EnlightmentProd::Application.routes.draw do
       get 'new_manual_subscriber', :on => :member
       post 'create_manual_subscriber', :on => :member
     end
+
     resources :users
     resources :password_resets
     resources :merchant_sessions, :only => [:new, :create, :destroy]
     resources :member_sessions, :only => [:new, :create, :destroy]
+    resources :backend_admin_sessions, :only => [:new, :create, :destroy]
 
     #Member session paths
     get "login_member" => "member_sessions#new", :as => "login_member"
@@ -60,10 +67,17 @@ EnlightmentProd::Application.routes.draw do
     #MerchantUser session paths
     get "login_merchant" => "merchant_sessions#new", :as => "login_merchant"
     get 'logout_merchant',  to: "merchant_sessions#destroy", :as => "logout_merchant"
+
+    #BackendAdmin session paths
+    get "login_admin" => "backend_admin_sessions#new", :as => "login_admin"
+    get 'logout_admin',  to: "backend_admin_sessions#destroy", :as => "logout_admin"
     
   end
 
   namespace :admin do
+    get "dashboard" => "dashboards#overview", :as => "dashboard"
+    get "message_status" => "message_notifications#index", :as => "message_status"
+    
   end
   
   

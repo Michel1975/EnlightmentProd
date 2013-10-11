@@ -1,5 +1,4 @@
 class Merchant::CampaignsController < Merchant::BaseController
-  #require 'lib/utility/SMSFactory'
   #If-override-from-base: layout "merchant", except: [:index]
 
   def index
@@ -21,36 +20,34 @@ class Merchant::CampaignsController < Merchant::BaseController
 
   #Eftersom oprettelsen af ordren i gateway sker asynkront, så vil vi oprette selve kampagnen først
   def create
-      #
-      #SMSFactory::Metode-navn
-
-
-
       #Step 1: Opret selve kampagnen først
       @campaign = current_merchant_store.campaigns.build(params[:campaign]) 
-      @campaign.status = 'scheduled'
       #Default add all members for a store
-      @campaign.save!
-      current_merchant_store.subscribers.each do |subscriber| 
-        @campaign.campaign_members.create(subscriber_id: subscriber.id, status: 'new') 
-      end
-     
-      #Step 2: Bestem om ordren sker omgående eller i fremtiden
-      if(@campaign.instant_activation)
-        #sendOfferReminderInstant?(@campaign, Array.new << Member.new(phone: '+4524600819')) #Member.find(1,10))         
+      if @campaign.save!
+        #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
+        current_merchant_store.subscribers.each do |subscriber| 
+          @campaign.campaign_members.create(subscriber_id: subscriber.id, status: 'new') 
+        end
+        #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions
+        if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign)
+          @campaign.status = 'scheduled'
+          @campaign.save!
+          flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
+          redirect_to merchant_campaigns_path
+        else
+          @campaign.status = 'error'
+          @campaign.save!
+          flash[:alert] = t(:campaign_error, :scope => [:business_validations, :campaign])
+          redirect_to [:merchant, @campaign]
+        end
       else
-        #sendOfferReminderScheduled?(@campaign, Array.new << Member.new(phone: '+4524600819')) #Member.find(1,10))          
+        render 'new'
       end
-      flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
-
-      #Old: sendSingleMessageScheduled?('Test - Velkommen til Club Novus', '+4524600819','2013-08-03T15:55:00')
-      redirect_to merchant_campaigns_path
   end
  
   def destroy
-    #To-Do: Foretag kald til gateway og aflys udsendelse af sms-er
     @campaign = Campaign.find(params[:id])
-    #cancelScheduledOfferReminder?(@campaign)    	
+    SMSFactory.cancelScheduledOfferReminder?(@campaign)    	
     @campaign.destroy
     flash[:success] = t(:campaign_deleted, :scope => [:business_validations, :campaign])
     redirect_to merchant_campaigns_path
@@ -59,10 +56,10 @@ class Merchant::CampaignsController < Merchant::BaseController
   def update
     @campaign = Campaign.find(params[:id])    
     @campaign.update_attributes(params[:campaign])
-    #reschduleOfferReminder?(@campaign)
-    flash[:success] = t(:campaign_updated, :scope => [:business_validations, :campaign])
-
-    redirect_to [:merchant, @campaign]
+    if SMSFactory.reschduleOfferReminder?(@campaign)
+      flash[:success] = t(:campaign_updated, :scope => [:business_validations, :campaign])
+      redirect_to [:merchant, @campaign]
+    end
   end
 
 end

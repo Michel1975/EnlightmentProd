@@ -26,12 +26,25 @@ module ApplicationHelper
       		Member.find(session[:current_user_id])
 	end
 
+	def current_admin_user=(admin_user)
+		@current_admin_user = admin_user
+	end
+
+	def current_admin_user
+		@current_admin_user ||= session[:current_user_id] &&
+      		BackendAdmin.find(session[:current_user_id])
+	end
+
 	def member_user?
     	return current_user && current_user.sub_type == 'Member' ? true : false
   	end
 
   	def merchant_user?
     	return current_user && current_user.sub_type == 'MerchantUser' ? true : false
+  	end
+
+  	def admin_user?
+    	return current_user && current_user.sub_type == 'BackendAmin' ? true : false
   	end
 
 	def store_session_variables(user)
@@ -48,5 +61,6 @@ module ApplicationHelper
 		session[:current_user_type] = nil
 		current_member_user = nil
 		current_merchant_user = nil
+		current_admin_user = nil
 	end
 end

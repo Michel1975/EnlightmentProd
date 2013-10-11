@@ -28,6 +28,7 @@
                   <li><%= link_to "Mine favorittter", favorites_path %></li>
                 <% else !logged_in? %>
                   <li> <%= link_to "Log ind som butik", shared_login_merchant_path %> </li>
+                  <li> <%= link_to "Log ind som administrator", shared_login_admin_path %> </li>
                   <li> <%= link_to "Log ind som medlem", shared_login_member_path %> </li>
                   <li> <%= link_to "Opret medlem", signup_member_path %> </li>
                 <% end %>
@@ -45,6 +46,9 @@
       <% elsif current_user && current_user.sub_type == "Member" %>
         Logget ind som Medlem <%= current_user.email %>.
         <%= link_to "Log out", shared_logout_member_path %>
+      <% elsif current_user && current_user.sub_type == "BackendAdmin" %>
+        Logget ind som Administrator <%= current_user.email %>.
+        <%= link_to "Log out", shared_logout_admin_path %>
       <% end %>
       </div>
       <br />

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= yield(:title)%></title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <!-- Configure Cloudinary jQuery plugin -->
+  <%= cloudinary_js_config %>
+</head>
+<body>
+
+  <div class="container">
+      <div class="masthead">
+        <h3 class="muted">Admin Backend</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li><%= link_to "Home", admin_dashboard_path %></li>
+                <li><%= link_to "Besked Status", admin_message_status_path %></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+      
+      <div class="span9">
+      <% if current_user && current_user.sub_type == "BackendAdmin" %>
+        Logget ind som BackendAdmin <%= current_user.email %>. Last login at: <%= current_user.last_login_at %>
+        <%= link_to "Log out", shared_logout_admin_path %>
+      <% else %>
+        <%= link_to "Log in", shared_login_admin_path %>.
+      <% end %>
+      </div>
+      <br />
+      <div>
+        <% flash.each do |name, msg| %>
+          <%= content_tag :div, msg, :id => "flash_#{name}" %>
+        <% end %>
+      </div>
+
+      <div class="span9">
+        <%= yield %>
+      </div>
+</div><!-- /container -->
+<div class="footer">
+        <p>&copy; Company 2013 </p>
+      </div>
+</body>
+</html>

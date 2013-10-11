@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131006140114) do
+ActiveRecord::Schema.define(:version => 20131010140321) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -106,6 +106,8 @@ ActiveRecord::Schema.define(:version => 20131006140114) do
     t.string   "origin"
   end
 
+  add_index "members", ["phone"], :name => "index_members_on_phone", :unique => true
+
   create_table "merchant_stores", :force => true do |t|
     t.boolean  "active",             :default => false
     t.string   "store_name"
@@ -143,7 +145,6 @@ ActiveRecord::Schema.define(:version => 20131006140114) do
     t.integer  "status_code_id"
     t.string   "type"
     t.string   "message_id"
-    t.string   "message_group_id"
     t.integer  "merchant_store_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false

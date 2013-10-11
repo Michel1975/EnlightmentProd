@@ -11,7 +11,7 @@ class Campaign < ActiveRecord::Base
   validates :message, presence: true, length: { maximum: 160 }
   validates :activation_time, presence: true, :unless => Proc.new { |a| a.instant_activation?}
   validates :instant_activation, :inclusion => { :in => [ true, false ] }
-  validates :status, :inclusion => { :in => %w(scheduled finished)}
+  validates :status, :inclusion => { :in => %w(scheduled error finished)}, :allow_blank => true
   validates :merchant_store_id, presence: true
 
   
@@ -23,7 +23,7 @@ class Campaign < ActiveRecord::Base
     def generate_message_group
       begin
         self.message_group_id = SecureRandom.urlsafe_base64
-      end while Campaign.exists?(self.message_group_id)
+      end while Campaign.exists?(message_group_id: self.message_group_id)
     end
     
 end

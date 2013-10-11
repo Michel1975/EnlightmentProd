@@ -21,6 +21,10 @@ class ApplicationController < ActionController::Base
       redirect_to root_path unless current_user.sub_type == 'Member'
   end
 
+  def admin_user
+      redirect_to root_path unless current_user.sub_type == 'BackendAdmin'
+  end
+
   def not_authenticated
     redirect_to root_path, :alert => t(:not_authenticated, :scope => [:business_validations, :generic])
     #if current_user.sub_type == "MerchantUser"
@@ -45,6 +49,5 @@ class ApplicationController < ActionController::Base
     def current_users_list
       current_users.map {|u| u.username}.join(", ")
     end
-
 	
 end#end class

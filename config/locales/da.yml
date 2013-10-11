@@ -319,6 +319,10 @@ da:
       logged_in: Du er nu logget ind som medlem!
       logged_out: Du er logget ud som medlem!
       invalid_login: E-mail og/eller kodeord er ugyldigt!
+    session_admin:
+      logged_in: Du er nu logget ind som administrator!
+      logged_out: Du er logget ud som administrator!
+      invalid_login: E-mail og/eller kodeord er ugyldigt!
     password_reset:
       email_sent: Du vil snarest modtage en email med instruktioner til at nulstille dit password!
       password_reset_confirmation: Dit kodeord er nu nulstillet!
@@ -326,6 +330,7 @@ da:
       campaign_created: Kampagne er oprettet og udføres på det angivne tidspunkt!
       campaign_deleted: Kampagne er nu slettet!
       campaign_updated: Kampagne er nu opdateret!
+      campaign_error: Der er opstået en teknisk fejl ved oprettelsen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
     merchant_member: 
       member_already_exists: Personen er allerede registreret som medlem i din kundeklub!
       member_added: Medlemmet er nu oprettet og tilføjet din kundeklub!

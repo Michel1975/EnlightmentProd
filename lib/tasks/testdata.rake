@@ -32,7 +32,7 @@ namespace :db do
         merchant_user = store.merchant_users.create!(name: "Michel Kenneth Hansen",
                 role: "Sales clerk")
         user.sub = merchant_user
-        user.save!
+        user.save! 
       else
         description = 'Lorem Ipsum Lorem Ipsum Lorem Ipsum'
         short_description =  'Lorem Ipsum Lorem Ipsum Lorem Ipsum'
@@ -72,9 +72,15 @@ namespace :db do
         postal_code = "3360"
         gender = "W"
         email = "test-#{s}-#{n}@clubnovustest.dk"
-        phone = "42415210"
-        password  = "password"
         
+        #Adding my phone number for my own store
+        phone = ""
+        begin
+          phone = SecureRandom.random_number(99999999)
+        end while Member.exists?(phone: phone)
+          
+        
+        password  = "password"
         member_user = User.create!(
                  email: email,
                  password: password,
@@ -148,5 +154,38 @@ namespace :db do
         MerchantStore.first.subscribers.create!(start_date: Date.today, member_id: member.id)
       end #end creation of special standalone member
 
+      #Create one standalone member with unique email
+      1.times do |n| 
+        name = "Niels Hansen"
+        postal_code = "3360"
+        gender = "W"
+        email = "info@disruptx.dk"
+        phone = "48391754"
+        password  = "password"
+        
+        admin_user = User.create!(
+                 email: email,
+                 password: password,
+                 password_confirmation: password)
+        admin = BackendAdmin.create!( name: name,
+                                      role: 'admin')
+                                        
+        admin_user.sub = admin
+        admin_user.save!
+      end #end creation of special admin user 
+
+      #Initialize status-codes from CimMobil. Used in sms-handler. 
+      status_codes = Hash.new
+      status_codes[0] = "Besked afsendt"
+      status_codes[1] = "Besked leveret"
+      status_codes[14] = "Udsendelse igang"
+      status_codes[129] = "Klar til udsendelse"
+      status_codes[130] = "Udsendelse igang"
+      status_codes[500] = "Udsendelse planlagt"
+      status_codes[999] = "Beskeden kunne ikke sendes"
+
+      status_codes.each do |key, value|
+        StatusCode.create!(name: key, description: value)
+      end
   end#end populate
 end#end namespace

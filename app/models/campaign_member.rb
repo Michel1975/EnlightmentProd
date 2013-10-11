@@ -5,5 +5,5 @@ class CampaignMember < ActiveRecord::Base
   belongs_to :subscriber
 
   validates :subscriber_id, :campaign_id, presence: true
-  validates :status, :inclusion => { :in => %w( new not-received received )}
+  validates :status, :inclusion => { :in => %w(new not-received received)}
 end
