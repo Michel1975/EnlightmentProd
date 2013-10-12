@@ -3,15 +3,21 @@ module SMSUtility
 class SMSFactory
 
 	#START SAVON
-	#Afsendelse af sms til en enkelt (typisk admin eller direkte kommunikation til et medlem)
-  def self.sendSingleMessageInstant?(message, recipient)
-    messageContent = prepareMessage('InstantSingleMessage', nil, Array.new << Member.new(phone: recipient), message)    
+	#Afsendelse af sms til en enkelt person (typisk admin eller direkte kommunikation til et medlem)
+  def self.sendSingleMessageInstant?(message, recipient, merchant_store)
+    messageContent = prepareMessage('InstantSingleMessage', nil, recipient, message, merchant_store)    
     sendMessage?('push', messageContent)   
   end
-  
+
+  #Afsendelse af sms'er i forbindelse med tilmelding og afmelding m.v. Her er Club Novus provider
+  def self.sendSingleAdminMessageInstant?(message, recipient)
+    messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, nil)    
+    sendMessage?('push', messageContent)   
+  end
+
   #Kampagne metoder
-  def self.sendOfferReminderScheduled?(campaign)
-    messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil)
+  def self.sendOfferReminderScheduled?(campaign, merchant_store)
+    messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
     
     sendMessage?('push_scheduled', messageContent) 
     
@@ -20,21 +26,21 @@ class SMSFactory
   end
 
   def self.reschduleOfferReminder?(campaign)
-    messageContent = prepareMessage('RescheduleCampaign', campaign, nil, nil)
+    messageContent = prepareMessage('RescheduleCampaign', campaign, nil, nil, nil)
     
     sendMessage?('reschedule_group', messageContent) 
       
   end
 
   def self.cancelScheduledOfferReminder?(campaign)
-    messageContent = prepareMessage('CancelCampaign', campaign, nil, nil)
+    messageContent = prepareMessage('CancelCampaign', campaign, nil, nil, nil)
 
     sendMessage?('cancel_group', messageContent)
   end  
 
   private
 
-  def self.prepareMessage(mode, campaign, recipients, adminMessage)
+  def self.prepareMessage(mode, campaign, recipient, adminMessage, merchant_store)
     xml_body = ""
     if mode == 'CreateCampaignScheduled'
       recipientString = ""
@@ -54,6 +60,7 @@ class SMSFactory
       builder.tag!("myb:sAlertXml", stringXml)
       builder.tag!("myb:sDateTimeToSend",  campaign.activation_time.strftime("%Y-%m-%dT%H:%M:%S")) 
       builder.tag!("myb:timeZone", 'Denmark')
+      builder.tag!("myb:MerchantId", merchant_store.id)
   elsif mode == 'CancelCampaign'    
     builder = Builder::XmlMarkup.new(:target => xml_body, :indent => 2)
     builder.tag!("myb:iGatewayId", ENV["SMS_GATEWAY_ID"])
@@ -62,28 +69,32 @@ class SMSFactory
     builder = Builder::XmlMarkup.new(:target => xml_body, :indent => 2)
     builder.tag!("myb:iGatewayId", ENV["SMS_GATEWAY_ID"])
     builder.tag!("myb:sMessageGroupId",  campaign.message_group_id)
-    #to-do: builder.tag!("myb:sMerchantId", )
     builder.tag!("myb:sDateTimeToSend", campaign.activation_time.strftime("%Y-%m-%dT%H:%M:%S") ) 
     builder.tag!("myb:timeZone", 'Denmark') 
-  elsif mode == 'InstantSingleMessage'     
+  elsif mode == 'InstantSingleMessage' || mode == 'InstantSingleAdminMessage'  
     message_id = SecureRandom.urlsafe_base64
     stringXml = "<xml><item>" +    
       "<message>" + HTMLEntities.new.encode(adminMessage) + "</message>" +
       "<messageid>" + message_id + "</messageid>" +
-      "<recipient>" + recipients.first.phone + "</recipient>" +  
+      "<recipient>" + recipient + "</recipient>" +
+      #ekstra tilføjelse med from
+      "<from>Club-Novus</from>" +
       "</item></xml>"      
       builder = Builder::XmlMarkup.new(:target => xml_body, :indent => 2)
       builder.tag!("myb:iGatewayId", ENV["SMS_GATEWAY_ID"])
-      #to-do: builder.tag!("myb:sMerchantId", )      
-      builder.tag!("myb:sAlertXml", stringXml)      
+      #Club Novus pays for all sign-up and opt-out sms messages
+      payer_id = mode == 'InstantSingleMessage' ? merchant_store.id : "Club Novus"
+      builder.tag!("myb:MerchantId", payer_id)   
+      builder.tag!("myb:sAlertXml", stringXml) 
       #Message_status.create(messageid: message_id, message_type: 'SMS', recipient: recipient.phone) 
   end
   return xml_body 
 end
+  
   def self.sendMessage?(method, messageContent)
   #wsdl_file = "http://sdk.ecmr.biz/src/gateway.asmx?wsdl"  
   wsdl_file = File.read(Rails.root.join("config/wsdl/CIMMobil_ssl.xml"))
-  #wsdl_file = "http://localhost:8088/mockGatewaySoap12?wsdl"
+  #wsdl_file = "http://127.0.0.1:8088/mockGatewaySoap12?wsdl"
   #wsdl_file =
 
   client = Savon.client(  env_namespace: :soap, wsdl: wsdl_file, raise_errors: true, ssl_verify_mode: :none, 
@@ -92,7 +103,6 @@ end
   result = client.call(method.to_sym, message: messageContent )   
   end
   #END SAVON
-
 end#End class
 
 end#end module

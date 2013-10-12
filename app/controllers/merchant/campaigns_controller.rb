@@ -26,18 +26,18 @@ class Merchant::CampaignsController < Merchant::BaseController
       if @campaign.save!
         #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
         current_merchant_store.subscribers.each do |subscriber| 
-          @campaign.campaign_members.create(subscriber_id: subscriber.id, status: 'new') 
+          @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 
         end
         #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions
-        if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign)
+        if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign, current_merchant_store)
           @campaign.status = 'scheduled'
           @campaign.save!
           flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
-          redirect_to merchant_campaigns_path
+          redirect_to [:merchant, @campaign]
         else
           @campaign.status = 'error'
           @campaign.save!
-          flash[:alert] = t(:campaign_error, :scope => [:business_validations, :campaign])
+          flash[:error] = t(:campaign_create_error, :scope => [:business_validations, :campaign])
           redirect_to [:merchant, @campaign]
         end
       else
@@ -47,19 +47,38 @@ class Merchant::CampaignsController < Merchant::BaseController
  
   def destroy
     @campaign = Campaign.find(params[:id])
-    SMSFactory.cancelScheduledOfferReminder?(@campaign)    	
-    @campaign.destroy
-    flash[:success] = t(:campaign_deleted, :scope => [:business_validations, :campaign])
-    redirect_to merchant_campaigns_path
-  end
-
-  def update
-    @campaign = Campaign.find(params[:id])    
-    @campaign.update_attributes(params[:campaign])
-    if SMSFactory.reschduleOfferReminder?(@campaign)
-      flash[:success] = t(:campaign_updated, :scope => [:business_validations, :campaign])
-      redirect_to [:merchant, @campaign]
+    if SMSUtility::SMSFactory.cancelScheduledOfferReminder?(@campaign)  
+      @campaign.destroy
+      flash[:success] = t(:campaign_deleted, :scope => [:business_validations, :campaign])
+      redirect_to merchant_campaigns_path 
+    else
+      flash[:error] = t(:campaign_delete_error, :scope => [:business_validations, :campaign]) 
     end
   end
 
-end
+  def update
+    @campaign = Campaign.find(params[:id])
+    #Determine if activation_time has changed
+    new_activation_time = false
+    if @campaign.activation_time != params[:campaign][:activation_time]
+      new_activation_time = true
+    end
+
+    if @campaign.update_attributes(params[:campaign])
+      status = true
+      if new_activation_time
+        status = SMSUtility::SMSFactory.reschduleOfferReminder?(@campaign)
+      end
+      if status
+        flash[:success] = t(:campaign_updated, :scope => [:business_validations, :campaign])
+        redirect_to [:merchant, @campaign]
+      else
+        flash.now[:error] = t(:campaign_update_error, :scope => [:business_validations, :campaign])
+        render :edit
+      end
+    else
+      render :edit
+    end
+  end
+
+end#end class

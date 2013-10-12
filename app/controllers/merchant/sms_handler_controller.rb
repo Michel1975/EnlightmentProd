@@ -1,4 +1,6 @@
 class Merchant::SmsHandlerController < Merchant::BaseController
+	skip_before_filter :require_login
+	skip_before_filter :merchant_user
 
 	def callbackMessage
 		notification = MessageNotification.find_by_message_id(params[:sessionid])
@@ -28,7 +30,11 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			else
  				signupMember(sender, text)	
  			end
- 		end 		
+ 		else
+ 			#Default response with OK status
+    		render :nothing => true, :status => :ok 
+ 		end
+ 				
  	end
 
  	def signupMember(sender, text)
@@ -44,27 +50,34 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  		if member
  			merchant_store = MerchantStore.find_by_sms_keyword(keyword)
  			if merchant_store.present?
- 				merchant_store.subscribers.create(member_id: member.id, start_date: Time.now)
- 				#To-do: Lav en template fil			
- 				sendSingleMessageInstant?("Hejsa,\nvelkommen som nyt medlem i vores kundeklub. Du vil løbende modtage spændende tilbud og nyheder fra vores butik\n\nMed venlig hilsen\n#{merchant_store.store_name}", member.phone)	
+ 				if(merchant_store.subscribers.find_by_member_id(member.id))
+ 					SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )	
+ 				else
+ 					merchant_store.subscribers.create(member_id: member.id, start_date: Time.now)
+ 					SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
+ 				end
  			else
- 				sendSingleMessageInstant?("Hejsa,\nder findes ikke en Club Novus partnerbutik med teksten #{keyword}.\nTjek venligst om teksten er korrekt og prøv igen.\n\nMed venlig hilsen\nClub Novus", member.phone)
+ 				SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:store_not_found_error, keyword: keyword, :scope => [:business_messages, :store_signup]), member.phone )
  			end
  		end
  		render :nothing => true, :status => :ok
  	end
 
+ 	
+
  	#Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
  	def stopStoreSubscription(sender, text)
  		member = Member.find_by_phone(sender)
  		if member 			
- 			keyword = text.gsub('stop', '').gsub(/\s+/, "")
- 			merchantStore = MerchantStore.find_by_keyword(keyword)
+ 			keyword = text.gsub('stop', '').gsub(/\s+/, "").lowercase
+ 			merchantStore = MerchantStore.find_by_sms_keyword(keyword)
  			if merchantStore
- 				merchantStore.subscribers.find_by_member_id(member.id).destroy
- 				sendSingleMessageInstant?("Hejsa,\ndu vil nu ikke længere modtage notifikationer fra #{merchantStore.store_name}.\n\nMvh\n Club Novus", member.phone)	
+ 				if merchantStore.subscribers.find_by_member_id(member.id).destroy
+ 					SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchant_store.store_name, :scope => [:business_messages, :opt_out] ), member.phone)	
+ 				end
  			end
  		end
- 		render :nothing => true 		
+ 		#Default response with OK status
+    	render :nothing => true, :status => :ok		
  	end
 end

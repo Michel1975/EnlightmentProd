@@ -10,6 +10,7 @@
         <th>Omkostninger</th>
         <th>Oprettet</th>
         <th>Senest opdateret</th>
+        <th>Handling</th>
       </tr>
     </thead>
     <tbody>     
@@ -18,9 +19,13 @@
         <td> <%= @campaign.message %> </td> 
         <td> <%= @campaign.activation_time %> </td>
         <td> <%= @campaign.status %> </td> 
-        <td> <%= @campaign.total_cost %> </td> 
-        <th><%= @campaign.created_at %></th>
-        <th><%= @campaign.updated_at %></th>       
+        <td> <%= @campaign.total_cost %> kr. </td> 
+        <td><%= @campaign.created_at %></td>
+        <td><%= @campaign.updated_at %></td> 
+        <td> 
+          <%= link_to "Slet sms kampagne", [:merchant, @campaign], method: :delete,
+            data: { confirm: "Er du sikker?" } %>         
+        </td>      
       </tr>      
     </tbody>
   </table>
@@ -49,7 +54,6 @@
     </tbody>
   </table>
 </div>
-
 
 <div> 
   <%= link_to 'Rediger', edit_merchant_campaign_path(@campaign) %> |

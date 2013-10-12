@@ -20,7 +20,7 @@ namespace :db do
     5.times do |s|
       if s == 1#!MerchantStore.all.any?
         store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', short_description: 'Michels karameller er bare dejlige', phone: "48391754", street: 'Klostervangen', house_number: '34', 
-            postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "CN#{s+1}" )
+            postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "cn#{s+1}" )
     
         store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_basic.id)
 

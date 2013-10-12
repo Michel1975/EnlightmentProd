@@ -26,7 +26,6 @@ EnlightmentProd::Application.routes.draw do
     #Callback sms-handling
     match '/processMessage',  to: 'sms_handler#processMessage', via: :get
     match '/callbackMessage',  to: 'sms_handler#callbackMessage', via: :get
-
     get "dashboard" => "dashboards#store_dashboard", :as => "dashboard"
     
     resources :subscribers, :only => [:index, :show, :destroy, :new] do
