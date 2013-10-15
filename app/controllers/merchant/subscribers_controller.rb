@@ -22,9 +22,19 @@ class Merchant::SubscribersController < Merchant::BaseController
 	def send_single_message
 		@subscriber = Subscriber.find(params[:id])
 		message = params[:message]
-		flash[:success] = t(:subscriber_message_sent, :scope => [:business_validations, :subscriber])
-		redirect_to [:merchant, @subscriber]
-		#To-do: kald sms-handler m.v.
+		if SMSUtility::SMSFactory.validate_sms?(message)
+			if SMSUtility::SMSFactory.sendSingleMessageInstant?(message, @subscriber.member.phone, current_merchant_store)
+				flash[:success] = t(:success, :scope => [:business_validations, :instant_subscriber_message])
+				redirect_to [:merchant, @subscriber]
+			else
+				flash.now[:error] = t(:error, :scope => [:business_validations, :instant_subscriber_message])
+				render :prepare_single_message	
+			end
+		else
+			flash.now[:error] = t(:invalid_message, :scope => [:business_validations, :instant_subscriber_message])
+			render :prepare_single_message	
+		end
 	end
+
 
 end

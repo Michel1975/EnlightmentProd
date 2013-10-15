@@ -1,8 +1,7 @@
 class Campaign < ActiveRecord::Base
   scope :completed, where(:status => 'completed')
   scope :scheduled, where(:status => 'scheduled')
-  attr_accessible :title, :message, :status, :activation_time, :instant_activation, :message_group_id 
-
+  attr_accessible :title, :message, :status, :activation_time, :instant_activation, :message_group_id
 
   belongs_to :merchant_store
   has_many :campaign_members, dependent: :destroy
@@ -11,6 +10,8 @@ class Campaign < ActiveRecord::Base
 
   validates :title, presence: true, length: { maximum: 30 }
   validates :message, presence: true, length: { maximum: 160 }
+  #Custom check of sms-message
+  validate  :sms_compliance_validation
   validates :activation_time, presence: true, :unless => Proc.new { |a| a.instant_activation?}
   validates :instant_activation, :inclusion => { :in => [ true, false ] }
   validates :status, :inclusion => { :in => %w(scheduled error finished)}, :allow_blank => true
@@ -23,9 +24,8 @@ class Campaign < ActiveRecord::Base
         0.0
       end
     end
+  
   private
-    
-
     #def generate_message_group
       #self.message_group_id = SecureRandom.urlsafe_base64
     #end
@@ -35,5 +35,11 @@ class Campaign < ActiveRecord::Base
       begin
         self.message_group_id = SecureRandom.urlsafe_base64
       end while Campaign.exists?(message_group_id: self.message_group_id)
+    end
+
+    def sms_compliance_validation
+      if self.message != "" && !SMSUtility::SMSFactory.validate_sms?(self.message)
+        errors.add(:message, I18n.t(:invalid_message, :scope => [:business_validations, :instant_subscriber_message]) )
+      end
     end
 end

@@ -46,7 +46,7 @@
       <% @campaign.campaign_members.each do |campaign_member| %>
       <tr>
         <td><%= campaign_member.subscriber.member.name%></td>
-        <td><%= campaign_member.subscriber.member.user.email %></td>
+        <td><%= campaign_member.subscriber.member.user.try(:email)%></td>
         <td><%= campaign_member.subscriber.member.phone %></td>
         <td><%= campaign_member.status %></td>
       </tr>

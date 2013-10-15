@@ -1,6 +1,44 @@
+#encoding: utf-8
 #Utility class with SMS handling methods
 module SMSUtility
+  #This regXP is used for incoming phone numbers from gateway and forms.
+  VALID_PHONE_REGEX_INCOMING = %r{\A(45|\+45|0045)?[1-9][0-9]{7}\z}
+
+  #This reflects the standard in database after conversion
+  VALID_PHONE_REGEX_STANDARD = %r{\A\+45?[1-9][0-9]{7}\z}
+
+  #This reflects the standard characters for sms messages
+  VALID_SMS_MESSAGE = %r{\A[\w\s@?£!1$"#è?¤é%ù&\\()*:Ø+;øÆ,<æ\-=Å.>å\/§\']+\z}
+
 class SMSFactory
+
+  #Primarily used by search functionality
+  def self.convert_phone_number(phone_number)
+    if validate_phone_number_converted?(phone_number)
+      return phone_number
+    else
+      if phone_number.to_s.size > 8 
+        return phone_number = "+45" + phone_number.sub(/\A(0045|45)/, "").to_s.strip
+      else
+        return phone_number = "+45" + phone_number.to_s
+      end
+    end
+  end
+
+  def self.validate_sms?(message)
+    #Reduceret udgave af http://stackoverflow.com/questions/15866068/regex-to-match-gsm-character-set
+    #Testet med http://rubular.com
+    #%r gør hele forskellen- dette skyldes at %r er beregnet til netop regulære udtryk
+    return message.match(SMSUtility::VALID_SMS_MESSAGE)
+  end
+
+  def self.validate_phone_number_converted?(phone_number)
+    return phone_number.to_s.match(SMSUtility::VALID_PHONE_REGEX_STANDARD)
+  end
+
+  def self.validate_phone_number_incoming?(phone_number)
+    return phone_number.to_s.match(SMSUtility::VALID_PHONE_REGEX_INCOMING)
+  end
 
 	#START SAVON
 	#Afsendelse af sms til en enkelt person (typisk admin eller direkte kommunikation til et medlem)
@@ -19,7 +57,8 @@ class SMSFactory
   def self.sendOfferReminderScheduled?(campaign, merchant_store)
     messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
     
-    sendMessage?('push_scheduled', messageContent) 
+    #sendMessage?('push_scheduled', messageContent) 
+    return true
     
     #Step 1: To-Do - Lav opslag i grupper via join objektet
     #Step X: Opdater besked-status, når webservicen har accepteret ordren
@@ -28,14 +67,16 @@ class SMSFactory
   def self.reschduleOfferReminder?(campaign)
     messageContent = prepareMessage('RescheduleCampaign', campaign, nil, nil, nil)
     
-    sendMessage?('reschedule_group', messageContent) 
+    #sendMessage?('reschedule_group', messageContent) 
+    return true
       
   end
 
   def self.cancelScheduledOfferReminder?(campaign)
     messageContent = prepareMessage('CancelCampaign', campaign, nil, nil, nil)
 
-    sendMessage?('cancel_group', messageContent)
+    #sendMessage?('cancel_group', messageContent)
+    return true
   end  
 
   private

@@ -76,7 +76,7 @@ namespace :db do
         #Adding my phone number for my own store
         phone = ""
         begin
-          phone = SecureRandom.random_number(99999999)
+          phone = Random.rand(11111111..99999999)
         end while Member.exists?(phone: phone)
           
         

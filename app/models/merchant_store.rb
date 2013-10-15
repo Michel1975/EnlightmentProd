@@ -16,7 +16,7 @@ class MerchantStore < ActiveRecord::Base
   has_many :members, :through => :subscribers
   accepts_nested_attributes_for :business_hours
 
-  before_save { |store| store.sms_keyword = store.sms_keyword.downcase }#af hensyn til match-forespørgsler ved sms-tilmelding
+  before_save { |store| store.sms_keyword = store.sms_keyword.downcase } #af hensyn til match-forespørgsler ved sms-tilmelding
 
   validates :active, :inclusion => { :in => [ true, false ] }
   validates :store_name, presence: true, length: { maximum: 30 }

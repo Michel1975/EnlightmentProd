@@ -16,7 +16,7 @@
     <tbody>
 		<tr>
 			<td> <%= @subscriber.member.name %></td>
-			<td> <%= @subscriber.member.user.email %></td>
+			<td> <%= @subscriber.member.user.try(:email) %></td>
 			<td> <%= @subscriber.member.phone %></td>
 			<td> <%= gender(@subscriber.member.gender)%></td>
 			<td> <%= @subscriber.member.birthday %></td>

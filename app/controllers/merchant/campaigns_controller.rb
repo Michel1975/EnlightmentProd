@@ -23,7 +23,7 @@ class Merchant::CampaignsController < Merchant::BaseController
       #Step 1: Opret selve kampagnen først
       @campaign = current_merchant_store.campaigns.build(params[:campaign]) 
       #Default add all members for a store
-      if @campaign.save!
+      if @campaign.save
         #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
         current_merchant_store.subscribers.each do |subscriber| 
           @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 

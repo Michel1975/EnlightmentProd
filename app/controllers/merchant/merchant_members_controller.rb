@@ -8,7 +8,7 @@ class Merchant::MerchantMembersController < Merchant::BaseController
 
 	#To be used from merchant portal when manually creating new subscriber from scrath - more logic needed
 	def create
-		@member = Member.find_by_phone(params[:member][:phone])
+		@member = Member.find_by_phone(SMSUtility::SMSFactory.convert_phone_number(params[:member][:phone]))
 		if @member.nil?
 			@member = Member.new(params[:member])
 			@member.validation_mode = 'store'
