@@ -30,7 +30,7 @@ namespace :db do
                  password: 'noniryder',
                  password_confirmation: 'noniryder')
         merchant_user = store.merchant_users.create!(name: "Michel Kenneth Hansen",
-                role: "Sales clerk")
+                role: "Sales clerk", phone: '99999999')
         user.sub = merchant_user
         user.save! 
       else
@@ -59,7 +59,7 @@ namespace :db do
                  password_confirmation: password)
 
         #Create backend admin user
-        merchant_user = store.merchant_users.create!(name: name, role: "Sales clerk")
+        merchant_user = store.merchant_users.create!(name: name, role: "Sales clerk", phone: '42415210' )
         user.sub = merchant_user
         user.save!
       end#end if-first-iteration
@@ -181,7 +181,9 @@ namespace :db do
       status_codes[14] = "Udsendelse igang"
       status_codes[129] = "Klar til udsendelse"
       status_codes[130] = "Udsendelse igang"
+      #Custom
       status_codes[500] = "Udsendelse planlagt"
+      #Custom
       status_codes[999] = "Beskeden kunne ikke sendes"
 
       status_codes.each do |key, value|

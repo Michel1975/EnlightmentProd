@@ -44,7 +44,8 @@ class SMSFactory
 	#Afsendelse af sms til en enkelt person (typisk admin eller direkte kommunikation til et medlem)
   def self.sendSingleMessageInstant?(message, recipient, merchant_store)
     messageContent = prepareMessage('InstantSingleMessage', nil, recipient, message, merchant_store)    
-    sendMessage?('push', messageContent)   
+    #sendMessage?('push', messageContent)  
+    return true 
   end
 
   #Afsendelse af sms'er i forbindelse med tilmelding og afmelding m.v. Her er Club Novus provider
@@ -81,9 +82,12 @@ class SMSFactory
 
   private
 
-  def self.prepareMessage(mode, campaign, recipient, adminMessage, merchant_store)
+  def self.prepareMessage(mode, campaign, recipient, message, merchant_store)
     xml_body = ""
     if mode == 'CreateCampaignScheduled'
+      #Ensure message is logged properly
+      register_message_notification(campaign, nil, merchant_store, nil)
+
       recipientString = ""
       #status_code = StatusCode.find_by_name("500")
       campaign.campaign_members.each do |campaign_member|
@@ -113,9 +117,15 @@ class SMSFactory
     builder.tag!("myb:sDateTimeToSend", campaign.activation_time.strftime("%Y-%m-%dT%H:%M:%S") ) 
     builder.tag!("myb:timeZone", 'Denmark') 
   elsif mode == 'InstantSingleMessage' || mode == 'InstantSingleAdminMessage'  
-    message_id = SecureRandom.urlsafe_base64
+    #Generate safe message-id
+    begin
+      message_id = SecureRandom.urlsafe_base64
+    end while MessageNotification.exists?(message_id: message_id)
+    #Ensure message is logged properly
+    register_message_notification(nil, recipient, merchant_store, message_id)
+    #Format payload containing message parameters.
     stringXml = "<xml><item>" +    
-      "<message>" + HTMLEntities.new.encode(adminMessage) + "</message>" +
+      "<message>" + HTMLEntities.new.encode(message) + "</message>" +
       "<messageid>" + message_id + "</messageid>" +
       "<recipient>" + recipient + "</recipient>" +
       #ekstra tilføjelse med from
@@ -144,6 +154,24 @@ end
   result = client.call(method.to_sym, message: messageContent )   
   end
   #END SAVON
+
+  def self.register_message_notification(campaign, recipient, merchant_store, message_id)
+    default_status_code = StatusCode.find_by_name("500")
+    if campaign
+      #Loop through all members and insert
+      campaign.campaign_members.each do |campaign_member|
+        entry = MessageNotification.new( notification_type: 'campaign', recipient: campaign_member.subscriber.member.phone,
+                                         message_id: campaign.message_group_id, status_code_id: default_status_code.id,
+                                         merchant_store_id: merchant_store.id)
+        entry.save!
+      end
+      elsif
+        #Create single entry!
+        merchant_store.message_notifications.create( notification_type: 'campaign', recipient: recipient,
+                                                     message_id: message_id, status_code_id: default_status_code.id) 
+      end
+  end
+
 end#End class
 
 end#end module

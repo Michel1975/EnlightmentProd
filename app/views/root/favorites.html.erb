@@ -10,6 +10,7 @@
                 <th>Husnummer</th>
                 <th>Postnummer</th>
                 <th>By</th>
+                <th>Telefon</th>
                 <th>Medlem fra</th>
                 <th>Se detaljer</th>
             </tr>
@@ -23,6 +24,7 @@
                 <td><%= favorite_store.merchant_store.house_number %></td>
                 <td><%= favorite_store.merchant_store.postal_code %></td>
                 <td><%= favorite_store.merchant_store.city %></td>
+                <td><%= favorite_store.merchant_store.phone %></td>
                 <td><%= favorite_store.start_date %></td>
                 <td><%= link_to "Klik for detaljer", display_store_path(favorite_store.merchant_store_id) %></td>
             </tr>

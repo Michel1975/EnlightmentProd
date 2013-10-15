@@ -12,8 +12,8 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 				if status_code
 					notification.status_code = status_code
 				else
-					#Default fejl indtil videre
-					notification.status_code = StatusCode.find_by_name("5")
+					#Default fejl-kode indtil videre. Vi skal nok inddrage hele listen på et tidspunkt, så vi har alle data.
+					notification.status_code = StatusCode.find_by_name("999")
 				end
 				notification.save!
 			end

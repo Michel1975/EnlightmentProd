@@ -2,6 +2,7 @@
 <div class="row">
 	<p>Navn: <%= @merchant_user.name %></p> 
     <p>Rolle: <%= @merchant_user.role %></p>  
+    <p>Telefon: <%= @merchant_user.phone %></p> 
     <p>Email: <%= @merchant_user.user.email %></p> 
     <%= link_to 'Rediger', edit_merchant_merchant_user_path(current_merchant_user) %>
 </div>

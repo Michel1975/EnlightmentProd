@@ -21,7 +21,7 @@
   </div>
   <div class="field">
     <%= f.label :activation_time %>
-    <%= f.datetime_select :activation_time, default: 1.days.from_now %>
+    <%= f.datetime_select :activation_time, default: DateTime.now %>
   </div> 
   <div class="actions">
     <%= f.submit %>

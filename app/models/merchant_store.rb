@@ -17,6 +17,7 @@ class MerchantStore < ActiveRecord::Base
   accepts_nested_attributes_for :business_hours
 
   before_save { |store| store.sms_keyword = store.sms_keyword.downcase } #af hensyn til match-forespørgsler ved sms-tilmelding
+  before_save :convert_phone_standard
 
   validates :active, :inclusion => { :in => [ true, false ] }
   validates :store_name, presence: true, length: { maximum: 30 }
@@ -25,9 +26,11 @@ class MerchantStore < ActiveRecord::Base
   validates :street, presence: true, length: { maximum: 30 }
   validates :house_number, :postal_code, numericality: { only_integer: true }, length: { maximum: 4 } 
   validates :sms_keyword, presence: true, uniqueness: { case_sensitive: false }
-  validates :phone, presence: true, length: { maximum: 8 }
+  
+  #We automatically convert to standard phone with +45 prefix
+  validates :phone, presence: true, length: { maximum: 12 }
 
-
+  #Geocode fields
   geocoded_by :address
   after_validation :geocode
   
@@ -46,4 +49,15 @@ class MerchantStore < ActiveRecord::Base
   end
 
   acts_as_gmappable :address => "address", :process_geocoding => false
+
+  private
+    def convert_phone_standard
+      self.phone = SMSUtility::SMSFactory.convert_phone_number(self.phone)
+    end
+
+    #Not currently used - we implement later with client-side code
+    def validate_phone_standard
+      return SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
+    end
+    
 end

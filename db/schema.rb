@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131013180812) do
+ActiveRecord::Schema.define(:version => 20131015122151) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -138,12 +138,13 @@ ActiveRecord::Schema.define(:version => 20131013180812) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.integer  "merchant_store_id"
+    t.string   "phone"
   end
 
   create_table "message_notifications", :force => true do |t|
     t.string   "recipient"
     t.integer  "status_code_id"
-    t.string   "type"
+    t.string   "notification_type"
     t.string   "message_id"
     t.integer  "merchant_store_id"
     t.datetime "created_at",        :null => false

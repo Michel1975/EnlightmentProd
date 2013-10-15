@@ -1,7 +1,7 @@
 class Campaign < ActiveRecord::Base
   scope :completed, where(:status => 'completed')
   scope :scheduled, where(:status => 'scheduled')
-  attr_accessible :title, :message, :status, :activation_time, :instant_activation, :message_group_id
+  attr_accessible :title, :message, :status, :activation_time, :message_group_id
 
   belongs_to :merchant_store
   has_many :campaign_members, dependent: :destroy
@@ -12,8 +12,8 @@ class Campaign < ActiveRecord::Base
   validates :message, presence: true, length: { maximum: 160 }
   #Custom check of sms-message
   validate  :sms_compliance_validation
-  validates :activation_time, presence: true, :unless => Proc.new { |a| a.instant_activation?}
-  validates :instant_activation, :inclusion => { :in => [ true, false ] }
+  validates :activation_time, presence: true#TBD, :unless => Proc.new { |a| a.instant_activation?}
+  #TBD:validates :instant_activation, :inclusion => { :in => [ true, false ] }
   validates :status, :inclusion => { :in => %w(scheduled error finished)}, :allow_blank => true
   validates :merchant_store_id, presence: true
 
