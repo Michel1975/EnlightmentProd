@@ -5,7 +5,7 @@ class Member < ActiveRecord::Base
   accepts_nested_attributes_for :user
   has_many :subscribers 
   before_save :convert_phone_standard
-  before_save :create_access_key
+  before_create :create_access_key
   #Used to determine current validation_mode
   attr_accessor :validation_mode
   #http://rubular.com
@@ -40,7 +40,7 @@ class Member < ActiveRecord::Base
     end
 
     def create_access_key
-      self.access_key = [id.to_s, SecureRandom.hex(5)].join
+      self.access_key ||= [id.to_s, SecureRandom.hex(5)].join
     end
 
 end#end class

@@ -1,8 +1,8 @@
 class MessageNotification < ActiveRecord::Base
-  attr_accessible :recipient, :status_code_id, :notification_type, :message_id, :merchant_store_id
+  attr_accessible :recipient, :status_code_id, :notification_type, :message_id, :campaign_group_id, :merchant_store_id
 
   belongs_to :merchant_store
-  belongs_to :status_code
+  belongs_to :status_code 
   
   validates :recipient, presence: true, length: { maximum: 12 }
   validates :status_code_id, :merchant_store_id, presence: true

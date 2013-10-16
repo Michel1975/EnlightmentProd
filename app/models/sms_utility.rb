@@ -58,8 +58,8 @@ class SMSFactory
   def self.sendOfferReminderScheduled?(campaign, merchant_store)
     messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
     
-    #sendMessage?('push_scheduled', messageContent) 
-    return true
+    sendMessage?('push_scheduled', messageContent) 
+    #return true
     
     #Step 1: To-Do - Lav opslag i grupper via join objektet
     #Step X: Opdater besked-status, når webservicen har accepteret ordren
@@ -84,15 +84,14 @@ class SMSFactory
 
   def self.prepareMessage(mode, campaign, recipient, message, merchant_store)
     xml_body = ""
+    default_status_code = StatusCode.find_by_name("500")
     if mode == 'CreateCampaignScheduled'
-      #Ensure message is logged properly
-      register_message_notification(campaign, nil, merchant_store, nil)
-
       recipientString = ""
-      #status_code = StatusCode.find_by_name("500")
       campaign.campaign_members.each do |campaign_member|
-        recipientString += "<to>" + campaign_member.subscriber.member.phone + "</to>" 
-        #MessageNotification.create(recipient: recipient.phone, message_group_id: @campaign.message_group_id, type: 'campaign', status_code: status_code)
+        #Generate safe message-id from log method
+        recipient = campaign_member.subscriber.member.phone
+        message_id = register_message_notification(campaign, recipient, merchant_store, default_status_code)
+        recipientString += "<to id='#{message_id}'>" + recipient + "</to>" 
       end
       recipientXml = "<recipients>" + recipientString + "</recipients>"     
       stringXml = "<bulk>" +    
@@ -116,13 +115,8 @@ class SMSFactory
     builder.tag!("myb:sMessageGroupId",  campaign.message_group_id)
     builder.tag!("myb:sDateTimeToSend", campaign.activation_time.strftime("%Y-%m-%dT%H:%M:%S") ) 
     builder.tag!("myb:timeZone", 'Denmark') 
-  elsif mode == 'InstantSingleMessage' || mode == 'InstantSingleAdminMessage'  
-    #Generate safe message-id
-    begin
-      message_id = SecureRandom.urlsafe_base64
-    end while MessageNotification.exists?(message_id: message_id)
-    #Ensure message is logged properly
-    register_message_notification(nil, recipient, merchant_store, message_id)
+  elsif mode == 'InstantSingleMessage' || mode == 'InstantSingleAdminMessage' 
+    message_id = register_message_notification(nil, recipient, merchant_store, default_status_code)
     #Format payload containing message parameters.
     stringXml = "<xml><item>" +    
       "<message>" + HTMLEntities.new.encode(message) + "</message>" +
@@ -155,22 +149,26 @@ end
   end
   #END SAVON
 
-  def self.register_message_notification(campaign, recipient, merchant_store, message_id)
-    default_status_code = StatusCode.find_by_name("500")
+  #This method is invoked once for each recipient in campaign or for single message
+  def self.register_message_notification(campaign, recipient, merchant_store, default_status_code)
+    #Generate safe message-id
+    begin
+        message_id = SecureRandom.urlsafe_base64
+    end while MessageNotification.exists?(message_id: message_id)
+    
     if campaign
-      #Loop through all members and insert
-      campaign.campaign_members.each do |campaign_member|
-        entry = MessageNotification.new( notification_type: 'campaign', recipient: campaign_member.subscriber.member.phone,
-                                         message_id: campaign.message_group_id, status_code_id: default_status_code.id,
-                                         merchant_store_id: merchant_store.id)
-        entry.save!
-      end
-      elsif
-        #Create single entry!
-        merchant_store.message_notifications.create( notification_type: 'campaign', recipient: recipient,
-                                                     message_id: message_id, status_code_id: default_status_code.id) 
-      end
-  end
+      #Create entry!
+      merchant_store.message_notifications.create!( notification_type: 'campaign', recipient: recipient,
+                                                    message_id: message_id, campaign_group_id: campaign.message_group_id, status_code_id: default_status_code.id,
+                                                    merchant_store_id: merchant_store.id)
+      
+    else
+      #Create entry!
+      merchant_store.message_notifications.create!( notification_type: 'single', recipient: recipient,
+                                                   message_id: message_id, status_code_id: default_status_code.id) 
+    end
+    return message_id
+  end#End method
 
 end#End class
 

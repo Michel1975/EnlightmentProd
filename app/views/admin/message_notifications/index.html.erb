@@ -5,10 +5,12 @@
 		<thead>
 			<tr>
 				<th>Butik</th>
-				<th>Type</th>	
-				<th>Besked id</th>
+				<th>Type</th>
 				<th>Modtager</th>
-				<th>Statuskode</th>	
+				<th>Besked id</th>
+				<th>Kampagne-kode</th>
+				<th>Update-kode</th>
+				<th>Update beskrivelse</th>			
 				<th>Oprettet</th>
 				<th>Opdateret</th>		
 			</tr>
@@ -18,9 +20,11 @@
 			<tr>
 				<td> <%= notification.merchant_store.store_name %></td>
 				<td> <%= notification.notification_type %></td>
-				<td> <%= notification.message_id %></td>
 				<td> <%= notification.recipient %></td>	
+				<td> <%= notification.message_id %></td>
+				<td> <%= notification.campaign_group_id %></td>
 				<td> <%= notification.status_code.name %></td>
+				<td> <%= notification.status_code.description %></td>
 				<td> <%= notification.created_at %></td>
 				<td> <%= notification.updated_at %></td>				
 			</tr>

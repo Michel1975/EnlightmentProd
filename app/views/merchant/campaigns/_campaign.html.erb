@@ -1,6 +1,7 @@
 
 <tr>        
-	<td> <%= link_to campaign.title, [:merchant, campaign] %> </td>        
+	<td> <%= link_to campaign.title, [:merchant, campaign] %> </td>  
+	<td> <%= campaign.message_group_id %> </td>    
     <td> <%= campaign.activation_time %> </td>
     <td> <%= campaign.status %> </td> 
     <td> <%= campaign.total_cost %> kr.</td> 
