@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131015122151) do
+ActiveRecord::Schema.define(:version => 20131015150841) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(:version => 20131015122151) do
     t.boolean  "terms_of_service", :default => false
     t.boolean  "complete",         :default => false
     t.string   "origin"
+    t.string   "access_key"
   end
 
   add_index "members", ["phone"], :name => "index_members_on_phone", :unique => true
@@ -139,6 +140,13 @@ ActiveRecord::Schema.define(:version => 20131015122151) do
     t.datetime "updated_at",                          :null => false
     t.integer  "merchant_store_id"
     t.string   "phone"
+  end
+
+  create_table "message_errors", :force => true do |t|
+    t.string   "text"
+    t.string   "recipient"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "message_notifications", :force => true do |t|

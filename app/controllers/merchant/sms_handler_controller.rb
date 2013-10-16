@@ -64,6 +64,8 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  					SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
  				end
  			else
+ 				#Log all keywords that doesn't match stores
+ 				MessageError.create!(recipient: sender, name: keyword)
  				#Her skal vi overveje om vi udsender sms'er. Vi kan evt. tælle fejl pr. telefonnummer og blokere ved for mange fejl
  				#SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:store_not_found_error, keyword: keyword, :scope => [:business_messages, :store_signup]), member.phone )
  			end
@@ -84,6 +86,9 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  				if subscriber && SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone)	
  					subscriber.destroy
  				end
+ 			else
+ 				#Log all keywords that doesn't match stores
+ 				MessageError.create!(recipient: sender, name: keyword)	
  			end
  		end
  		#Default response with OK status

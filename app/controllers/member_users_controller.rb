@@ -7,7 +7,7 @@ class MemberUsersController < ApplicationController
   	#Create new member frontend
 
 	def new
-		#Vik en fejl på date_select efter vi skiftede til dansk locale
+		#Fik en fejl på date_select efter vi skiftede til dansk locale
 		#Læs denne artikel: http://i18n.lighthouseapp.com/projects/14947/tickets/12-i18n-and-date_select-exception
   		@member = Member.new
   		@member.build_user()
@@ -54,6 +54,31 @@ class MemberUsersController < ApplicationController
     logout
     respond_to do |format|
       format.html { redirect_to root_path }
+    end
+  end
+
+  #Show form for completing profile on web
+  def complete_sms_profile
+    token = params[:token]
+    if token.present?
+      @member = Member.find_by_access_key(params[:token])
+      if @member.nil?
+        flash[:alert] = "Medlem findes ikke"
+        redirect_to root_path
+      end
+    else
+      flash[:alert] = "Ugyldig forespørgsel"
+      redirect_to root_path
+    end
+  end
+
+  #Save full profile with all attributes
+  def update_sms_profile 
+    @member = Member.find(params[:id])
+    respond_to do |format|
+      if @member.update_attributes(params[:member])
+        format.html { redirect_to root_path, notice: 'Din profil er nu faerdigoprettet' }        
+      end
     end
   end
 

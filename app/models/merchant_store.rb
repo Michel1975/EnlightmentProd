@@ -48,6 +48,10 @@ class MerchantStore < ActiveRecord::Base
     address
   end
 
+  def short_store_link
+    #To-Do: Generate bitly link for store. This link should not be changed - maybe stored in database.
+  end
+
   acts_as_gmappable :address => "address", :process_geocoding => false
 
   private

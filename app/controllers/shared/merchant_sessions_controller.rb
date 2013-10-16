@@ -3,7 +3,8 @@ class Shared::MerchantSessionsController < Shared::BaseController
 	
   def create
   		user = login(params[:email], params[:password], params[:remember_me])
-  		if user
+  		#Login and verify user type to avoid invalid logins
+      if user && user.sub_type == "MerchantUser"
         	store_session_variables(user)
         	if user.sub_type == 'MerchantUser'
           		name = MerchantUser.find(user.sub_id)

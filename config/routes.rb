@@ -1,4 +1,6 @@
 EnlightmentProd::Application.routes.draw do
+  get "message_errors/index"
+
   #get "password_resets/create"
 
   #get "password_resets/edit"
@@ -19,8 +21,16 @@ EnlightmentProd::Application.routes.draw do
   match '/signup_member',  to: 'root#subscribe', :as => "signup_member", via: :post
   match '/unsubscribe_member/:id',  to: 'root#unsubscribe', :as => "unsubscribe_member", via: :delete
 
+  #SMS opt-out from sms-link
+  match '/stop_sms_confirm',  to: 'root#stop_sms_subscription_view', via: :get, :as => "stop_sms_confirm"
+  match '/stop_sms_save',  to: 'root#stop_sms_subscription_update', via: :post, :as => "stop_sms_save"
+
   #Member links
   get "favorites" => "root#favorites", :as => "favorites"
+
+  #Complete profile on web after signing up in store
+  match '/edit_sms_profile',  to: 'member_users#complete_sms', via: :get
+  match '/update_sms_profile/:id', to: 'member_users#update_sms', via: :put, :as => "update_sms_profile"
   
   namespace :merchant do
     #Callback sms-handling
@@ -76,6 +86,7 @@ EnlightmentProd::Application.routes.draw do
   namespace :admin do
     get "dashboard" => "dashboards#overview", :as => "dashboard"
     get "message_status" => "message_notifications#index", :as => "message_status"
+    get "message_error" => "message_errors#index", :as => "message_error"
     
   end
   

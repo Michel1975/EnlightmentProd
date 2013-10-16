@@ -1,9 +1,11 @@
 class Member < ActiveRecord::Base
   attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
+
   has_one :user, :as => :sub
   accepts_nested_attributes_for :user
   has_many :subscribers 
   before_save :convert_phone_standard
+  before_save :create_access_key
   #Used to determine current validation_mode
   attr_accessor :validation_mode
   #http://rubular.com
@@ -21,6 +23,12 @@ class Member < ActiveRecord::Base
   validates :complete, :inclusion => { :in => [true, false] }
   validates :origin, :inclusion => { :in => %w( web store ) }
 
+  #This method is called in sms-utility before sending a message to subscriber
+  def opt_out_link(merchant_store)
+    client = Bitly.client
+    client.shorten("http://www.clubnovus.dk?token={}&member_id=#{self.id}&merchant_store_id=#{merchant_store.id}")
+  end
+
   private
     def convert_phone_standard
       self.phone = SMSUtility::SMSFactory.convert_phone_number(self.phone)
@@ -29,6 +37,10 @@ class Member < ActiveRecord::Base
     #Not currently used - we implement later with client-side code
     def validate_phone_standard
       return SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
+    end
+
+    def create_access_key
+      self.access_key = [id.to_s, SecureRandom.hex(5)].join
     end
 
 end#end class

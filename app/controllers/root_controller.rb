@@ -44,7 +44,9 @@ class RootController < ApplicationController
     	@subscribed = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
 	end
 
-	def subscribe
+	
+  #Via map
+  def subscribe
 		@member = Member.find(params[:subscriber][:member_id])
 		@merchant_store = MerchantStore.find(params[:subscriber][:merchant_store_id])
     if @merchant_store.subscribers.find_by_member_id(@member.id).nil?
@@ -59,6 +61,7 @@ class RootController < ApplicationController
     end
   end
 
+  #Via map
   def unsubscribe
     @subscriber = Subscriber.find_by_member_id(params[:id])
     if @subscriber.present?
@@ -74,10 +77,46 @@ class RootController < ApplicationController
     end
   end
 
-    def favorites
-    	@member_user = current_member_user
-    	@favorite_stores = @member_user.subscribers.paginate(page: params[:page], :per_page => 20)  
-    end
-end
+  def favorites
+    @member_user = current_member_user
+    @favorite_stores = @member_user.subscribers.paginate(page: params[:page], :per_page => 20)  
+  end
+
+  #Sms functionality
+  def stop_sms_subscription_view
+    @token = params[:token]
+    @member = Member.find(params[:member_id])
+    @merchant_store = MerchantStore.find(params[:merchant_id])
+    if @token.present? && @member.present? && @merchant_store.present?
+      render 'stop_sms'
+    else
+      #Eller en 404-fejl med fejlbesked
+      redirect_to root_path
+    end   
+  end
+
+  def stop_sms_subscription_update
+    @token = params[:token]
+    @member = Member.find(params[:member_id])
+    @merchant_store = MerchantStore.find(params[:merchant_store_id])  
+    if @token == @member.access_key
+      flash[:success] = "Du er nu afmeldt sms-notifikationer fra #{@merchant_store.store_name}!"
+      subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
+      if subscriber && subscriber.destroy
+        render 'stop'
+      end
+      else
+        flash[:alert] = "Teknisk fejl er opstået"
+        render 'stop' 
+      end
+    else
+      flash[:alert] = "Sikkerhedsfejl"
+      render 'stop' 
+    end  
+  end 
+
+end#End class
+
+
 
 

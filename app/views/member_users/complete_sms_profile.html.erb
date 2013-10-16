@@ -1,0 +1,54 @@
+<div class="container">	
+        <% flash.each do |key, value| %>
+            <%= content_tag(:div, value, class: "alert alert-#{key}") %>
+        <% end %>        
+		<div class="row-fluid margin-bottom-10">
+          <%= form_for(@member, :url => update_sms_profile_path(@member), html: { class: "reg-page"}) do |f| %> 
+                <h3>Færdiggør din profil</h3> 
+               <div class="controls"> 
+                    <div class="field">
+                         <%= f.label :name %>
+                         <%= f.text_field :name %>
+                    </div>
+                    <div class="field">
+                         <%= f.label :phone %>
+                         <%= f.text_field :phone %>
+                    </div>
+                    <div class="field">
+                         <%= f.label :postal_code %>
+                         <%= f.text_field :postal_code %>
+                    </div>
+                    <div class="field">
+                         <%= f.label :gender %>
+                         <%= f.text_field :gender %>
+                    </div>
+                    <div class="field">
+                         <%= f.label :birthday %>
+                         <%= f.date_select :birthday %>
+                    </div>
+                    <%= f.fields_for :user do |t| %>
+                         <div class="field">
+                              <%= t.label :email %>
+                              <%= t.text_field :email %>
+                         </div>
+                         <div class="field">
+                              <%= t.label :password %>
+                              <%= t.password_field :password %>
+                         </div>
+                         <div class="field">
+                              <%= t.label :password_confirmation %>
+                              <%= t.password_field :password_confirmation %>
+                         </div>
+                    <% end %>
+               </div> 
+               <div class="controls form-inline">                    
+                    <%= button_tag "Gem oplysninger", type: "submit", class: "btn-u pull-right" %>
+                </div>
+                <br/>
+                <hr />
+          <% end %>
+        </div><!--/row-fluid-->
+</div><!--/container-->
+	
+
+

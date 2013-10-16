@@ -3,7 +3,8 @@ class Shared::BackendAdminSessionsController < Shared::BaseController
   
   	def create
   		user = login(params[:email], params[:password], params[:remember_me])
-  		if user
+  		#Login and verify user type to avoid invalid logins
+      if user && user.sub_type == "BackendAdmin"
         	store_session_variables(user)
           redirect_back_or_to admin_dashboard_url, :notice => t(:logged_in, :scope => [:business_validations, :session_admin])
   		else
