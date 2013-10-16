@@ -5,11 +5,13 @@ class Member < ActiveRecord::Base
   accepts_nested_attributes_for :user
   has_many :subscribers 
   before_save :convert_phone_standard
+  before_save :check_status
+
+  #Used for completing profiles on web if they signed up in-store
   before_create :create_access_key
   #Used to determine current validation_mode
   attr_accessor :validation_mode
   #http://rubular.com
-
   #Vi antager at telefonnumre indtastet via forms fylder max. 8 tegn og automatisk opdateres med +45 før oprettelse. 
   #Sidstnævnte skal ske med client-side validering.
 
@@ -30,6 +32,16 @@ class Member < ActiveRecord::Base
   end
 
   private
+    #Updates status to true when member completes his profile on web
+    def check_status
+      if !self.complete
+        self.validation_mode = "web"
+        if self.valid? && user !=nil
+          self.complete = true
+        end 
+      end
+    end
+
     def convert_phone_standard
       self.phone = SMSUtility::SMSFactory.convert_phone_number(self.phone)
     end

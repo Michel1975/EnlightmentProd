@@ -29,8 +29,8 @@ EnlightmentProd::Application.routes.draw do
   get "favorites" => "root#favorites", :as => "favorites"
 
   #Complete profile on web after signing up in store
-  match '/edit_sms_profile',  to: 'member_users#complete_sms', via: :get
-  match '/update_sms_profile/:id', to: 'member_users#update_sms', via: :put, :as => "update_sms_profile"
+  match '/edit_sms_profile',  to: 'member_users#complete_sms_profile', via: :get
+  match '/update_sms_profile/:id', to: 'member_users#update_sms_profile', via: :put, :as => "update_sms_profile"
   
   namespace :merchant do
     #Callback sms-handling

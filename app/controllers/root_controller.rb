@@ -1,6 +1,6 @@
 class RootController < ApplicationController
 	#default layout application is used
-	skip_before_filter :require_login, :only => [:home, :show_merchant_store]
+	skip_before_filter :require_login, :only => [:home, :show_merchant_store, :stop_sms_subscription_view, :stop_sms_subscription_update]
 
 	def home
 		member_ships = Hash.new
@@ -100,17 +100,19 @@ class RootController < ApplicationController
     @member = Member.find(params[:member_id])
     @merchant_store = MerchantStore.find(params[:merchant_store_id])  
     if @token == @member.access_key
-      flash[:success] = "Du er nu afmeldt sms-notifikationer fra #{@merchant_store.store_name}!"
       subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
-      if subscriber && subscriber.destroy
-        render 'stop'
+      if subscriber
+        if subscriber.destroy
+          flash[:success] = t(:opt_out, store_name: @merchant_store.store_name, :scope => [:business_messages, :web_profile])
+          render 'stop_sms'
+        end
       else
-        flash[:alert] = "Teknisk fejl er opstaaet"
-        render 'stop' 
+        flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
+        render 'stop_sms'
       end
     else
-      flash[:alert] = "Sikkerhedsfejl"
-      render 'stop' 
+      flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
+      render 'stop_sms'
     end  
   end 
 

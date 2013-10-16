@@ -360,6 +360,15 @@ da:
       already_signed_up: "Kære medlem,\n\ndu er allerede tilmeldt %{store_name} i %{city} via Club Novus.\n\nMvh\nClub Novus"
     opt_out:
       success: "Kære medlem,\ndu vil nu ikke længere modtage sms-notifikationer fra %{store_name}.\n\nMvh\nClub Novus"
+    web_profile:
+      member_not_exist: Det pågældende medlem findes ikke. 
+      security_error: Ugyldig forespørgsel
+      already_finished: Medlemsprofil er allerede færdigoprettet
+      success: Tillykke! din medlemsprofil er nu færdigoprettet.
+      opt_out: Du er nu afmeldt og vil ikke længere modtage sms-notifikationer fra %{store_name}
+
+
+
     
 
 

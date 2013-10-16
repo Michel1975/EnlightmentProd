@@ -6,7 +6,7 @@ class Campaign < ActiveRecord::Base
   belongs_to :merchant_store
   has_many :campaign_members, dependent: :destroy
   before_create :generate_message_group 
-  after_save :calculate_cost
+  before_save :calculate_cost
 
   validates :title, presence: true, length: { maximum: 30 }
   validates :message, presence: true, length: { maximum: 160 }
@@ -17,15 +17,16 @@ class Campaign < ActiveRecord::Base
   validates :status, :inclusion => { :in => %w(scheduled error finished)}, :allow_blank => true
   validates :merchant_store_id, presence: true
 
-  def calculate_cost
-      if self.campaign_members.size > 0
-        self.total_cost = self.campaign_members.size * 0,25
-      else
-        0.0
-      end
-    end
+  
   
   private
+    def calculate_cost
+      if self.campaign_members.size > 0
+        self.total_cost = (self.campaign_members.size * 0.25)
+      else
+        self.total_cost = 0.0
+      end
+    end
     #def generate_message_group
       #self.message_group_id = SecureRandom.urlsafe_base64
     #end

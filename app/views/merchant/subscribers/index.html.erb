@@ -6,6 +6,7 @@
 		<thead>
 			<tr>
 				<th>Navn</th>
+				<th>Token</th>
 				<th>Email</th>
 				<th>Telefon</th>
 				<th>Køn</th>
@@ -19,6 +20,7 @@
 			<% @subscribers.each do |subscriber| %>
 			<tr>
 				<td> <%= subscriber.member.name %></td>
+				<td> <%= subscriber.member.access_key %></td>
 				<td> <%= subscriber.member.user.try(:email)%></td>
 				<td> <%= subscriber.member.phone %></td>
 				<td> <%= gender(subscriber.member.gender)%></td>

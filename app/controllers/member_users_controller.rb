@@ -1,6 +1,6 @@
 class MemberUsersController < ApplicationController
   #default layout application is used
-	skip_before_filter :require_login, :only => [:new, :create]
+	skip_before_filter :require_login, :only => [:new, :create, :complete_sms_profile, :update_sms_profile]
   before_filter :member_user,  :only => [:edit, :update, :show, :destroy]
   
   	#Vigtig! http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for
@@ -58,16 +58,24 @@ class MemberUsersController < ApplicationController
   end
 
   #Show form for completing profile on web
+  #Eksempel: http://localhost:3000/edit_sms_profile/0f4882b68a
   def complete_sms_profile
     token = params[:token]
     if token.present?
       @member = Member.find_by_access_key(params[:token])
       if @member.nil?
-        flash[:alert] = "Medlem findes ikke"
+        flash[:alert] = t(:member_not_exist, :scope => [:business_messages, :web_profile])
         redirect_to root_path
+      elsif @member.complete
+        flash[:alert] = t(:already_finished, :scope => [:business_messages, :web_profile])
+        redirect_to root_path
+      else
+        #Set validation mode and build user object
+        @member.validation_mode = "web"
+        @member.build_user()
       end
     else
-      flash[:alert] = "Ugyldig forespoergsel"
+      flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
       redirect_to root_path
     end
   end
@@ -75,10 +83,11 @@ class MemberUsersController < ApplicationController
   #Save full profile with all attributes
   def update_sms_profile 
     @member = Member.find(params[:id])
-    respond_to do |format|
-      if @member.update_attributes(params[:member])
-        format.html { redirect_to root_path, notice: 'Din profil er nu faerdigoprettet' }        
-      end
+    if @member.update_attributes(params[:member])
+        flash[:notice] = t(:success, :scope => [:business_messages, :web_profile])
+        redirect_to root_path
+    else
+      render 'complete_sms_profile'      
     end
   end
 
