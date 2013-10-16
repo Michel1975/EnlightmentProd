@@ -104,9 +104,8 @@ class RootController < ApplicationController
       subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
       if subscriber && subscriber.destroy
         render 'stop'
-      end
       else
-        flash[:alert] = "Teknisk fejl er opstået"
+        flash[:alert] = "Teknisk fejl er opstaaet"
         render 'stop' 
       end
     else

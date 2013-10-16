@@ -67,7 +67,7 @@ class MemberUsersController < ApplicationController
         redirect_to root_path
       end
     else
-      flash[:alert] = "Ugyldig forespørgsel"
+      flash[:alert] = "Ugyldig forespoergsel"
       redirect_to root_path
     end
   end
