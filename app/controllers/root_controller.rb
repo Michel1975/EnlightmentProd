@@ -72,6 +72,8 @@ class RootController < ApplicationController
     if @subscriber.present? && @subscriber.active && @merchant_store
       @subscriber.opt_out
       @subscriber.save!
+      #Send opt-out e-mail to member
+      MemberMailer.web_opt_out(@subscriber.member, @merchant_store).deliver
     end
     #else
       #render :nothing => true
@@ -107,7 +109,10 @@ class RootController < ApplicationController
     if @token == @member.access_key
       subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
       if subscriber
-        if subscriber.destroy
+        subscriber.opt_out
+        if subscriber.save!
+          #Send opt-out e-mail to member
+          MemberMailer.web_opt_out(@member, @merchant_store).deliver
           flash[:success] = t(:opt_out, store_name: @merchant_store.store_name, :scope => [:business_messages, :web_profile])
           render 'stop_sms'
         end

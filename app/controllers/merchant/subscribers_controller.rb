@@ -10,9 +10,15 @@ class Merchant::SubscribersController < Merchant::BaseController
 	end
 
 	def destroy
-  		Subscriber.find(params[:id]).opt_out
-    	flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
-    	redirect_to merchant_subscribers_url
+  		subscriber = Subscriber.find(params[:id])
+		subscriber.opt_out
+		if subscriber.save!
+			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
+    		redirect_to merchant_subscribers_url
+		else
+			flash[:error] = t(:subscriber_remove_error, :scope => [:business_validations, :subscriber])
+    		redirect_to merchant_subscribers_url
+		end
 	end
 
 	def prepare_single_message

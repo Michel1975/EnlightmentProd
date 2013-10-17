@@ -62,7 +62,8 @@ class ApplicationController < ActionController::Base
         #Send welcome message with notice about welcome present 
         SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
       else
-        #To-do: Send e-mail
+        #Send welcome e-mail with welcomepresent
+        MemberMailer.web_sign_up_present(member, merchant_store).deliver
       end
 
       #Send welcome present if active for particular merchant - default is active.
@@ -70,8 +71,6 @@ class ApplicationController < ActionController::Base
       if welcome_offer.active
         if origin == "store"
           SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.description, member.phone )
-        else
-          #To-do: Send e-mail
         end
       end
     else
@@ -79,7 +78,8 @@ class ApplicationController < ActionController::Base
         #Send normal welcome message without notes about welcome present
         SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone ) 
       else
-        #To-do: Send e-mail
+        #Send welcome e-mail without welcomepresent
+        MemberMailer.web_sign_up(member, merchant_store).deliver
       end
     end
   end

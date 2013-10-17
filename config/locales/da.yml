@@ -346,6 +346,7 @@ da:
       offer_deleted: Tilbud er slettet!
     subscriber:
       subscriber_removed: Medlem er nu fjernet fra kundeklubben!
+      subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       subscriber_message_sent: Besked er afsendt til medlemmet!
     welcome_offer:
       offer_updated: Velkomsttilbud er opdateret!
