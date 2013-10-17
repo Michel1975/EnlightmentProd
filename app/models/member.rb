@@ -1,4 +1,5 @@
 class Member < ActiveRecord::Base
+  include ActiveModel::Dirty
   attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
 
   has_one :user, :as => :sub
@@ -6,6 +7,7 @@ class Member < ActiveRecord::Base
   has_many :subscribers 
   before_save :convert_phone_standard
   before_save :check_status
+  before_save :check_member_status, :if => "self.status_changed?"
 
   #Used for completing profiles on web if they signed up in-store
   before_create :create_access_key
@@ -32,6 +34,16 @@ class Member < ActiveRecord::Base
   end
 
   private
+    #Deactivate all memberships on merchant stores
+    def check_member_status
+      if self.status == false
+        subscribers.each do |subscriber|
+          subscriber.opt_out
+          subscriber.save
+        end
+      end
+    end
+
     #Updates status to true when member completes his profile on web
     def check_status
       if !self.complete

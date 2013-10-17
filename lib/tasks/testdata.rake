@@ -63,6 +63,7 @@ namespace :db do
         user.sub = merchant_user
         user.save!
       end#end if-first-iteration
+      
       #Create one welcome offer
       store.create_welcome_offer!(description: 'Super', active: true)
 
