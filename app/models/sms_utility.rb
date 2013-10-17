@@ -58,11 +58,8 @@ class SMSFactory
   def self.sendOfferReminderScheduled?(campaign, merchant_store)
     messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
     
-    sendMessage?('push_scheduled', messageContent) 
-    #return true
-    
-    #Step 1: To-Do - Lav opslag i grupper via join objektet
-    #Step X: Opdater besked-status, når webservicen har accepteret ordren
+    #sendMessage?('push_scheduled', messageContent) 
+    return true
   end
 
   def self.reschduleOfferReminder?(campaign)
@@ -149,7 +146,7 @@ end
   end
   #END SAVON
 
-  #This method is invoked once for each recipient in campaign or for single message
+  #This method is invoked once for each recipient in campaign or for single message.
   def self.register_message_notification(campaign, recipient, merchant_store, default_status_code)
     #Generate safe message-id
     begin

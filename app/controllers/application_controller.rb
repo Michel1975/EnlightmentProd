@@ -45,6 +45,45 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #Detailed logic for sign-up - used by several controllers
+  #To-Do: For completed profiles or web profiles, we send e-mails instead of sms if signed up on web
+  #If signed up in store, we always send sms to member - more logic and analysis is needed for this.
+  def processSignup(member, subscriber, merchant_store, origin)
+    if subscriber.nil?
+      #Create new subscriber record
+      merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now)  
+    else
+      subscriber.signup
+      subscriber.save!
+    end
+
+    if eligble_welcome_present?
+      if origin == "store"
+        #Send welcome message with notice about welcome present 
+        SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
+      else
+        #To-do: Send e-mail
+      end
+
+      #Send welcome present if active for particular merchant - default is active.
+      welcome_offer = merchant_store.welcome_offer
+      if welcome_offer.active
+        if origin == "store"
+          SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.description, member.phone )
+        else
+          #To-do: Send e-mail
+        end
+      end
+    else
+      if origin == "store"
+        #Send normal welcome message without notes about welcome present
+        SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone ) 
+      else
+        #To-do: Send e-mail
+      end
+    end
+  end
+
   protected
     def current_users_list
       current_users.map {|u| u.username}.join(", ")

@@ -57,11 +57,14 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  		if member
  			merchant_store = MerchantStore.find_by_sms_keyword(keyword)
  			if merchant_store.present?
- 				if(merchant_store.subscribers.find_by_member_id(member.id))
+ 				subscriber = merchant_store.subscribers.find_by_member_id(member.id)
+ 				if(subscriber && subscriber.active)
  					SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )	
  				else
- 					merchant_store.subscribers.create(member_id: member.id, start_date: Time.now)
- 					SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
+ 					#Make call to base_controller method for detailed signup
+ 					processSignup(member, subscriber, merchant_store, "store")
+ 					#merchant_store.subscribers.create(member_id: member.id, start_date: Time.now)
+ 					#SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
  				end
  			else
  				#Log all keywords that doesn't match stores
@@ -73,8 +76,6 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  		render :nothing => true, :status => :ok
  	end
 
- 	
-
  	#Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
  	def stopStoreSubscription(sender, text)
  		member = Member.find_by_phone(sender)
@@ -84,7 +85,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			if merchantStore
  				subscriber = merchantStore.subscribers.find_by_member_id(member.id)
  				if subscriber && SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone)	
- 					subscriber.destroy
+ 					subscriber.opt_out.save!
  				end
  			else
  				#Log all keywords that doesn't match stores

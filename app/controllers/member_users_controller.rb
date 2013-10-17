@@ -85,6 +85,7 @@ class MemberUsersController < ApplicationController
     @member = Member.find(params[:id])
     if @member.update_attributes(params[:member])
         flash[:notice] = t(:success, :scope => [:business_messages, :web_profile])
+        #Overvej at linke direkte til butikken efter profilen er færdig oprettet.
         redirect_to root_path
     else
       render 'complete_sms_profile'      

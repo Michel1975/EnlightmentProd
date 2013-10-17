@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131016140904) do
+ActiveRecord::Schema.define(:version => 20131017071811) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"

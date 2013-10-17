@@ -26,7 +26,10 @@ class Merchant::CampaignsController < Merchant::BaseController
       if @campaign.save!
         #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
         current_merchant_store.subscribers.each do |subscriber| 
+          #Only active subscribers are included
+          if subscriber.active
             @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 
+          end
         end
 
         #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions

@@ -6,8 +6,10 @@ class RootController < ApplicationController
 		member_ships = Hash.new
 		if current_member_user && current_member_user.subscribers.any?
 			current_member_user.subscribers.each do |c|
-  				member_ships[c.merchant_store_id] = c.id
-  			end
+  				if c.active
+            member_ships[c.merchant_store_id] = c.id
+          end
+  		end
 		end	
 		#http://jsfiddle.net/jEhJ3/597/
 		#http://t3923.codeinpro.us/q/51502208e8432c04261eb26e
@@ -41,7 +43,8 @@ class RootController < ApplicationController
 
 	def show_merchant_store
     	@merchant_store = MerchantStore.find(params[:id])
-    	@subscribed = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
+      subscriber = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
+    	@subscribed = subscriber && subscriber.active ? true : false
 	end
 
 	
@@ -49,8 +52,9 @@ class RootController < ApplicationController
   def subscribe
 		@member = Member.find(params[:subscriber][:member_id])
 		@merchant_store = MerchantStore.find(params[:subscriber][:merchant_store_id])
-    if @merchant_store.subscribers.find_by_member_id(@member.id).nil?
-		  @merchant_store.subscribers.create!(member_id: @member.id, start_date: Date.today)
+    subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
+    if subscriber.nil? || !subscriber.active
+      processSignup(@member, subscriber, @merchant_store, "web")
     end
     #else
       #render :nothing => true
@@ -64,9 +68,10 @@ class RootController < ApplicationController
   #Via map
   def unsubscribe
     @subscriber = Subscriber.find_by_member_id(params[:id])
-    if @subscriber.present?
-      @merchant_store = MerchantStore.find(@subscriber.merchant_store_id)
-      @merchant_store.subscribers.find(@subscriber.id).destroy
+    @merchant_store = MerchantStore.find(@subscriber.merchant_store_id)
+    if @subscriber.present? && @subscriber.active && @merchant_store
+      @subscriber.opt_out
+      @subscriber.save!
     end
     #else
       #render :nothing => true
