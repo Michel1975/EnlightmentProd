@@ -44,23 +44,23 @@ class SMSFactory
 	#Afsendelse af sms til en enkelt person (typisk admin eller direkte kommunikation til et medlem)
   def self.sendSingleMessageInstant?(message, recipient, merchant_store)
     messageContent = prepareMessage('InstantSingleMessage', nil, recipient, message, merchant_store)    
-    #sendMessage?('push', messageContent)  
-    return true 
+    sendMessage?('push', messageContent)  
+    #return true 
   end
 
   #Afsendelse af sms'er i forbindelse med tilmelding og afmelding m.v. Her er Club Novus provider
   def self.sendSingleAdminMessageInstant?(message, recipient, merchant_store)
     messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, merchant_store)    
-    sendMessage?('push', messageContent)  
-    #return true 
+    #sendMessage?('push', messageContent)  
+    return true 
   end
 
   #Kampagne metoder
   def self.sendOfferReminderScheduled?(campaign, merchant_store)
     messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
     
-    #sendMessage?('push_scheduled', messageContent) 
-    return true
+    sendMessage?('push_scheduled', messageContent) 
+    #return true
   end
 
   def self.reschduleOfferReminder?(campaign)
@@ -83,17 +83,21 @@ class SMSFactory
   def self.prepareMessage(mode, campaign, recipient, message, merchant_store)
     xml_body = ""
     default_status_code = StatusCode.find_by_name("500")
+    
     if mode == 'CreateCampaignScheduled'
       recipientString = ""
+
+      #Insert placeholder macro for stop-link
+      message = campaign.message + "\n%StopLink%"
       campaign.campaign_members.each do |campaign_member|
         #Generate safe message-id from log method
         recipient = campaign_member.subscriber.member.phone
         message_id = register_message_notification(campaign, recipient, merchant_store, default_status_code)
-        recipientString += "<to id='#{message_id}'>" + recipient + "</to>" 
+        recipientString += "<to id='#{message_id}' StopLink='#{campaign_member.subscriber.opt_out_link}' >" + recipient + "</to>" 
       end
       recipientXml = "<recipients>" + recipientString + "</recipients>"     
       stringXml = "<bulk>" +    
-      "<message>" + HTMLEntities.new.encode(campaign.message) + "</message>" +
+      "<message>" + HTMLEntities.new.encode(message) + "</message>" +
       "<header><from>Club-Novus</from>" +
       "<GroupID>" + campaign.message_group_id + "</GroupID></header>" + 
       recipientXml + "</bulk>"      
@@ -115,6 +119,11 @@ class SMSFactory
     builder.tag!("myb:timeZone", 'Denmark') 
   elsif mode == 'InstantSingleMessage' || mode == 'InstantSingleAdminMessage' 
     message_id = register_message_notification(nil, recipient, merchant_store, default_status_code)
+    #Insert stop-link for single direct messages
+    if mode == 'InstantSingleMessage' 
+      subscriber = merchant_store.subscribers.joins(:member).where(:members =>{ :phone => recipient}).first
+      message += "\n#{subscriber.opt_out_link}"
+    end
     #Format payload containing message parameters.
     stringXml = "<xml><item>" +    
       "<message>" + HTMLEntities.new.encode(message) + "</message>" +

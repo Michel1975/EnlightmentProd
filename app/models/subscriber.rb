@@ -32,7 +32,7 @@ class Subscriber < ActiveRecord::Base
 
   def opt_out_link
   	client = Bitly.client
-  	return "Stop:" + client.shorten("http://www.clubnovus.dk/stop_sms_confirm?token#{member_access_key}&#{member.id}&#{merchant_store.id}")
+  	return "Stop:" + client.shorten("http://www.clubnovus.dk/stop_sms_confirm?token#{member.access_key}&#{member.id}&#{merchant_store.id}").short_url
   end
 
 end#end class

@@ -52,8 +52,9 @@ class ApplicationController < ActionController::Base
     sign_up_status = false
     if subscriber.nil?
       #Create new subscriber record
-      merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
-      sign_up_status = true 
+      if merchant_store.subscribers.create!(member_id: member.id, start_date: Time.zone.now) 
+        sign_up_status = true 
+      end
     elsif subscriber.active && origin == "store"
       #We only send sms for incorrect signups in stores - not on web since message is shown directly in interface
       SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )

@@ -36,5 +36,4 @@ class MemberMailer < ActionMailer::Base
   	mail(to: member.user.email, subject: t(:web_sign_up_present, store_name: merchant_store.store_name, :scope => [:business_messages, :email]) )  	
   end
 
-
 end
