@@ -49,37 +49,46 @@ class ApplicationController < ActionController::Base
   #To-Do: For completed profiles or web profiles, we send e-mails instead of sms if signed up on web
   #If signed up in store, we always send sms to member - more logic and analysis is needed for this.
   def processSignup(member, subscriber, merchant_store, origin)
+    sign_up_status = false
     if subscriber.nil?
       #Create new subscriber record
-      merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now)  
-    else
+      merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
+      sign_up_status = true 
+    elsif subscriber.active && origin == "store"
+      #We only send sms for incorrect signups in stores - not on web since message is shown directly in interface
+      SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+    else 
       subscriber.signup
-      subscriber.save!
+      if subscriber.save!
+        sign_up_status = true
+      end
     end
 
-    if eligble_welcome_present?
-      if origin == "store"
-        #Send welcome message with notice about welcome present 
-        SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
-      else
-        #Send welcome e-mail with welcomepresent
-        MemberMailer.web_sign_up_present(member, merchant_store).deliver
-      end
-
-      #Send welcome present if active for particular merchant - default is active.
-      welcome_offer = merchant_store.welcome_offer
-      if welcome_offer.active
+    if sign_up_status
+      if subscriber.eligble_welcome_present? 
         if origin == "store"
-          SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.description, member.phone )
+          #Send welcome message with notice about welcome present 
+          SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+        else
+          #Send welcome e-mail with welcomepresent
+          MemberMailer.web_sign_up_present(member, merchant_store).deliver
         end
-      end
-    else
-      if origin == "store"
-        #Send normal welcome message without notes about welcome present
-        SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone ) 
+
+        #Send welcome present if active for particular merchant - default is active.
+        welcome_offer = merchant_store.welcome_offer
+        if welcome_offer.active
+          if origin == "store"
+            SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.description, member.phone, merchant_store )
+          end
+        end
       else
-        #Send welcome e-mail without welcomepresent
-        MemberMailer.web_sign_up(member, merchant_store).deliver
+        if origin == "store"
+          #Send normal welcome message without notes about welcome present
+          SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store ) 
+        else
+          #Send welcome e-mail without welcomepresent
+          MemberMailer.web_sign_up(member, merchant_store).deliver
+        end
       end
     end
   end

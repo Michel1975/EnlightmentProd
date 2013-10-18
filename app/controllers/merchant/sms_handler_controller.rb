@@ -30,7 +30,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  		#Regel: Vi tillader forskelige formater når de kommer direkte fra gatewayen. Senere laves de om
  		#i klasse-metoden for member så alle telefonnummer er med +45. Det er vigtigt at alle telefonnumre
  		#er fuldstændig ens i databasen.
- 		if text.present? && sender.present? && SMSUtility::SMSFactory.validate_phone_number_incoming(sender) #/\A(45|\+45|0045)?[1-9][0-9]{7}\z/.match(sender)
+ 		if text.present? && sender.present? && SMSUtility::SMSFactory.validate_phone_number_incoming?(sender) #/\A(45|\+45|0045)?[1-9][0-9]{7}\z/.match(sender)
  			if text.downcase.include? "stop"
  				stopStoreSubscription(sender, text)
  			else
@@ -58,14 +58,8 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			merchant_store = MerchantStore.find_by_sms_keyword(keyword)
  			if merchant_store.present?
  				subscriber = merchant_store.subscribers.find_by_member_id(member.id)
- 				if(subscriber && subscriber.active)
- 					SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )	
- 				else
- 					#Make call to base_controller method for detailed signup
- 					processSignup(member, subscriber, merchant_store, "store")
- 					#merchant_store.subscribers.create(member_id: member.id, start_date: Time.now)
- 					#SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone )
- 				end
+ 				#Make call to base_controller method for detailed signup
+ 				processSignup(member, subscriber, merchant_store, "store")
  			else
  				#Log all keywords that doesn't match stores
  				MessageError.create!(recipient: sender, name: keyword)

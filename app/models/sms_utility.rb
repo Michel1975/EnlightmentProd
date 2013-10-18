@@ -49,9 +49,10 @@ class SMSFactory
   end
 
   #Afsendelse af sms'er i forbindelse med tilmelding og afmelding m.v. Her er Club Novus provider
-  def self.sendSingleAdminMessageInstant?(message, recipient)
-    messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, nil)    
-    sendMessage?('push', messageContent)   
+  def self.sendSingleAdminMessageInstant?(message, recipient, merchant_store)
+    messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, merchant_store)    
+    sendMessage?('push', messageContent)  
+    #return true 
   end
 
   #Kampagne metoder

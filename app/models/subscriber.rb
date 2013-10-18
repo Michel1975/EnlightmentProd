@@ -26,7 +26,7 @@ class Subscriber < ActiveRecord::Base
   		return true
   	else
   		#To avoid abuse, there is a 90 days sleep period in which no welcome present is sent.
-  		return (self.start_date.to_date - self.cancel_date.to_date).to_i < 90
+  		return (self.start_date.to_date - self.cancel_date.to_date).to_i > 90
   	end
   end
 

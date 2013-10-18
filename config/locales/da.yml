@@ -368,6 +368,12 @@ da:
       already_finished: Medlemsprofil er allerede færdigoprettet
       success: Tillykke! din medlemsprofil er nu færdigoprettet.
       opt_out: Du er nu afmeldt og vil ikke længere modtage sms-notifikationer fra %{store_name}
+    email:
+      welcome_mail_new_member: Velkommen som nyt medlem i Club Novus
+      web_sign_up: Din tilmelding til %{store_name}
+      web_opt_out: Bekræftelse på din afmelding til %{store_name}
+      web_sign_up_present: Din velkomstgave fra %{store_name}
+      password_reset: Dit password er blevet nulstillet!
 
 
 

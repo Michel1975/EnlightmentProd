@@ -2,7 +2,7 @@ class Member < ActiveRecord::Base
   include ActiveModel::Dirty
   attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
 
-  has_one :user, :as => :sub
+  has_one :user, :as => :sub, dependent: :destroy
   accepts_nested_attributes_for :user
   has_many :subscribers 
   before_save :convert_phone_standard
@@ -21,7 +21,7 @@ class Member < ActiveRecord::Base
   validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :unless => "validation_mode == 'store'"
   validates :gender, :inclusion => { :in => %w( W M ) }, :unless => "validation_mode == 'store'"
   validates :birthday, presence: true, :unless => "validation_mode == 'store'"
-  validates :phone, presence: true, length: { maximum: 12}
+  validates :phone, presence: true, length: { maximum: 12}, uniqueness: { case_sensitive: false }
   validate  :validate_phone_standard
   validates :terms_of_service, :inclusion => { :in => [true, false] }, :unless => "validation_mode == 'store'"
   validates :complete, :inclusion => { :in => [true, false] }
