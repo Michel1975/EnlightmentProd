@@ -27,7 +27,8 @@ gem 'bitly' #Used to shorten various urls in
 #gem 'rqrcode-rails3'
 
 group :development, :test do
-  gem 'sqlite3', '1.3.5'
+  #gem 'sqlite3', '1.3.5'
+  gem 'pg'
   gem 'rspec-rails', '2.11.0'   
   gem 'annotate', '2.5.0' 
   gem 'better_errors'
@@ -49,7 +50,7 @@ group :test do
 end
 
 group :production do
-  gem 'pg', '0.12.2'
+  gem 'pg'
 end
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
