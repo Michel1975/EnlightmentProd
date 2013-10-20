@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
     sign_up_status = false
     if subscriber.nil?
       #Create new subscriber record
-      if merchant_store.subscribers.create!(member_id: member.id, start_date: Time.zone.now) 
+      if subscriber = merchant_store.subscribers.create!(member_id: member.id, start_date: Time.zone.now) 
         sign_up_status = true 
       end
     elsif subscriber.active && origin == "store"

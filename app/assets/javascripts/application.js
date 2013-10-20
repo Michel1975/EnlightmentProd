@@ -15,4 +15,7 @@
 //= require bootstrap
 //= require cloudinary
 //= require cloudinary/processing
+//= require raphael
+//= require morris
 //= require_tree .
+

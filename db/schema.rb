@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131017130954) do
+ActiveRecord::Schema.define(:version => 20131019100005) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -111,7 +111,7 @@ ActiveRecord::Schema.define(:version => 20131017130954) do
   add_index "members", ["phone"], :name => "index_members_on_phone", :unique => true
 
   create_table "merchant_stores", :force => true do |t|
-    t.boolean  "active",             :default => false
+    t.boolean  "active",                      :default => false
     t.string   "store_name"
     t.text     "description"
     t.string   "owner"
@@ -123,12 +123,14 @@ ActiveRecord::Schema.define(:version => 20131017130954) do
     t.string   "latitude"
     t.string   "longitude"
     t.string   "sms_keyword"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
     t.string   "phone"
     t.text     "short_description"
     t.string   "store_picture"
     t.integer  "store_picture_size"
+    t.integer  "subscribers_count"
+    t.integer  "message_notifications_count"
   end
 
   add_index "merchant_stores", ["sms_keyword"], :name => "index_merchant_stores_on_sms_keyword", :unique => true

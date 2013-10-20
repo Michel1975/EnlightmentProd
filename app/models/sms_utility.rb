@@ -10,6 +10,8 @@ module SMSUtility
   #This reflects the standard characters for sms messages
   VALID_SMS_MESSAGE = %r{\A[\w\s@?£!1$"#è?¤é%ù&\\()*:Ø+;øÆ,<æ\-=Å.>å\/§\']+\z}
 
+  TOTAL_MESSAGES_MONTH = 500
+
 class SMSFactory
 
   #Primarily used by search functionality
@@ -40,12 +42,20 @@ class SMSFactory
     return phone_number.to_s.match(SMSUtility::VALID_PHONE_REGEX_INCOMING)
   end
 
+  def self.validate_message_limits?(merchant_store, message_count)
+    return (merchant_store.message_notifications.month_total_messages.count + message_count) <= SMSUtility::TOTAL_MESSAGES_MONTH
+  end
+
 	#START SAVON
 	#Afsendelse af sms til en enkelt person (typisk admin eller direkte kommunikation til et medlem)
   def self.sendSingleMessageInstant?(message, recipient, merchant_store)
-    messageContent = prepareMessage('InstantSingleMessage', nil, recipient, message, merchant_store)    
-    sendMessage?('push', messageContent)  
-    #return true 
+    if validate_message_limits?(merchant_store, 1)
+      messageContent = prepareMessage('InstantSingleMessage', nil, recipient, message, merchant_store)    
+      #sendMessage?('push', messageContent)  
+      return true 
+    else
+      #To-do: Throw error
+    end
   end
 
   #Afsendelse af sms'er i forbindelse med tilmelding og afmelding m.v. Her er Club Novus provider
@@ -57,10 +67,11 @@ class SMSFactory
 
   #Kampagne metoder
   def self.sendOfferReminderScheduled?(campaign, merchant_store)
-    messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
-    
-    sendMessage?('push_scheduled', messageContent) 
-    #return true
+    if validate_message_limits?(merchant_store, campaign.campaign_members.count)
+      messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
+      #sendMessage?('push_scheduled', messageContent) 
+      #return true
+    end
   end
 
   def self.reschduleOfferReminder?(campaign)

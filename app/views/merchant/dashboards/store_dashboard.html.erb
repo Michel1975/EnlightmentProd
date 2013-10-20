@@ -3,9 +3,13 @@
 
 <p id="notice"><%= notice %></p>
 
+<%= content_tag :div, "", id: "subscribers_chart", style: "width: 100%;", data: {subscribers: @active_subscribers} %>
+
+<br/> 
+<%= @active_subscribers.to_json %>
 <p>
   <b>Aktive medlemmer: </b>
-  <%= @active_subscribers %>
+  <%= @active_subscribers_count %>
 </p>
 
 <p>
@@ -51,6 +55,11 @@
 <p>
   <b>Afsluttede kampagner: </b>
   <%= @completed_campaigns  %> 
+</p>
+
+<p>
+  <b> Antal sms'er denne måned: </b>
+  <%= @total_sms_messages %> 
 </p>
 
 <h4>Aktivitetsfeed</h4>
