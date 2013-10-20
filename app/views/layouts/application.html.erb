@@ -7,7 +7,9 @@
   <%= csrf_meta_tags %>
   <!-- Configure Cloudinary jQuery plugin -->
   <%= cloudinary_js_config %>
-
+  <!-- http://blog.seancarpenter.net/2012/11/05/page-specific-javascript-with-the-asset-pipeline/ -->
+  <%= javascript_include_tag params[:controller] %> 
+  <%= stylesheet_link_tag params[:controller] %>
 </head>
 <body>
 

@@ -70,7 +70,7 @@ class SMSFactory
     if validate_message_limits?(merchant_store, campaign.campaign_members.count)
       messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
       #sendMessage?('push_scheduled', messageContent) 
-      #return true
+      return true
     end
   end
 

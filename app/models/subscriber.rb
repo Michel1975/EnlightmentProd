@@ -15,24 +15,38 @@ class Subscriber < ActiveRecord::Base
   validates :merchant_store_id, :member_id, :start_date,  presence: true
   validates :active, :inclusion => { :in => [ true, false ] }
 
-  def self.chart_data(start_date = 2.weeks.ago)
-    total_subscribers = subscribers_by_day(start_date)
+  #To-Do: Group by month, når vi installerer postgress på lokal maskine.
+  def self.chart_data(start_date = 2.weeks.ago, merchant_store, mode)
+    total_new_subscribers = new_subscribers_by_day(start_date, merchant_store, mode)
+    total_opt_outs = opt_outs_by_day(start_date, merchant_store, mode)
     (start_date.to_date..Date.today).map do |date|
       {
-        created_date: date,
-        total: total_subscribers[date] || 0
+        #Standard date format is applied using I18n
+        date: I18n.l(date),
+        no_new_members: total_new_subscribers[date] || 0,
+        no_opt_outs: total_opt_outs[date] || 0
       }
     end
   end
 
-  def self.subscribers_by_day(start_date)
-    subscribers = Subscriber.where(created_at: start_date.beginning_of_day..Time.zone.now)
-    subscribers = subscribers.group("created_date")
+  def self.new_subscribers_by_day(start_date, merchant_store, mode)
+    subscribers = Subscriber.where(created_at: start_date.beginning_of_day..Time.zone.now, merchant_store_id: merchant_store.id)
     subscribers = subscribers.select("date(created_at) as created_date, count(id) as total")
+    subscribers = subscribers.group("created_date")
     subscribers.each_with_object({}) do |subscriber, totals|
       totals[subscriber.created_date.to_date] = subscriber.total
     end
   end
+
+  def self.opt_outs_by_day(start_date, merchant_store, mode)
+    opt_outs = Subscriber.where(cancel_date: start_date.beginning_of_day..Time.zone.now, merchant_store_id: merchant_store.id)
+    opt_outs = opt_outs.select("date(cancel_date) as cancel_date, count(id) as total")
+    opt_outs = opt_outs.group("cancel_date")
+    opt_outs.each_with_object({}) do |subscriber, totals|
+      totals[subscriber.cancel_date.to_date] = subscriber.total
+    end
+  end
+
 
   def signup
   	self.active = true

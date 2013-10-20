@@ -6,7 +6,10 @@ class Merchant::DashboardsController < Merchant::BaseController
 	def store_dashboard
     	@merchant_store = current_merchant_store
         #Calling custom cache
-        @active_subscribers = Subscriber.chart_data(2.day.ago)
+        @recent_subscriber_data = Subscriber.chart_data(14.day.ago, @merchant_store, "day")
+        #To-Do: Skal ændres til group ny month når postgress installeres på lokal maskine
+        @months_subscriber_data = Subscriber.chart_data(2.weeks.ago, @merchant_store, "day")
+
     	@active_subscribers_count = @merchant_store.subscribers_count
     	date_range = (Date.today - 14.day)..Date.today
     	@opt_outs_last_14_days = @merchant_store.subscribers.inactive.where(:cancel_date => date_range).count

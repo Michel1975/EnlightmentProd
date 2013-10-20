@@ -3,10 +3,14 @@
 
 <p id="notice"><%= notice %></p>
 
-<%= content_tag :div, "", id: "subscribers_chart", style: "width: 100%;", data: {subscribers: @active_subscribers} %>
+<%= content_tag :div, "", id: "subscribers_recent", style: "width: 100%;", data: { subscribers: @recent_subscriber_data } %>
 
-<br/> 
-<%= @active_subscribers.to_json %>
+<br/>
+
+<%= content_tag :div, "", id: "subscribers_bar", style: "width: 100%;", data: { subscribers: @months_subscriber_data } %>
+<br/>
+
+<%= @recent_subscriber_data.to_json %>
 <p>
   <b>Aktive medlemmer: </b>
   <%= @active_subscribers_count %>

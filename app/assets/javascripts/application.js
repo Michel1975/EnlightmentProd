@@ -17,5 +17,5 @@
 //= require cloudinary/processing
 //= require raphael
 //= require morris
-//= require_tree .
+// require_tree .
 
