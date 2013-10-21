@@ -1,6 +1,12 @@
 #encoding: utf-8
 class ApplicationController < ActionController::Base
 	before_filter :require_login
+  before_filter :authorize
+  
+
+  #Security measures
+  delegate :allow?, to: :current_permission
+  helper_method :allow?
 
   def default_url_options
     {:locale => I18n.locale}
@@ -93,6 +99,23 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+
+  #Permission methods
+  def current_permission
+    @current_permission ||= Permissions.permission_for(current_user)
+  end
+
+  def current_resource
+    nil
+  end
+
+  def authorize
+    if !current_permission.allow?(params[:controller], params[:action], current_resource)
+      redirect_to root_url, alert: "Du er ikke autoriseret til denne ressource"
+    end
+  end
+
 
   protected
     def current_users_list

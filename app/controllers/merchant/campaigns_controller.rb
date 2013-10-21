@@ -7,7 +7,7 @@ class Merchant::CampaignsController < Merchant::BaseController
   end 
   
   def show
-    @campaign = Campaign.find(params[:id])        
+    @campaign = @current_resource       
   end
   
   def new
@@ -15,7 +15,7 @@ class Merchant::CampaignsController < Merchant::BaseController
   end
 
   def edit
-    @campaign = Campaign.find(params[:id])
+    @campaign = @current_resource
   end
 
   #Eftersom oprettelsen af ordren i gateway sker asynkront, så vil vi oprette selve kampagnen først
@@ -50,7 +50,7 @@ class Merchant::CampaignsController < Merchant::BaseController
   end
  
   def destroy
-    @campaign = Campaign.find(params[:id])
+    @campaign = @current_resource
     if SMSUtility::SMSFactory.cancelScheduledOfferReminder?(@campaign)  
       @campaign.destroy
       flash[:success] = t(:campaign_deleted, :scope => [:business_validations, :campaign])
@@ -61,7 +61,7 @@ class Merchant::CampaignsController < Merchant::BaseController
   end
 
   def update
-    @campaign = Campaign.find(params[:id])
+    @campaign = @current_resource
     #Determine if activation_time has changed
     new_activation_time = false
     if @campaign.activation_time != params[:campaign][:activation_time]
@@ -83,6 +83,12 @@ class Merchant::CampaignsController < Merchant::BaseController
     else
       render :edit
     end
+  end
+
+  private
+  
+  def current_resource
+    @current_resource ||= Campaign.find(params[:id]) if params[:id]
   end
 
 end#end class

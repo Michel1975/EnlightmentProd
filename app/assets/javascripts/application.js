@@ -17,5 +17,6 @@
 //= require cloudinary/processing
 //= require raphael
 //= require morris
+//= require_directory ./gmaps4rails
 // require_tree .
 

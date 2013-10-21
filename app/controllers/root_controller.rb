@@ -2,7 +2,8 @@ class RootController < ApplicationController
 	#default layout application is used
 	skip_before_filter :require_login, :only => [:home, :show_merchant_store, :stop_sms_subscription_view, :stop_sms_subscription_update]
 
-	def home
+	
+  def home
 		member_ships = Hash.new
 		if current_member_user && current_member_user.subscribers.any?
 			current_member_user.subscribers.each do |c|
