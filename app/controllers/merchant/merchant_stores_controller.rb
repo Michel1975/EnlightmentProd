@@ -2,11 +2,11 @@ class Merchant::MerchantStoresController < Merchant::BaseController
   #If-override-from-base: layout "merchant", except: [:index]
   
   def edit
-    @merchant_store = MerchantStore.find(params[:id])
+    @merchant_store = current_resource
   end
 
   def update
-    @merchant_store = MerchantStore.find(params[:id])
+    @merchant_store = current_resource
     if params[:merchant_store][:store_picture].present? 
       preloaded = Cloudinary::PreloadedFile.new(params[:merchant_store][:store_picture])         
         raise "Invalid upload signature" if !preloaded.valid?
@@ -25,13 +25,18 @@ class Merchant::MerchantStoresController < Merchant::BaseController
   end
 
   def show
-    @merchant_store = MerchantStore.find(params[:id])
+    @merchant_store = current_resource
   end
 
   def active_subscription
-    @merchant_store = current_merchant_store
+    @merchant_store = current_resource #Old: current_merchant_store
     @subscription = @merchant_store.subscription_plan
     @features = @subscription.subscription_type.features
   end
+
+  private
+    def current_resource
+      @current_resource ||= MerchantStore.find(params[:id]) if params[:id]
+    end
 
 end

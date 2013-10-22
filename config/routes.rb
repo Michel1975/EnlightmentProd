@@ -18,8 +18,8 @@ EnlightmentProd::Application.routes.draw do
 
   #Member joining specific merchantstore on Map
   match '/display_store/:id',  to: 'root#show_merchant_store', :as => "display_store"
-  match '/signup_member',  to: 'root#subscribe', :as => "signup_member", via: :post
-  match '/unsubscribe_member/:id',  to: 'root#unsubscribe', :as => "unsubscribe_member", via: :delete
+  match '/signup_member',  to: 'member_subscribers#subscribe', :as => "signup_member", via: :post
+  match '/unsubscribe_member/:id',  to: 'member_subscribers#unsubscribe', :as => "unsubscribe_member", via: :delete
 
   #SMS opt-out from sms-link
   match '/stop_sms_confirm',  to: 'root#stop_sms_subscription_view', via: :get, :as => "stop_sms_confirm"

@@ -2,12 +2,12 @@ class Merchant::CampaignsController < Merchant::BaseController
   #If-override-from-base: layout "merchant", except: [:index]
 
   def index
-    @active_campaigns = Campaign.where("activation_time > :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)
-    @completed_campaigns = Campaign.where("activation_time < :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)
+    @active_campaigns = current_merchant_store.campaigns.where("activation_time > :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)
+    @completed_campaigns = current_merchant_store.campaigns.where("activation_time < :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)
   end 
   
   def show
-    @campaign = @current_resource       
+    @campaign = current_resource       
   end
   
   def new
@@ -15,7 +15,7 @@ class Merchant::CampaignsController < Merchant::BaseController
   end
 
   def edit
-    @campaign = @current_resource
+    @campaign = current_resource
   end
 
   #Eftersom oprettelsen af ordren i gateway sker asynkront, så vil vi oprette selve kampagnen først
@@ -50,7 +50,7 @@ class Merchant::CampaignsController < Merchant::BaseController
   end
  
   def destroy
-    @campaign = @current_resource
+    @campaign = current_resource
     if SMSUtility::SMSFactory.cancelScheduledOfferReminder?(@campaign)  
       @campaign.destroy
       flash[:success] = t(:campaign_deleted, :scope => [:business_validations, :campaign])
@@ -61,7 +61,7 @@ class Merchant::CampaignsController < Merchant::BaseController
   end
 
   def update
-    @campaign = @current_resource
+    @campaign = current_resource
     #Determine if activation_time has changed
     new_activation_time = false
     if @campaign.activation_time != params[:campaign][:activation_time]
@@ -86,9 +86,8 @@ class Merchant::CampaignsController < Merchant::BaseController
   end
 
   private
-  
-  def current_resource
-    @current_resource ||= Campaign.find(params[:id]) if params[:id]
-  end
+    def current_resource
+      @current_resource ||= Campaign.find(params[:id]) if params[:id]
+    end
 
 end#end class

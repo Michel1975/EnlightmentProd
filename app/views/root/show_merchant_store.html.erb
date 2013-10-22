@@ -5,9 +5,9 @@
 <div id="membership">
 <% if logged_in? && current_member_user && %>
   <% if @subscribed %>
-    <%= render :partial => "unsubscribe", :locals => { :merchant_store => @merchant_store } %>
+    <%= render :partial => "/member_subscribers/unsubscribe", :locals => { :merchant_store => @merchant_store } %>
   <% else %>
-    <%= render :partial => "subscribe", :locals => { :merchant_store => @merchant_store } %>
+    <%= render :partial => "/member_subscribers/subscribe", :locals => { :merchant_store => @merchant_store } %>
   <% end %>
 <% end %>
 </div>

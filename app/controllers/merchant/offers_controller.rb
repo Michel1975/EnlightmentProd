@@ -8,7 +8,7 @@ class Merchant::OffersController < Merchant::BaseController
   end
 
   def show
-    @offer = Offer.find(params[:id])
+    @offer = current_resource
   end
 
   
@@ -17,7 +17,7 @@ class Merchant::OffersController < Merchant::BaseController
   end
   
   def edit
-    @offer = Offer.find(params[:id])
+    @offer = current_resource
   end
 
   def create
@@ -39,7 +39,7 @@ class Merchant::OffersController < Merchant::BaseController
   end
 
   def update
-    @offer = Offer.find(params[:id])
+    @offer = current_resource
 
     picture = params[:offer][:offer_picture]
     if picture.present? 
@@ -63,11 +63,20 @@ class Merchant::OffersController < Merchant::BaseController
   end
 
   def destroy
-    @offer = Offer.find(params[:id])
+    @offer = current_resource
     @offer.destroy
 
     respond_to do |format|
       format.html { redirect_to merchant_offers_url, notice: t(:offer_deleted, :scope => [:business_validations, :offer]) }
     end
   end
+
+
+private
+  
+  def current_resource
+    @current_resource ||= Offer.find(params[:id]) if params[:id]
+  end
+
+
 end

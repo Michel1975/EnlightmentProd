@@ -374,6 +374,8 @@ da:
       web_opt_out: Bekræftelse på din afmelding til %{store_name}
       web_sign_up_present: Din velkomstgave fra %{store_name}
       password_reset: Dit password er blevet nulstillet!
+    security:
+      not_authorized: Du har ikke adgang til disse data!
 
 
 

@@ -1,6 +1,7 @@
 class MemberUsersController < ApplicationController
   #default layout application is used
 	skip_before_filter :require_login, :only => [:new, :create, :complete_sms_profile, :update_sms_profile]
+  skip_before_filter :authorize, :only => [:new, :create, :complete_sms_profile, :update_sms_profile]
   before_filter :member_user,  :only => [:edit, :update, :show, :destroy]
   
   	#Vigtig! http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for
@@ -11,7 +12,6 @@ class MemberUsersController < ApplicationController
 		#Læs denne artikel: http://i18n.lighthouseapp.com/projects/14947/tickets/12-i18n-and-date_select-exception
   		@member = Member.new
   		@member.build_user()
-
 	end
 
   	#Create new member frontend
@@ -33,15 +33,15 @@ class MemberUsersController < ApplicationController
 
   def edit
   	#logger.info("Michel:" + current_member_user.id + "current_user-id:" + current_user.id)
-  	@member = current_member_user
+  	@member = current_resource #Old:current_member_user
   end
 
   def show
-  	@member_user = current_member_user	
+  	@member_user = current_resource #Old:current_member_user	
   end
 
   def update
-  	@member_user = Member.find(params[:id])
+  	@member_user = current_resource
     if @member_user.update_attributes(params[:member])
     	flash[:success] = t(:member_updated, :scope => [:business_validations, :frontend, :member_user])
     	redirect_to member_user_path(@member_user)
@@ -51,7 +51,7 @@ class MemberUsersController < ApplicationController
   end
 
   def destroy
-    @member_user = Member.find(params[:id])
+    @member_user = current_resource
     @member_user.destroy
     logout
     respond_to do |format|
@@ -84,7 +84,7 @@ class MemberUsersController < ApplicationController
 
   #Save full profile with all attributes
   def update_sms_profile 
-    @member = Member.find(params[:id])
+    @member = current_resource
     if @member.update_attributes(params[:member])
         flash[:notice] = t(:success, :scope => [:business_messages, :web_profile])
         #Overvej at linke direkte til butikken efter profilen er færdig oprettet.
@@ -93,5 +93,10 @@ class MemberUsersController < ApplicationController
       render 'complete_sms_profile'      
     end
   end
+
+  private
+    def current_resource
+      @current_resource ||= Member.find(params[:id]) if params[:id]
+    end
 
 end

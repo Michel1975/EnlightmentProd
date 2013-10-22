@@ -1,8 +1,8 @@
 class RootController < ApplicationController
 	#default layout application is used
 	skip_before_filter :require_login, :only => [:home, :show_merchant_store, :stop_sms_subscription_view, :stop_sms_subscription_update]
-
-	
+	skip_before_filter :authorize
+  
   def home
 		member_ships = Hash.new
 		if current_member_user && current_member_user.subscribers.any?
@@ -39,9 +39,6 @@ class RootController < ApplicationController
 		end
 	end
 
-	def secret
-	end
-
 	def show_merchant_store
     	@merchant_store = MerchantStore.find(params[:id])
       subscriber = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
@@ -49,48 +46,14 @@ class RootController < ApplicationController
 	end
 
 	
-  #Via map
-  def subscribe
-		@member = Member.find(params[:subscriber][:member_id])
-		@merchant_store = MerchantStore.find(params[:subscriber][:merchant_store_id])
-    subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
-    if subscriber.nil? || !subscriber.active
-      processSignup(@member, subscriber, @merchant_store, "web")
-    end
-    #else
-      #render :nothing => true
-		#
-    respond_to do |format|
-      format.html { redirect_to root_path }
-      format.js  
-    end
-  end
-
-  #Via map
-  def unsubscribe
-    @subscriber = Subscriber.find_by_member_id(params[:id])
-    @merchant_store = MerchantStore.find(@subscriber.merchant_store_id)
-    if @subscriber.present? && @subscriber.active && @merchant_store
-      @subscriber.opt_out
-      @subscriber.save!
-      #Send opt-out e-mail to member
-      MemberMailer.web_opt_out(@subscriber.member, @merchant_store).deliver
-    end
-    #else
-      #render :nothing => true
-    #redirect_to root_path
-    respond_to do |format|
-      format.html { redirect_to root_path }
-      format.js  
-    end
-  end
+  
 
   def favorites
     @member_user = current_member_user
     @favorite_stores = @member_user.subscribers.paginate(page: params[:page], :per_page => 20)  
   end
 
-  #Sms functionality
+ #SMS: Invoked from bit.ly links in sms
   def stop_sms_subscription_view
     @token = params[:token]
     @member = Member.find(params[:member_id])
@@ -103,6 +66,7 @@ class RootController < ApplicationController
     end   
   end
 
+  #SMS:Confirm and save opt-out from bit.ly link in sms
   def stop_sms_subscription_update
     @token = params[:token]
     @member = Member.find(params[:member_id])
@@ -125,7 +89,14 @@ class RootController < ApplicationController
       flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
       render 'stop_sms'
     end  
-  end 
+  end
+
+  private
+    #Only for subscriber part - perhaps this should be moved to separate controller
+    def current_resource
+      @current_resource ||= Campaign.find(params[:id]) if params[:id]
+    end
+
 
 end#End class
 

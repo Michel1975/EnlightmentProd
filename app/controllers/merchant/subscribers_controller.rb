@@ -6,11 +6,11 @@ class Merchant::SubscribersController < Merchant::BaseController
 	end
 
 	def show
-		@subscriber = Subscriber.find(params[:id])
+		@subscriber = current_resource
 	end
 
 	def destroy
-  		subscriber = Subscriber.find(params[:id])
+  		subscriber = current_resource
 		subscriber.opt_out
 		if subscriber.save!
 			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
@@ -22,11 +22,11 @@ class Merchant::SubscribersController < Merchant::BaseController
 	end
 
 	def prepare_single_message
-		@subscriber = @subscriber = Subscriber.find(params[:id])
+		@subscriber = current_resource
 	end
 
 	def send_single_message
-		@subscriber = Subscriber.find(params[:id])
+		@subscriber = current_resource
 		message = params[:message]
 		if SMSUtility::SMSFactory.validate_sms?(message)
 			if SMSUtility::SMSFactory.sendSingleMessageInstant?(message, @subscriber.member.phone, current_merchant_store)
@@ -42,5 +42,9 @@ class Merchant::SubscribersController < Merchant::BaseController
 		end
 	end
 
+	private
+  		def current_resource
+    		@current_resource ||= Subscriber.find(params[:id]) if params[:id]
+  		end
 
 end

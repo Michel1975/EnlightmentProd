@@ -16,8 +16,6 @@ class Campaign < ActiveRecord::Base
   #TBD:validates :instant_activation, :inclusion => { :in => [ true, false ] }
   validates :status, :inclusion => { :in => %w(scheduled error finished)}, :allow_blank => true
   validates :merchant_store_id, presence: true
-
-  
   
   private
     def calculate_cost

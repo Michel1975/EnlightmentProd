@@ -2,7 +2,6 @@
 class ApplicationController < ActionController::Base
 	before_filter :require_login
   before_filter :authorize
-  
 
   #Security measures
   delegate :allow?, to: :current_permission
@@ -33,11 +32,6 @@ class ApplicationController < ActionController::Base
 
   def not_authenticated
     redirect_to root_path, :alert => t(:not_authenticated, :scope => [:business_validations, :generic])
-    #if current_user.sub_type == "MerchantUser"
-  	   #redirect_to shared_login_merchant_url, :alert => "First login to access this page."
-    #elsif current_user.sub_type == "Member"
-       #redirect_to shared_login_member_url, :alert => "First login to access this page."  
-    #end
   end
 
   helper_method :current_users_list
@@ -103,7 +97,7 @@ class ApplicationController < ActionController::Base
 
   #Permission methods
   def current_permission
-    @current_permission ||= Permissions.permission_for(current_user)
+    @current_permission ||= Permissions.permission_for(current_user, current_merchant_store)
   end
 
   def current_resource
@@ -111,8 +105,16 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize
-    if !current_permission.allow?(params[:controller], params[:action], current_resource)
-      redirect_to root_url, alert: "Du er ikke autoriseret til denne ressource"
+    #Log authorize
+    logger.debug("Michel-log: Controller:" + params[:controller] + ", Action: " + params[:action])
+    if !current_permission.allow?(self.controller_name, params[:action], current_resource)
+      if current_user.nil? || current_user.sub_type == "Member"
+        redirect_to root_url, alert: t(:not_authorized, :scope => [:business_messages, :security])
+      elsif current_user && current_user.sub_type == "MerchantUser"
+        redirect_to merchant_dashboard_url, alert: t(:not_authorized, :scope => [:business_messages, :security])
+      elsif current_user && current_user.sub_type == "BackendAdmin"
+        redirect_to admin_dashboard_url, t(:not_authorized, :scope => [:business_messages, :security])
+      end
     end
   end
 
