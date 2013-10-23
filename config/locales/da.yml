@@ -348,6 +348,7 @@ da:
       subscriber_removed: Medlem er nu fjernet fra kundeklubben!
       subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       subscriber_message_sent: Besked er afsendt til medlemmet!
+      warning_deletion_mechant: Du er ved at fjerne et medlem fra din kundeklub. Er du sikker?
     welcome_offer:
       offer_updated: Velkomsttilbud er opdateret!
     instant_subscriber_message:

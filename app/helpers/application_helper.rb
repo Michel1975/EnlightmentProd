@@ -1,4 +1,8 @@
 module ApplicationHelper
+	def gender_danish(gender)
+		return gender == "W" ? "Kvinde" : "Mand"
+	end
+
 	#Helps determine active menu item
 	def currentMenuItem(expected, controller, action)  		
   		return "class=active" if expected == (controller + "#" + action)

@@ -1,43 +1,44 @@
-<% provide(:title, 'Aktive medlemmer') %>
-<h1>Alle Medlemmer</h1>
-<%= will_paginate @subscribers, class:"paging_bootstrap pagination"%>
-<div class="span8">
-	<table id="sample-table-1" class="table table-striped table-bordered table-hover">
-		<thead>
-			<tr>
-				<th>Navn</th>
-				<th>Token</th>
-				<th>Email</th>
-				<th>Telefon</th>
-				<th>Køn</th>
-				<th>Fødselsdag</th>
-				<th>Medlem fra</th>
-				<th>Vis detaljer</th>
-				<th>Fjern medlem</th>
-			</tr>
-		</thead>
-		<tbody>
-			<% @subscribers.each do |subscriber| %>
-			<tr>
-				<td> <%= subscriber.member.name %></td>
-				<td> <%= subscriber.member.access_key %></td>
-				<td> <%= subscriber.member.user.try(:email)%></td>
-				<td> <%= subscriber.member.phone %></td>
-				<td> <%= gender(subscriber.member.gender)%></td>
-				<td> <%= subscriber.member.birthday %></td>
-				<td> <%= subscriber.start_date %></td>
-				<td> <%= link_to "Vis detaljer", [:merchant, subscriber] %></td>
-				<td>
-					<%= link_to [:merchant, subscriber], method: :delete, data: { confirm: "Er du sikker?" } do %>
+<% provide(:title, 'Medlemmer') %>
+<% provide(:title, 'Liste over aktive medlemmer') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Medlemmer</li>
+<% end %>
+<h3>Alle Medlemmer</h3>
+<%= will_paginate @subscribers, class:"pagination"%>
+	<div class="row-fluid">
+		<div class="span12">
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Navn</th>
+						<th>Email</th>
+						<th>Telefon</th>
+						<th>Køn</th>
+						<th>Fødselsdag</th>
+						<th>Medlem fra</th>
+						<th>Vis detaljer</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+				<% @subscribers.each do |subscriber| %>
+				<tr>
+					<td> <%= subscriber.member.name %></td>
+					<td> <%= subscriber.member.user.try(:email)%></td>
+					<td> <%= subscriber.member.phone %></td>
+					<td> <%= gender_danish( gender( subscriber.member.gender) ) %></td>
+					<td> <%= I18n.l(subscriber.member.birthday) if subscriber.member.birthday %></td>
+					<td> <%= I18n.l(subscriber.start_date) %></td>
+					<td> <%= link_to "Vis detaljer", [:merchant, subscriber] %></td>
+					<td>
+					<%= link_to [:merchant, subscriber], method: :delete, data: { confirm: t(:warning_deletion_mechant, :scope => [:business_validations, :subscriber])} do %>
 						<button class="btn btn-mini btn-danger">
-							<i class="icon-trash bigger-120"></i>
+							<i class="icon-trash bigger-110"></i>
 						</button>
 					<% end %>
-				</td>
-			</tr>
-			<% end %>
-		</tbody>
-	</table>
-</div>
-<%= link_to "Opret nyt medlem", new_merchant_merchant_member_path, 
-                                class: "btn btn-medium btn-primary" %>
+					</td>
+				<% end %>
+				</tbody>
+			</table>
+		</div>
+	</div>
