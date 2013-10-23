@@ -1,0 +1,98 @@
+				<!-- /.sidebar start -->
+        <div class="sidebar sidebar-fixed" id="sidebar">
+					<ul class="nav nav-list">
+						<li <%= currentMenuItem('dashboards#store_dashboard', controller.controller_name, controller.action_name) %> >
+            				<%= link_to merchant_dashboard_path do %>
+              					<i class="icon-dashboard"></i> 
+              					<span class="menu-text"> Dashboard </span>  
+            				<% end %>                        
+          				</li>
+          				<li <%= currentMenuItem('subscribers#index', controller.controller_name, controller.action_name) %> >
+            				<%= link_to merchant_subscribers_path do %>
+              					<i class="icon-user"></i> 
+              					<span class="menu-text"> Medlemmer </span>  
+            				<% end %>                        
+          				</li>
+          				
+          				<li>
+            				<a href="#" class="dropdown-toggle">
+              					<i class="icon-money"></i>
+              						<span class="menu-text"> Tilbud </span>
+              						<b class="arrow icon-angle-down"></b>
+            				</a>
+
+            				<ul class="submenu">
+               					<li>           
+                  					<%= link_to merchant_offers_path do %>                   
+                  						<i class="icon-double-angle-right"></i>
+                  						Aktuelle  
+                					<% end %>                        
+              					</li>
+              					<li>
+                  					<%= link_to merchant_offers_path do %>                    
+                  						<i class="icon-double-angle-right"></i>
+                  						Arkiv  
+                					<% end %>                        
+              					</li>              
+            				</ul>
+          				</li>
+
+          				<li>
+            				<a href="#" class="dropdown-toggle">
+              					<i class="icon-bullhorn"></i>
+              						<span class="menu-text"> SMS Kampagner </span>
+              						<b class="arrow icon-angle-down"></b>
+            				</a>
+            				<ul class="submenu">
+               					<li>
+                  					<%= link_to merchant_campaigns_path do %>                   
+                  						 <i class="icon-double-angle-right"></i>
+                  						 Planlagte  
+                					<% end %>                        
+              					</li>
+              					<li>
+                  					<%= link_to merchant_campaigns_path do %>                    
+                  						<i class="icon-double-angle-right"></i>
+                  						Afsluttede  
+                					<% end %>                        
+              					</li>              
+            				</ul>
+          				</li>
+
+          				<li>
+            				<a href="#" class="dropdown-toggle">
+              					<i class="icon-wrench"></i>
+              					<span class="menu-text"> Indstillinger </span>
+              					<b class="arrow icon-angle-down"></b>
+            				</a>
+            				<ul class="submenu">
+               					<li>           
+                  					<%= link_to merchant_merchant_store_path(current_merchant_store) do %>                   
+                  						<i class="icon-double-angle-right"></i>
+                  						Butik 
+                					<% end %>                        
+              					</li>
+              					<li>           
+                  					<%= link_to merchant_offers_path do %>                   
+                  						<i class="icon-double-angle-right"></i>
+                  						QR-kode  
+                					<% end %>                        
+              					</li>      
+              					
+              					<li>           
+                  					<%= link_to merchant_welcome_offer_path(current_merchant_store.welcome_offer) do %>
+                  						<i class="icon-double-angle-right"></i>
+                  						Velkomstgave  
+                					<% end %>                        
+              					</li>
+              					
+              					<li>           
+                  					<%= link_to active_subscription_merchant_merchant_store_path(current_merchant_store) do %>
+                  					<i class="icon-double-angle-right"></i>
+                  					Abonnement  
+                				<% end %>                        
+              					</li>                           
+            				</ul>
+          				</li>
+					</ul><!-- /.nav-list -->
+				</div><!-- /.sidebar -->

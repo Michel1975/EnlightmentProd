@@ -27,6 +27,9 @@ EnlightmentProd::Application.configure do
   # Raise exception on mass assignment protection for Active Record models
   config.active_record.mass_assignment_sanitizer = :strict
 
+  # Precompile assets
+  config.assets.precompile += %w(.svg .eot .woff .ttf)
+
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   config.active_record.auto_explain_threshold_in_seconds = 0.5
@@ -37,7 +40,7 @@ EnlightmentProd::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  #ActionMailer setup - skal lægges i en fil som ikke gemmes på github
+  #ActionMailer setup
   config.action_mailer.smtp_settings = {
     :address              => "smtp.gmail.com",
     :port                 => 587,

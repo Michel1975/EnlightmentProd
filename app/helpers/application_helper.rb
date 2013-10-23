@@ -1,4 +1,9 @@
 module ApplicationHelper
+	#Helps determine active menu item
+	def currentMenuItem(expected, controller, action)  		
+  		return "class=active" if expected == (controller + "#" + action)
+	end
+
 	def current_merchant_store=(merchant_store)
 		@current_merchant_store = merchant_store
 	end

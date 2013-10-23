@@ -18,5 +18,3 @@
 //= require raphael
 //= require morris
 //= require_directory ./utility
-
-

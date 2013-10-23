@@ -1,64 +1,47 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title><%= yield(:title)%></title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-  <!-- Configure Cloudinary jQuery plugin -->
-  <%= cloudinary_js_config %>
-  <!-- Husk dette: Når tema skal installeres skal tema-filer lægges i separat undermappe, da vi kan require directory som før -->
-  <!-- http://blog.seancarpenter.net/2012/11/05/page-specific-javascript-with-the-asset-pipeline/ -->
-  <%= javascript_include_tag params[:controller] %> 
-  <%= stylesheet_link_tag params[:controller] %>
-</head>
-<body>
-
-  <div class="container">
-
-      <div class="masthead">
-        <h3 class="muted">Project name</h3>
-        <div class="navbar">
-          <div class="navbar-inner">
-            <div class="container">
-              <ul class="nav">
-                <li ><a href="#">Home</a></li>
-                <li><%= link_to "Dashboard", merchant_dashboard_path %></li>
-                <li><%= link_to "Medlemmer", merchant_subscribers_path %></li>
-                <li><%= link_to "Tilbud", merchant_offers_path %></li>
-                <li><a href="#">Indstillinger</a></li>
-                <li><%= link_to "Sms kampagner", merchant_campaigns_path %></li>
-                <li><%= link_to "Velkomsttilbud", merchant_welcome_offer_path(current_merchant_store.welcome_offer) %></li>
-                <li><%= link_to "Indstillinger - stamdata", merchant_merchant_store_path(current_merchant_store) %></li>
-                <li><%= link_to "Indstillinger - Abonemment", active_subscription_merchant_merchant_store_path(current_merchant_store) %></li>
-                <li><%= link_to "Brugerprofil", merchant_merchant_user_path(current_merchant_user)%></li>
-              </ul>
-            </div>
-          </div>
-        </div><!-- /.navbar -->
-      </div>
-
-      <div class="span9">
-      <% if current_user && current_user.sub_type == "MerchantUser" %>
-        Logget ind som butik<%= current_user.email %>. Last login at: <%= current_user.last_login_at %>
-        <%= link_to "Log out", shared_logout_merchant_path %>
-      <% else %>
-        <%= link_to "Log in", shared_login_merchant_path %>.
-      <% end %>
-      </div>
-      <br />
-      <div>
-        <% flash.each do |name, msg| %>
-          <%= content_tag :div, msg, :id => "flash_#{name}" %>
-        <% end %>
-      </div>
-
-      <div class="span9">
-        <%= yield %>
-      </div>
-</div><!-- /container -->
-<div class="footer">
-        <p>&copy; Company 2013</p>
-      </div>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title><%= yield(:title)%></title>
+    <!-- Load generic styles and scripts for merchant admin portal -->
+    <%= stylesheet_link_tag    "merchant/merchant_styles", media: "all" %>
+    <%= javascript_include_tag "merchant/merchant_scripts" %>
+    <!-- Load page specific styles and scripts - common ressources reside in utility folder -->
+    <%= javascript_include_tag params[:controller] %> 
+    <%= stylesheet_link_tag params[:controller] %>
+    <!-- Runtime config data for file upload functionality -->
+    <%= cloudinary_js_config %>
+    <%= csrf_meta_tags %>
+    <meta name="description" content=<%= yield(:description)%> />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body class="skin-4 navbar-fixed breadcrumbs-fixed"> <!-- Start body-->
+    <%= render 'layouts/merchant_header' %>
+    <div class="main-container container-fluid">
+       <%= render 'layouts/merchant_sidebar_menu' %>
+        <div class="main-content">
+          <%= render 'layouts/merchant_breadcrumps' %>
+          <div class="page-content">
+            <div class="row-fluid">
+              <div class="span12">
+                <!-- PAGE CONTENT BEGINS -->
+                   <%= yield %>
+                <!-- PAGE CONTENT ENDS -->
+              </div><!-- /.span -->
+            </div><!-- /.row-fluid -->
+          </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+    </div><!-- /.main-container -->
+    
+  </body><!--Body Ends -->
 </html>
+
+
+
+
+
+
+
+
+
+
