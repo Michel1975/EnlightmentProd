@@ -17,7 +17,7 @@ class Member < ActiveRecord::Base
   #Vi antager at telefonnumre indtastet via forms fylder max. 8 tegn og automatisk opdateres med +45 før oprettelse. 
   #Sidstnævnte skal ske med client-side validering.
 
-  validates :name, presence: true, length: { maximum: 40 }, :unless => "validation_mode == 'store'"
+  validates :name, presence: true, length: { maximum: 40 }
   validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :unless => "validation_mode == 'store'"
   validates :gender, :inclusion => { :in => %w( W M ) }, :unless => "validation_mode == 'store'"
   validates :birthday, presence: true, :unless => "validation_mode == 'store'"

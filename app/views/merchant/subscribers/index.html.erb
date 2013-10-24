@@ -3,7 +3,10 @@
 <% content_for :breadcrumps do %>
   <li class="active">Medlemmer</li>
 <% end %>
-<h3>Alle Medlemmer</h3>
+<h3 class="header blue lighter smaller">
+	<i class="icon-user bigger-110"></i>
+	Alle Medlemmer
+</h3>
 <%= will_paginate @subscribers, class:"pagination"%>
 	<div class="row-fluid">
 		<div class="span12">
@@ -17,28 +20,46 @@
 						<th>Fødselsdag</th>
 						<th>Medlem fra</th>
 						<th>Vis detaljer</th>
-						<th></th>
+						<th>Handling</th>
 					</tr>
 				</thead>
 				<tbody>
 				<% @subscribers.each do |subscriber| %>
 				<tr>
-					<td> <%= subscriber.member.name %></td>
-					<td> <%= subscriber.member.user.try(:email)%></td>
-					<td> <%= subscriber.member.phone %></td>
-					<td> <%= gender_danish( gender( subscriber.member.gender) ) %></td>
-					<td> <%= I18n.l(subscriber.member.birthday) if subscriber.member.birthday %></td>
-					<td> <%= I18n.l(subscriber.start_date) %></td>
-					<td> <%= link_to "Vis detaljer", [:merchant, subscriber] %></td>
+					<td> <%= empty_attribute_info( subscriber.member.name ) %></td>
+					<td> <%= empty_attribute_info( subscriber.member.user.try(:email) ) %></td>
+					<td> <%= empty_attribute_info( subscriber.member.phone ) %></td>
+					<td> <%= gender_danish( subscriber.member.gender ) %></td>
+					<td> <%= subscriber.member.birthday.present? ? I18n.l( subscriber.member.birthday ) : empty_attribute_info( subscriber.member.birthday ) %></td>
+					<td> <%= subscriber.member.birthday.present? ? I18n.l( subscriber.start_date ) : empty_attribute_info( subscriber.start_date )   %></td>
+					<td> <%= link_to [:merchant, subscriber] do %>
+						 	<button class="btn btn-info btn-small">
+								Mere info
+							</button>
+						<% end %>
+					</td>
+
 					<td>
 					<%= link_to [:merchant, subscriber], method: :delete, data: { confirm: t(:warning_deletion_mechant, :scope => [:business_validations, :subscriber])} do %>
-						<button class="btn btn-mini btn-danger">
+						<button class="btn btn-small btn-danger">
 							<i class="icon-trash bigger-110"></i>
+							Slet medlem
 						</button>
 					<% end %>
 					</td>
 				<% end %>
 				</tbody>
 			</table>
+           <%= link_to new_merchant_merchant_member_path do %>
+            	<button class="btn btn-primary">
+            		<i class="icon-user bigger-110"></i>
+            		Opret medlem
+            	</button>
+            <% end %>
 		</div>
 	</div>
+	<%= render :partial => 'tooltip_index' %>
+	
+
+
+

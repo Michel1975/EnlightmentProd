@@ -16,3 +16,9 @@
  *= require_directory ./utility
  */
 
+/*
+	This is important since otherwise help buttons will jump down to next line if forms have errors.
+	field_with_errors are a standard rails way of associating error text with fields if developers needs this.
+	Link: http://stackoverflow.com/questions/5267998/rails-3-field-with-errors-wrapper-changes-the-page-appearance-how-to-avoid-t;
+*/
+.field_with_errors { display: inline; }

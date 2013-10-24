@@ -1,6 +1,20 @@
 module ApplicationHelper
+	def tooltip(text, title)
+		#content_tag(:span, class: "help-button", data: { rel: "popover", trigger: "hover", placement: "right", content: text, title: title, original_title: title } )
+		#content_tag("span", class: "help-button")
+		#content_tag(:span, { :class => "help-button"} )
+		#content_tag(:span, nil, class: '#', id: 'foo', data: {foo: 'bar'})
+		content_tag(:span, nil, class: "help-button", style: "white-space: nowrap", data: { rel: "popover", trigger: "hover", placement: "right", content: text, title: title, original_title: title } ) do |variable|
+		'?'
+		end
+	end
+
 	def gender_danish(gender)
 		return gender == "W" ? "Kvinde" : "Mand"
+	end
+
+	def empty_attribute_info(attribute)
+		return attribute.blank? ? "Ikke oplyst" : attribute
 	end
 
 	#Helps determine active menu item
