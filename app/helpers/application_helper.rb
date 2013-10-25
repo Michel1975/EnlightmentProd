@@ -1,10 +1,14 @@
 module ApplicationHelper
+	def b(value)
+		value == true ? "Ja" : "Nej"
+  	end
+
 	def tooltip(text, title)
 		#content_tag(:span, class: "help-button", data: { rel: "popover", trigger: "hover", placement: "right", content: text, title: title, original_title: title } )
 		#content_tag("span", class: "help-button")
 		#content_tag(:span, { :class => "help-button"} )
 		#content_tag(:span, nil, class: '#', id: 'foo', data: {foo: 'bar'})
-		content_tag(:span, nil, class: "help-button", style: "white-space: nowrap", data: { rel: "popover", trigger: "hover", placement: "right", content: text, title: title, original_title: title } ) do |variable|
+		content_tag(:span, nil, class: "help-button", style: "", data: { rel: "popover", trigger: "hover", placement: "right", content: text, title: title, original_title: title } ) do |variable|
 		'?'
 		end
 	end

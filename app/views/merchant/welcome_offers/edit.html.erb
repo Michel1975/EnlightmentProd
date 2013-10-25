@@ -1,30 +1,86 @@
-<% provide(:title, 'Rediger velkomsttilbud') %>
-<h1>Rediger tilbud</h1>
-
-<%= form_for [:merchant, @welcome_offer] do |f| %>
-  <% if @welcome_offer.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@offer.errors.count, "error") %> prohibited this offer from being saved:</h2>
-
-      <ul>
-      <% @welcome_offer.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :description %><br />
-    <%= f.text_area :description %>
-  </div>
-  <div class="field">
-    <%= f.label :active %>
-    <%= f.check_box :active %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<% provide(:title, 'Rediger velkomstpræmie') %>
+<% provide(:description, 'Rediger velkomstpræmie for nye medlemmer') %>
+<% content_for :breadcrumps do %>
+  <li>
+  </li>
+  <li class="active">Rediger velkomstgave</li>
 <% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-star bigger-110"></i>
+  Velkomstgave
+</h3>
+<div class="row-fluid">
+  <div class="span5">
+    <%= render :partial => "/merchant/shared/error_messages", :locals => { :obj => @welcome_offer } %>
+    <%= form_for [:merchant, @welcome_offer], html: { class: "horizontal"} do |f| %>
+      <div class="control-group">
+        <%= f.label :description, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_area :description, class: "limited preview", style:"width:400px", maxlength: "140", rows: "6", placeholder: "Beskrivelse af velkomstgave" %>&nbsp;&nbsp;
+          <%= tooltip("Lav kortfattet beskrivelse da præmien sendes med sms (max. 140 tegn)", "Beskrivelse af velkomstgave") %>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <%= f.label :active, class: "ace" do %>
+            <%= f.check_box :active %>
+            <span class="lbl"><%= WelcomeOffer.human_attribute_name( :active ) %></span>
+            <%= tooltip("Velkomstgaven er obligatorisk for alle kundeklubber. Eventuel deaktivering skal være midlertidig", "Aktiv") %>
+          <% end %>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <%= button_tag class: "btn btn-primary" do %>
+            <i class="icon-edit bigger-110"></i>
+            Opdater velkomstgave
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <%= link_to merchant_welcome_offer_path(current_merchant_store.welcome_offer), class: "btn btn-primary btn-small" do %>
+      <i class="icon-arrow-left bigger-110"></i>
+      Tilbage
+    <% end %>
+  </div><!-- /.span5 -->
+  <div class="span5">
+    <div id="live-preview-display" class="widget-box">
+      <div class="widget-header widget-header-flat">
+        <h4 class="smaller">Preview af sms-besked</h4>
+      </div>
+      <div class="widget-body"> 
+        <div id="sms_text" class="widget-main"></div>
+      </div>
+    </div><!-- /.widget-box -->
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
 
-<%= link_to 'Tilbage', merchant_welcome_offers_path %>
+<%= render :partial => 'tooltip_new' %>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      $(document).ready(function() {
+        $('#live-preview-display').hide();
+        $('textarea.preview').bind('blur keyup',function() {
+          var display_container = $('#live-preview-display')
+          if ('display_container:hidden'){
+            display_container.show();
+          }
+          var commentNode = $('#sms_text');
+          var text = $('textarea.preview').val() + "\nSe butik: http://bit.ly/1drRbaH"
+          //comment
+          commentNode.text(text);
+          commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
+        });
+      });
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+          
+          $('textarea.limited').inputlimiter({
+          remText: '%n tegn tilbage...',
+          limitText: 'maks tilladt: %n.'
+          });
+      });
+  </script>
+<% end %>

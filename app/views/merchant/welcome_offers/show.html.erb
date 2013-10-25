@@ -1,16 +1,33 @@
-<% provide(:title, 'Velkomsttilbud') %>
-<h1>Velkomsttilbud</h1>
+<% provide(:title, 'Velkomstpræmie') %>
+<% provide(:description, 'Velkomstpræmie for nye medlemmer') %>
+<% content_for :breadcrumps do %>
+  <li>
+  </li>
+  <li class="active">Velkomstgave</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-star bigger-110"></i>
+  Velkomstgave
+</h3>
+<div class="row-fluid">
+ 	<div class="span5">
+		<div id="live-preview-display" class="widget-box">
+      		<div class="widget-header widget-header-flat">
+        	<h4 class="smaller">Preview af sms-besked</h4>
+      	</div>
+      	<div class="widget-body"> 
+        	<div id="sms_text" class="widget-main"><%= simple_format(@welcome_offer.description) %></div>
+      	</div>
+    	</div><!-- /.widget-box -->
+		<p>
+  			<b>Aktiveret:</b>
+  			<%= b(@welcome_offer.active) %>
+		</p>
+		<%= link_to edit_merchant_welcome_offer_path(@welcome_offer), class: "btn btn-primary btn-small" do %>
+      		<i class="icon-edit bigger-110"></i>
+      		Rediger
+    	<% end %>
+	</div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
+<%= render :partial => 'tooltip_new' %>
 
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>Tilbudstekst</b>
-  <%= @welcome_offer.description %>
-</p>
-
-<p>
-  <b>Status:</b>
-  <%= @welcome_offer.active %>
-</p>
-
-<%= link_to 'Rediger', edit_merchant_welcome_offer_path(@welcome_offer) %>
