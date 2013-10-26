@@ -1,17 +1,94 @@
-<% provide(:title, 'Send') %>
-<div class="container">
-  <% flash.each do |key, value| %>
-      <%= content_tag(:div, value, class: "alert alert-#{key}") %>
-  <% end %>
-  <div class="row-fluid">
-    <%= form_tag send_single_message_merchant_subscriber_path(@subscriber), :method => :post do %> 
-      <div class="controls">                  
-      	<%= label_tag :message %>
-        <%= text_area_tag :message %>                    
-      </div> 
-       <div class="controls form-inline">                    
-       	<%= button_tag "Send besked", type: "submit", class: "btn-u pull-right" %>
-       </div>
+<% provide(:title, 'Send direkte besked') %>
+<% provide(:description, 'Send en direkte besked til et medlem') %>
+<% content_for :breadcrumps do %>
+  <li>
+    Medlemmer
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li class="active">Send besked</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-pencil bigger-110"></i>
+  Send besked
+</h3>
+<div class="row-fluid">
+  <div class="span5">
+    
+    <%= form_tag send_single_message_merchant_subscriber_path(@subscriber), html: { class: "horizontal"}, :method => :post do %>
+      <div class="control-group">
+        <%= label_tag :message, "Besked" %>
+        <div class="controls">
+          <%= text_area_tag :message, nil, class: "limited preview", style:"width:400px", maxlength: "#{@message_limit}", rows: "6", placeholder: "Indtast besked"%>&nbsp;&nbsp;
+          <%= tooltip("", "Indtast besked (max. #{@message_limit} tegn).\nPreview vises i boksen til højre. Bemærk at påkrævet stop link indsættes automatisk") %>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <%= button_tag class: "btn btn-primary" do %>
+            <i class="icon-edit bigger-110"></i>
+            Send besked
+          <% end %>
+        </div>
+      </div>
     <% end %>
-    </div><!--/row-fluid-->
-</div><!--/container-->   
+    <%= link_to :back, class: "btn btn-primary btn-small" do %>
+      <i class="icon-arrow-left bigger-110"></i>
+      Tilbage
+    <% end %>
+  </div><!-- /.span5 -->
+  <div class="span5">
+    <div id="live-preview-display" class="widget-box">
+      <div class="widget-header widget-header-flat">
+        <h4 class="smaller">Preview af sms-besked</h4>
+      </div>
+      <div class="widget-body" style=""> 
+        <div id="sms_text" class="widget-main"></div>
+      </div>
+    </div><!-- /.widget-box -->
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
+
+<%= render :partial => 'tooltip_message' %>
+<%= tag("span", :data => { link: @subscriber.opt_out_link}, style: "display:none", id:"opt-out-link") %>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      $(document).ready(function() {
+        var opt_out_section = $( "#opt-out-link").data("link");
+        char_limit = parseInt(160 - opt_out_section.length);
+
+        $('#live-preview-display').hide();
+        $('textarea.preview').bind('blur keyup',function() {
+          var display_container = $('#live-preview-display')
+          if ('display_container:hidden'){
+            display_container.show();
+          }
+          var commentNode = $('#sms_text');
+          var text = $('textarea.preview').val() + opt_out_section
+          //comment
+          commentNode.text(text);
+          commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
+        });
+      });
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+          
+          $('textarea.limited').inputlimiter({
+          limit: char_limit,
+          lineReturnCount: 2,
+          remText: '%n tegn tilbage...',
+          limitText: 'maks tilladt: %n.'
+          });
+      });
+  </script>
+<% end %>
+
+
+
+
+
+
+

@@ -20,7 +20,7 @@ class MerchantStore < ActiveRecord::Base
   before_save :convert_phone_standard
 
   validates :active, :inclusion => { :in => [ true, false ] }
-  validates :store_name, presence: true, length: { maximum: 30 }
+  validates :store_name, presence: true, length: { maximum: 25 }
   validates :description, :short_description, :city, :country, presence: true
   validates :owner, presence: true, length: { maximum: 30 }
   validates :street, presence: true, length: { maximum: 30 }
@@ -34,6 +34,16 @@ class MerchantStore < ActiveRecord::Base
   geocoded_by :address
   after_validation :geocode
   
+  #Bit.ly link
+  def store_link
+    client = Bitly.client
+    return "\nButik:" + client.shorten("http://www.clubnovus.dk/display_store/#{self.id}").short_url
+  end
+
+  def store_regards
+    return "\nMvh\n" + self.store_name + store_link
+  end
+
   #Used by GeoCoder
   def address
     return street + " " + house_number + " " + postal_code + " " + city + " Denmark"

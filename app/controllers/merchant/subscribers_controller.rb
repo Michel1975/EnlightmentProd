@@ -23,15 +23,19 @@ class Merchant::SubscribersController < Merchant::BaseController
 
 	def prepare_single_message
 		@subscriber = current_resource
+		#Used for max-length property in textarea
+		@message_limit = 160 - @subscriber.opt_out_link.length
 	end
 
 	def send_single_message
 		@subscriber = current_resource
 		message = params[:message]
-		if SMSUtility::SMSFactory.validate_sms?(message)
+		message = message + @subscriber.opt_out_link
+		no_characters = message.length
+		if SMSUtility::SMSFactory.validate_sms?(message) || no_characters > 160
 			if SMSUtility::SMSFactory.sendSingleMessageInstant?(message, @subscriber.member.phone, current_merchant_store)
 				flash[:success] = t(:success, :scope => [:business_validations, :instant_subscriber_message])
-				redirect_to [:merchant, @subscriber]
+				redirect_to merchant_subscribers_path#[:merchant, @subscriber]
 			else
 				flash.now[:error] = t(:error, :scope => [:business_validations, :instant_subscriber_message])
 				render :prepare_single_message	

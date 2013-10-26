@@ -352,7 +352,7 @@ da:
     welcome_offer:
       offer_updated: Velkomsttilbud er opdateret!
     instant_subscriber_message:
-      invalid_message: SMS-beskeden indeholder ugyldige tegn.
+      invalid_message: SMS-beskeden indeholder ugyldige tegn eller fylder mere end 160 tegn.
       success: Beskeden er nu sendt til medlemmet
       error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
   business_messages:

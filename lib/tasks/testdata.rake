@@ -69,7 +69,8 @@ namespace :db do
 
       #Create subscriber for each merchant     
       5.times do |n| 
-        name = Faker::Name.name
+        first_name = Faker::Name.first_name
+        last_name = Faker::Name.last_name
         postal_code = "3360"
         gender = "W"
         email = "test-#{s}-#{n}@clubnovustest.dk"
@@ -86,7 +87,8 @@ namespace :db do
                  email: email,
                  password: password,
                  password_confirmation: password)
-        member = Member.create!(  name: name,
+        member = Member.create!(  first_name: first_name,
+                                  last_name: last_name,
                                   postal_code: postal_code,
                                   gender: gender,
                                   birthday: Date.today,
@@ -132,7 +134,8 @@ namespace :db do
 
     #Create one standalone member with unique email
       1.times do |n| 
-        name = "Michel Hansen"
+        first_name = "Michel"
+        last_name = "Hansen"
         postal_code = "3360"
         gender = "W"
         email = "scoop751@hotmail.com"
@@ -143,7 +146,8 @@ namespace :db do
                  email: email,
                  password: password,
                  password_confirmation: password)
-        member = Member.create!(  name: name,
+        member = Member.create!(  first_name: first_name,
+                                  last_name: last_name,
                                   postal_code: postal_code,
                                   gender: gender,
                                   birthday: Date.today,

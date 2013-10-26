@@ -1,13 +1,13 @@
 class Member < ActiveRecord::Base
   include ActiveModel::Dirty
-  attr_accessible :name, :postal_code, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
+  attr_accessible :first_name, :last_name, :name, :postal_code, :city, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
 
   has_one :user, :as => :sub, dependent: :destroy
   accepts_nested_attributes_for :user
   has_many :subscribers 
-  before_save :convert_phone_standard
-  before_save :check_status
+  before_save :convert_phone_standard, :check_status, :name_convert
   before_save :check_member_status, :if => "self.status_changed?"
+
 
   #Used for completing profiles on web if they signed up in-store
   before_create :create_access_key
@@ -17,8 +17,10 @@ class Member < ActiveRecord::Base
   #Vi antager at telefonnumre indtastet via forms fylder max. 8 tegn og automatisk opdateres med +45 før oprettelse. 
   #Sidstnævnte skal ske med client-side validering.
 
-  validates :name, presence: true, length: { maximum: 40 }
+  validates :first_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
+  validates :last_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :unless => "validation_mode == 'store'"
+  #validates :city, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :gender, :inclusion => { :in => %w( W M ) }, :unless => "validation_mode == 'store'"
   validates :birthday, presence: true, :unless => "validation_mode == 'store'"
   validates :phone, presence: true, length: { maximum: 12}, uniqueness: { case_sensitive: false }
@@ -42,6 +44,10 @@ class Member < ActiveRecord::Base
           subscriber.save
         end
       end
+    end
+
+    def name_convert
+      self.name = self.first_name + " " + self.last_name
     end
 
     #Updates status to true when member completes his profile on web

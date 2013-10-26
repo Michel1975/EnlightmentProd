@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131019100005) do
+ActiveRecord::Schema.define(:version => 20131026172435) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -106,6 +106,9 @@ ActiveRecord::Schema.define(:version => 20131019100005) do
     t.string   "origin"
     t.string   "access_key"
     t.boolean  "status",           :default => true
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "city"
   end
 
   add_index "members", ["phone"], :name => "index_members_on_phone", :unique => true

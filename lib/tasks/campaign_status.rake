@@ -95,7 +95,6 @@ namespace :campaign do
         end#If messages
     end#End campaign
     puts "Finished fetching campaign updates"
-  
   end#end task
 end#End namespace
 

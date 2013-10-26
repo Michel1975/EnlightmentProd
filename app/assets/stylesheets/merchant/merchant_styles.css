@@ -30,3 +30,10 @@
 .lp-block input, .lp-block textarea { width:90%; }
 #live-preview-display 	{ background:#eee; padding:10px; margin-left:50px; margin-top:20px; }
 #lp-comment { padding-top:10px; font-style:italic; line-height:19px; }
+
+/*
+	#To ensure scrolling in sms preview div
+*/
+#live-preview-display div.widget-body{
+	overflow: scroll;
+}

@@ -14,12 +14,11 @@
 				<thead>
 					<tr>
 						<th>Navn</th>
-						<th>Email</th>
 						<th>Telefon</th>
-						<th>Køn</th>
-						<th>Fødselsdag</th>
+						<th>Postnummer</th>
+						<th>By</th>
 						<th>Medlem fra</th>
-						<th>Vis detaljer</th>
+						<th>Mere info</th>
 						<th>Handling</th>
 					</tr>
 				</thead>
@@ -27,26 +26,75 @@
 				<% @subscribers.each do |subscriber| %>
 				<tr>
 					<td> <%= empty_attribute_info( subscriber.member.name ) %></td>
-					<td> <%= empty_attribute_info( subscriber.member.user.try(:email) ) %></td>
 					<td> <%= empty_attribute_info( subscriber.member.phone ) %></td>
-					<td> <%= gender_danish( subscriber.member.gender ) %></td>
-					<td> <%= subscriber.member.birthday.present? ? I18n.l( subscriber.member.birthday ) : empty_attribute_info( subscriber.member.birthday ) %></td>
-					<td> <%= subscriber.member.birthday.present? ? I18n.l( subscriber.start_date ) : empty_attribute_info( subscriber.start_date )   %></td>
-					<td> <%= link_to [:merchant, subscriber] do %>
+					<td> <%= empty_attribute_info( subscriber.member.postal_code ) %></td>
+					<td> <%= empty_attribute_info( subscriber.member.city ) %></td>
+					<td> <%= subscriber.start_date.present? ? I18n.l( subscriber.start_date ) : empty_attribute_info( subscriber.start_date ) %> </td>
+					<td> 
+						<a href=<%= "#member-#{subscriber.member.id}" %> data-toggle="modal" role="button" class="green">
 						 	<button class="btn btn-info btn-small">
 								Mere info
 							</button>
-						<% end %>
+						</a>
 					</td>
 
 					<td>
-					<%= link_to [:merchant, subscriber], method: :delete, data: { confirm: t(:warning_deletion_mechant, :scope => [:business_validations, :subscriber])} do %>
-						<button class="btn btn-small btn-danger">
-							<i class="icon-trash bigger-110"></i>
-							Slet medlem
-						</button>
-					<% end %>
+						<%= link_to prepare_single_message_merchant_subscriber_path(subscriber)  do %>
+							<button class="btn btn-small btn-info">
+								<i class="icon-pencil bigger-110"></i>
+								Send besked
+							</button>
+						<% end %>
+						<%= link_to [:merchant, subscriber], method: :delete, data: { confirm: t(:warning_deletion_mechant, :scope => [:business_validations, :subscriber])} do %>
+							<button class="btn btn-small btn-danger">
+								<i class="icon-trash bigger-110"></i>
+								Slet medlem
+							</button>
+						<% end %>
 					</td>
+					<!-- /.modal user data Start -->
+					<div id=<%= "member-#{subscriber.member.id}" %> class="modal hide fade" tabindex="-1" style="display: none;" aria-hidden="true">
+						<div class="modal-header no-padding">
+							<div class="table-header">
+								<button type="button" class="close" data-dismiss="modal">×</button>
+									Medlemsinfo
+							</div>
+						</div>
+						<div class="profile-user-info profile-user-info-striped">
+							<div class="profile-info-row">
+								<div class="profile-info-name"> Navn </div>
+								<div class="profile-info-value"> <%= empty_attribute_info( subscriber.member.name ) %> </div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> Email </div>
+								<div class="profile-info-value"> <%= empty_attribute_info( subscriber.member.user.try(:email) ) %> </div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> Telefon </div>
+								<div class="profile-info-value"> <%= empty_attribute_info( subscriber.member.phone ) %> </div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> Postnummer </div>
+								<div class="profile-info-value"> <%= empty_attribute_info( subscriber.member.postal_code ) %> </div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> By </div>
+								<div class="profile-info-value"> <%= empty_attribute_info( subscriber.member.city ) %> </div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> Køn </div>
+								<div class="profile-info-value"> <%= gender_danish( subscriber.member.gender ) %> </div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> Fødselsdag </div>
+								<div class="profile-info-value"><%= subscriber.member.birthday.present? ? I18n.l( subscriber.member.birthday ) : empty_attribute_info( subscriber.member.birthday ) %> </div>
+							</div>
+							<div class="profile-info-row">
+								<div class="profile-info-name"> Medlem fra </div>
+								<div class="profile-info-value"> <%= subscriber.start_date.present? ? I18n.l( subscriber.start_date ) : empty_attribute_info( subscriber.start_date ) %> </div>
+							</div>
+						</div><!-- /.profile container End -->
+					</div><!-- /. modal user data End -->
 				<% end %>
 				</tbody>
 			</table>

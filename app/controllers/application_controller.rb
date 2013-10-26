@@ -79,7 +79,7 @@ class ApplicationController < ActionController::Base
         welcome_offer = merchant_store.welcome_offer
         if welcome_offer.active
           if origin == "store"
-            SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.description, member.phone, merchant_store )
+            SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.message, member.phone, merchant_store )
           end
         end
       else

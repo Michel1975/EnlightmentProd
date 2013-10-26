@@ -1,8 +1,6 @@
 <% provide(:title, 'Rediger velkomstpræmie') %>
 <% provide(:description, 'Rediger velkomstpræmie for nye medlemmer') %>
 <% content_for :breadcrumps do %>
-  <li>
-  </li>
   <li class="active">Rediger velkomstgave</li>
 <% end %>
 <h3 class="header blue lighter smaller">
@@ -16,8 +14,8 @@
       <div class="control-group">
         <%= f.label :description, class: "control-label" %>
         <div class="controls">
-          <%= f.text_area :description, class: "limited preview", style:"width:400px", maxlength: "140", rows: "6", placeholder: "Beskrivelse af velkomstgave" %>&nbsp;&nbsp;
-          <%= tooltip("Lav kortfattet beskrivelse da præmien sendes med sms (max. 140 tegn)", "Beskrivelse af velkomstgave") %>
+          <%= f.text_area :description, class: "limited preview", style:"width:400px", maxlength: "#{@message_limit}", rows: "6", placeholder: "Beskrivelse af velkomstgave" %>&nbsp;&nbsp;
+          <%= tooltip("Lav kortfattet beskrivelse da præmien sendes med sms (max. #{@message_limit} tegn)", "Beskrivelse af velkomstgave") %>
         </div>
       </div>
       <div class="control-group">
@@ -56,10 +54,14 @@
 </div><!-- /.row-fluid -->
 
 <%= render :partial => 'tooltip_new' %>
+<%= tag("span", :data => {store_regards: current_merchant_store.store_regards}, style: "display:none", id:"store_regards") %>
 
 <% content_for :scripts do %>
   <script type="text/javascript">
       $(document).ready(function() {
+        var regards_section = $( "#store_regards").data("store-regards");
+        char_limit = parseInt(160 - regards_section.length);
+
         $('#live-preview-display').hide();
         $('textarea.preview').bind('blur keyup',function() {
           var display_container = $('#live-preview-display')
@@ -67,7 +69,7 @@
             display_container.show();
           }
           var commentNode = $('#sms_text');
-          var text = $('textarea.preview').val() + "\nSe butik: http://bit.ly/1drRbaH"
+          var text = $('textarea.preview').val() + regards_section
           //comment
           commentNode.text(text);
           commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
@@ -78,6 +80,8 @@
           $('[data-rel=popover]').popover({container:'body'});
           
           $('textarea.limited').inputlimiter({
+          limit: char_limit,
+          lineReturnCount: 2,
           remText: '%n tegn tilbage...',
           limitText: 'maks tilladt: %n.'
           });
