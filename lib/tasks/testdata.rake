@@ -27,8 +27,8 @@ namespace :db do
         #Create backend admin user
         user = User.create!(
                  email: "michelhansen75@hotmail.com",
-                 password: 'noniryder',
-                 password_confirmation: 'noniryder')
+                 password: 'password',
+                 password_confirmation: 'password')
         merchant_user = store.merchant_users.create!(name: "Michel Kenneth Hansen",
                 role: "Sales clerk", phone: '99999999')
         user.sub = merchant_user
