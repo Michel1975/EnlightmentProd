@@ -207,7 +207,7 @@ da:
       merchant_store: Butik
       invoice: Faktura
       offer: Tilbud
-      welcome_offer: Velkomsttilbud
+      welcome_offer: Velkomstgave
       feature: Funktion
       subscription_type: Abonnementstype
       subscription_plan: Abonnement
@@ -236,6 +236,8 @@ da:
         country: Land
         sms_keyword: Sms kode
       member:
+        first_name: Fornavn
+        last_name: Efternavn
         name: Navn
         postal_code: Postnr.
         gender: Køn
@@ -350,7 +352,7 @@ da:
       subscriber_message_sent: Besked er afsendt til medlemmet!
       warning_deletion_mechant: Du er ved at fjerne et medlem fra din kundeklub. Er du sikker?
     welcome_offer:
-      offer_updated: Velkomsttilbud er opdateret!
+      offer_updated: Velkomstgave er opdateret!
     instant_subscriber_message:
       invalid_message: SMS-beskeden indeholder ugyldige tegn eller fylder mere end 160 tegn.
       success: Beskeden er nu sendt til medlemmet
@@ -377,6 +379,34 @@ da:
       password_reset: Dit password er blevet nulstillet!
     security:
       not_authorized: Du har ikke adgang til disse data!
+  misc:
+    members_active:
+      zero: aktive medlemmer
+      one: aktivt medlem
+      other: aktive medlemmer
+    members_inactive:
+      zero: afmeldinger 
+      one: afmelding 
+      other: afmeldinger 
+    offers:
+      zero: aktive tilbud
+      one: aktivt tilbud
+      other: aktive tilbud
+    campaigns_scheduled:
+      zero: planlagte kampagner
+      one: planlagt kampagne
+      other: planlagte kampagner
+    campaigns_finished:
+      zero: afsluttede kampagner 
+      one: afsluttet kampagne 
+      other: afsluttede kampagner 
+    total_sms_messages:
+      zero: sms-beskeder 
+      one:  sms-beskeder 
+      other: sms-beskeder
+
+
+    
 
 
 

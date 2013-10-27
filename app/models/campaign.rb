@@ -13,7 +13,7 @@ class Campaign < ActiveRecord::Base
   #Custom check of sms-message
   validate  :sms_compliance_validation
   validates :activation_time, presence: true
-  validates :status, :inclusion => { :in => %w(scheduled error finished)}, :allow_blank => true
+  validates :status, :inclusion => { :in => %w(scheduled error completed)}, :allow_blank => true
   validates :merchant_store_id, presence: true
   
   private

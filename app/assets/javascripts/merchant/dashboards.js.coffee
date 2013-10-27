@@ -13,9 +13,9 @@ jQuery ->
     Morris.Bar
     	element: 'subscribers_bar'
     	data: $('#subscribers_bar').data('subscribers')
-    	xkey: 'date'
+    	xkey: 'month'
     	ykeys: ['no_new_members', 'no_opt_outs']
     	labels: ['Antal tilmeldinger', 'Antal afmeldinger']
-    	xLabels: 'day'
+    	xLabels: 'month'
     	parseTime: false
 

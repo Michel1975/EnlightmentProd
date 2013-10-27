@@ -1,97 +1,128 @@
-<% provide(:title, 'Overblik') %>
-<% provide(:description, 'Rapporter og statistik for kundeklub') %>
+<% provide(:title, 'Overblik ovr kundeklub') %>
+<% provide(:description, 'Overblik og statistik') %>
 <% content_for :breadcrumps do %>
-  <li class="active">Dashboard</li>
+  <li class="active">Overblik og statistik</li>
 <% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-dashboard bigger-110"></i>
+  Overblik og statistik
+</h3>
+<div class="row-fluid">
+  <div class="span7 infobox-container">
+    <div class="infobox infobox-green">
+        <div class="infobox-icon">
+          <i class="icon-user"></i>
+        </div>
+        <div class="infobox-data">
+          <span class="infobox-data-number"> <%= @active_subscribers_count %> </span>
+          <div class="infobox-content"> <%= t('misc.members_active', :count => @active_subscribers_count ) %> </div>
+      </div>
+    </div>
+    <div class="infobox infobox-blue">
+      <div class="infobox-icon">
+        <i class="icon-money"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @active_offers %> </span>
+        <div class="infobox-content"> <%= t('misc.offers', :count => @active_offers ) %> </div>
+      </div>
+    </div>
+    <div class="infobox infobox-orange">
+      <div class="infobox-icon">
+        <i class="icon-bullhorn"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @scheduled_campaigns %>  </span>
+        <div class="infobox-content"> <%= t('misc.campaigns_scheduled', :count => @scheduled_campaigns ) %> </div>
+      </div>
+    </div>
+    <div class="infobox infobox-blue">
+      <div class="infobox-icon">
+        <i class="icon-envelope"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @total_sms_messages_campaign %> </span>
+        <div class="infobox-content"> <%= t('misc.total_sms_messages', :count => @total_sms_messages_campaign ) %> </div>
+      </div>
+    </div>
+    <div class="infobox infobox-orange2">
+      <div class="infobox-icon">
+        <i class="icon-bullhorn"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @completed_campaigns %> </span>
+        <div class="infobox-content"> <%= t('misc.campaigns_finished', :count => @completed_campaigns ) %> </div>
+      </div>
+    </div>
+    <div class="infobox infobox-red">
+      <div class="infobox-icon">
+        <i class="icon-user"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @opt_outs_total %> </span>
+        <div class="infobox-content"> <%= t('misc.members_inactive', :count => @opt_outs_total ) %> </div>
+      </div>
+    </div>
+ </div><!-- /.infobox container -->
 
-<h1>Overblik</h1>
+</div><!-- /.row-fluid -->
 
-<p id="notice"><%= notice %></p>
+<div class="row-fluid">
+  <div class="span12">
+    <h3 class="header blue lighter smaller">
+      <i class="icon-user bigger-110"></i>
+      Tilmelding og afmelding (seneste 14 dage)
+    </h3>
+    <%= content_tag :div, "", id: "subscribers_recent", style: "width: 100%;", data: { subscribers: @recent_subscriber_data } %>
+ </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
 
-<%= content_tag :div, "", id: "subscribers_recent", style: "width: 100%;", data: { subscribers: @recent_subscriber_data } %>
+<div class="row-fluid">
+  <div class="span12">
+    <h3 class="header blue lighter smaller">
+      <i class="icon-user bigger-110"></i>
+      Tilmelding og afmelding (seneste 3 mdr.)
+    </h3>
+    <%= content_tag :div, "", id: "subscribers_bar", style: "width: 100%;", data: { subscribers: @months_subscriber_data } %>
+ </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
 
-<br/>
+<div class="row-fluid">
+  <div class="span10">
+    <h3 class="header blue lighter smaller">
+      <i class="icon-user bigger-110"></i>
+      Aktivitetsfeed
+    </h3>
+    <div class="widget-box">
+      <div class="widget-body">
+        <div class="widget-main no-padding">
+          <table class="table table-striped table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Tidspunkt</th>
+                <th>Beskrivelse</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @merchant_store.event_histories.order("created_at DESC").each do |event| %>
+                <tr>
+                  <td><%= event.event_type %></td>
+                  <td><%= I18n.l( event.created_at )  %></td>
+                  <td><%= event.description %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /.widget-body -->
+    </div><!-- /.widget-box -->
+ </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
 
-<%= content_tag :div, "", id: "subscribers_bar", style: "width: 100%;", data: { subscribers: @months_subscriber_data } %>
-<br/>
 
-<%= @recent_subscriber_data.to_json %>
-<p>
-  <b>Aktive medlemmer: </b>
-  <%= @active_subscribers_count %>
-</p>
 
-<p>
-  <b>Nye medlemmer - 14 dage: </b>
-  <%= @new_subscribers_last_14_days %>
-</p>
 
-<p>
-  <b>Afmeldinger - 14 dage: </b>
-  <%= @opt_outs_last_14_days %>
-</p>
-
-<p>
-  <b>SMS kode: </b>
-  <%= @merchant_store.sms_keyword %>
-</p>
-
-<p>
-  <b>Pris pr. sms-bsked: </b>
-  0,25 kr.
-</p>
-
-<p>
-  <b>Aktive tilbud: </b>
-  <%= @active_offers %> 
-</p>
-
-<p>
-  <b>Planlagte tilbud: </b>
-  <%= @scheduled_offers  %> 
-</p>
-
-<p>
-  <b>Arkiverede tilbud: </b>
-  <%= @completed_offers %> 
-</p>
-
-<p>
-  <b>Antal planlagte kampagner: </b>
-  <%= @scheduled_campaigns %> 
-</p>
-
-<p>
-  <b>Afsluttede kampagner: </b>
-  <%= @completed_campaigns  %> 
-</p>
-
-<p>
-  <b> Antal sms'er denne måned: </b>
-  <%= @total_sms_messages %> 
-</p>
-
-<h4>Aktivitetsfeed</h4>
-<div class="span10">
-  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Tidspunkt</th>
-        <th>Beskrivelse</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @merchant_store.event_histories.order("created_at DESC").each do |event| %>
-      <tr>
-        <td><%= event.event_type %></td>
-        <td><%= event.created_at %></td>
-        <td><%= event.description %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
 
 
 

@@ -72,7 +72,7 @@ class Member < ActiveRecord::Base
     def create_access_key
       self.access_key ||= [id.to_s, SecureRandom.hex(5)].join
     end
-
+    
 end#end class
 
 

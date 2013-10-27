@@ -73,5 +73,4 @@ class MerchantStore < ActiveRecord::Base
     def validate_phone_standard
       return SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
     end
-    
 end
