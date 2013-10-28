@@ -1,5 +1,5 @@
 class MerchantStore < ActiveRecord::Base
-  attr_accessible :store_name, :store_picture, :store_picture_size, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
+  attr_accessible :store_name, :store_picture, :store_picture_size, :email, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
   #attr_reader :subscribers_count
   mount_uploader :store_picture, ImageUploader
   
@@ -19,6 +19,8 @@ class MerchantStore < ActiveRecord::Base
   before_save { |store| store.sms_keyword = store.sms_keyword.downcase } #af hensyn til match-forespørgsler ved sms-tilmelding
   before_save :convert_phone_standard
 
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
   validates :active, :inclusion => { :in => [ true, false ] }
   validates :store_name, presence: true, length: { maximum: 25 }
   validates :description, :short_description, :city, :country, presence: true

@@ -32,6 +32,8 @@ class Merchant::MerchantStoresController < Merchant::BaseController
     @merchant_store = current_resource #Old: current_merchant_store
     @subscription = @merchant_store.subscription_plan
     @features = @subscription.subscription_type.features
+    @number_of_messages_month = @merchant_store.message_notifications.month_total_messages.length
+    @running_total_month =  @subscription.subscription_type.monthly_price + (@number_of_messages_month * 0.25)
   end
 
   private

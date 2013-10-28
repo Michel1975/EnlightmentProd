@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131026172435) do
+ActiveRecord::Schema.define(:version => 20131028122926) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -87,8 +87,9 @@ ActiveRecord::Schema.define(:version => 20131026172435) do
     t.decimal  "amount_incl_moms"
     t.text     "comment"
     t.integer  "merchant_store_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.boolean  "paid",              :default => false
   end
 
   add_index "invoices", ["merchant_store_id"], :name => "index_invoices_on_merchant_store_id"
@@ -134,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20131026172435) do
     t.integer  "store_picture_size"
     t.integer  "subscribers_count"
     t.integer  "message_notifications_count"
+    t.string   "email"
   end
 
   add_index "merchant_stores", ["sms_keyword"], :name => "index_merchant_stores_on_sms_keyword", :unique => true

@@ -385,9 +385,9 @@ da:
       one: aktivt medlem
       other: aktive medlemmer
     members_inactive:
-      zero: afmeldinger 
-      one: afmelding 
-      other: afmeldinger 
+      zero: afmeldinger ialt
+      one: afmelding ialt
+      other: afmeldinger ialt
     offers:
       zero: aktive tilbud
       one: aktivt tilbud
@@ -397,13 +397,13 @@ da:
       one: planlagt kampagne
       other: planlagte kampagner
     campaigns_finished:
-      zero: afsluttede kampagner 
-      one: afsluttet kampagne 
-      other: afsluttede kampagner 
+      zero: afsluttede kampagner ialt
+      one: afsluttet kampagne ialt
+      other: afsluttede kampagner ialt
     total_sms_messages:
-      zero: sms-beskeder 
-      one:  sms-beskeder 
-      other: sms-beskeder
+      zero: sms-beskeder ialt
+      one:  sms-besked ialt
+      other: sms-beskeder ialt
 
 
     

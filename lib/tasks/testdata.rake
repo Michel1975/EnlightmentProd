@@ -13,13 +13,20 @@ namespace :db do
     house_numbers.push("16")
 
     #Setup independent lookup tables
-    subscription_basic = SubscriptionType.create!(name: "Basis", monthly_price: '149.95')
-    subscription_basic.features.create!(title: "Sms kampagner", description: "Gør det muligt at udføre sms kampagner for sine kunder")
+    subscription_basic = SubscriptionType.create!(name: "Basis medlemsskab", monthly_price: '199.95')
+    subscription_basic.features.create!(title: "Online promotion", description: "Skab større synlighed på nettet")
+    subscription_basic.features.create!(title: "Sms kampagnemodul", description: "Lav fantastiske sms-kampagner og skab meromsætning")
+    subscription_basic.features.create!(title: "Rapport & Statistik", description: "Rapport og statistik for kundeklubben")
+    subscription_basic.features.create!(title: "Velkomstgave", description: "Giv alle nye medlemmer en velkomstgave efter eget valg")
+    subscription_basic.features.create!(title: "QR-kode", description: "Gør det muligt at tilmelde sig via qr-kode")
+    subscription_basic.features.create!(title: "Marketing materiale", description: "Startpakke med marketing materiale")
+    subscription_basic.features.create!(title: "Egen hjemmeside på clubnovus.dk", description: "Startpakke med marketing materiale")
+    subscription_basic.features.create!(title: "Support og rådgiving", description: "Få hjælp og rådgivning til kampagner og administration af kundeklubben")
 
     
     5.times do |s|
       if s == 1#!MerchantStore.all.any?
-        store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', short_description: 'Michels karameller er bare dejlige', phone: "48391754", street: 'Klostervangen', house_number: '34', 
+        store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', email: "test@store345.dk", short_description: 'Michels karameller er bare dejlige', phone: "48391754", street: 'Klostervangen', house_number: '34', 
             postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "cn#{s+1}" )
     
         store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_basic.id)
@@ -38,6 +45,7 @@ namespace :db do
         short_description =  'Lorem Ipsum Lorem Ipsum Lorem Ipsum'
         street = 'Nørregade'
         house_number = house_numbers[s]
+        email = "test@store#{s+1}.dk"
         postal_code = '3300'
         city = 'Frederiksværk'
         country = 'Denmark'
@@ -45,7 +53,7 @@ namespace :db do
         store_name = "Cafe & Steakhouse #{s+1}"
         phone = "41415210"
         sms_keyword = "CN#{s+1}"  
-        store = MerchantStore.create(description: description, short_description: short_description, phone: phone, street: street, house_number: house_number, 
+        store = MerchantStore.create(description: description, short_description: short_description, email: email, phone: phone, street: street, house_number: house_number, 
           postal_code: postal_code, city: city, country:'Denmark', owner: owner, store_name: store_name, sms_keyword: sms_keyword)
 
         #Create average user record for merchant user
@@ -66,6 +74,13 @@ namespace :db do
       
       #Create one welcome offer
       store.create_welcome_offer!(description: 'Super', active: true)
+
+      #Create sample invoice for previous month
+      store.invoices.create!( period_start: (Time.zone.now - 1.month).beginning_of_month, period_end: (Time.zone.now - 1.month).end_of_month,
+                              amount_ex_moms: '199.95', amount_incl_moms: '250.00', comment: 'Lidt for højt sms-forbrug', paid: true)
+      store.invoices.create!( period_start: (Time.zone.now - 2.month).beginning_of_month, period_end: (Time.zone.now - 2.month).end_of_month,
+                              amount_ex_moms: '199.95', amount_incl_moms: '250.00', comment: 'Lidt for højt sms-forbrug', paid: true)
+
 
       #Create subscriber for each merchant     
       5.times do |n| 

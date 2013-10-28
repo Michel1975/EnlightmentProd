@@ -8,7 +8,7 @@ class Merchant::DashboardsController < Merchant::BaseController
         #Calling custom cache
         @recent_subscriber_data = Subscriber.chart_data(14.day.ago, @merchant_store, "day")
         #To-Do: Skal ændres til group by month når postgress installeres på lokal maskine
-        @months_subscriber_data = Subscriber.chart_data(12.weeks.ago, @merchant_store, "month")
+        @months_subscriber_data = Subscriber.chart_data(16.weeks.ago, @merchant_store, "month")
 
         #Diverse medlemsstatistikker
     	@active_subscribers_count = @merchant_store.subscribers_count
@@ -26,7 +26,7 @@ class Merchant::DashboardsController < Merchant::BaseController
     	@completed_campaigns = @merchant_store.campaigns.completed.count
 
         #SMS-beskeder ialt
-        @total_sms_messages_campaign = @merchant_store.message_notifications.length #.month_total_messages.size
+        @total_sms_messages = @merchant_store.message_notifications.length #.month_total_messages.size
 
         #SMS beskeder denne måned
         #@total_sms_messages_campaign = @merchant_store.message_notifications.month_total_messages.length #.month_total_messages.size
