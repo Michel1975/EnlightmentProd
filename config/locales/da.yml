@@ -229,6 +229,9 @@ da:
         store_picture: Billede
         short_description: Beskrivelse (forkortet)
         owner: Ejer
+        phone: Telefon
+        store_picture: Præsentationsbillede
+        email: Email
         street: Gade
         house_number: Husnr.
         postal_code: Postnr.

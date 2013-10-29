@@ -18,4 +18,6 @@
 //= require raphael
 //= require morris
 //= require jquery.inputlimiter.1.3.1
+//= require jquery.easy-pie-chart
+//= require bootstrap-timepicker
 //= require_directory ./utility

@@ -133,7 +133,14 @@ namespace :db do
 
       #Create business hours
       7.times do |n|
-        store.business_hours.create!(day: (Date.today.beginning_of_week + n).wday, open_time: Time.new(2013, 8, 29, 8, 30, 0), close_time: Time.new(2013, 8, 29, 16, 30, 0))
+        weekday = (Date.today.beginning_of_week + n)
+        
+        if n == 6
+          store.business_hours.create!(day: (n+1), day_text: I18n.l(weekday, :format => "%A"), closed: true, open_time: Time.new(2013, 8, 29, 8, 30, 0), close_time: Time.new(2013, 8, 29, 16, 30, 0))
+        else
+          store.business_hours.create!(day: (n+1), day_text: I18n.l(weekday, :format => "%A"), closed: false, open_time: Time.new(2013, 8, 29, 8, 30, 0), close_time: Time.new(2013, 8, 29, 16, 30, 0))
+        end
+
       end 
 
       #Create event history

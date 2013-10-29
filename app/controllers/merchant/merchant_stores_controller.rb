@@ -14,7 +14,6 @@ class Merchant::MerchantStoresController < Merchant::BaseController
     else
        @merchant_store.store_picture = nil
     end
-
       
     if @merchant_store.update_attributes(params[:merchant_store])
       	flash[:success] = t(:information_updated, :scope => [:business_validations, :merchant_store])        

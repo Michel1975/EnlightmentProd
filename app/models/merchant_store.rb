@@ -23,7 +23,9 @@ class MerchantStore < ActiveRecord::Base
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
   validates :active, :inclusion => { :in => [ true, false ] }
   validates :store_name, presence: true, length: { maximum: 25 }
-  validates :description, :short_description, :city, :country, presence: true
+  validates :city, :country, presence: true
+  validates :description, presence: true, length: { maximum: 255 }
+  validates :short_description, presence: true, length: { maximum: 80 }
   validates :owner, presence: true, length: { maximum: 30 }
   validates :street, presence: true, length: { maximum: 30 }
   validates :house_number, :postal_code, numericality: { only_integer: true }, length: { maximum: 4 } 

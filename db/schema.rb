@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131028122926) do
+ActiveRecord::Schema.define(:version => 20131028161919) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -26,8 +26,10 @@ ActiveRecord::Schema.define(:version => 20131028122926) do
     t.time     "open_time"
     t.time     "close_time"
     t.integer  "merchant_store_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.string   "day_text"
+    t.boolean  "closed",            :default => false
   end
 
   add_index "business_hours", ["merchant_store_id"], :name => "index_business_hours_on_merchant_store_id"
