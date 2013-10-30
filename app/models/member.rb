@@ -27,6 +27,7 @@ class Member < ActiveRecord::Base
   validate  :validate_phone_standard
   validates :terms_of_service, :inclusion => { :in => [true, false] }, :unless => "validation_mode == 'store'"
   validates :complete, :inclusion => { :in => [true, false] }
+  validates :status, :inclusion => { :in => [true, false] }
   validates :origin, :inclusion => { :in => %w( web store ) }
 
   #This method is called in sms-utility before sending a message to subscriber
@@ -39,6 +40,7 @@ class Member < ActiveRecord::Base
     #Deactivate all memberships on merchant stores
     def check_member_status
       if self.status == false
+        #To-do: self.deactivation_date = Time.zone.now
         subscribers.each do |subscriber|
           subscriber.opt_out
           subscriber.save

@@ -22,7 +22,7 @@ module Permissions
         merchant_user.merchant_store_id == current_merchant_store.id  
       end
 
-      allow :offers, [:index, :new, :create]
+      allow :offers, [:active, :archived, :new, :create]
       allow :offers, [:show, :edit, :update, :destroy] do |offer|
         offer.merchant_store_id == current_merchant_store.id
       end

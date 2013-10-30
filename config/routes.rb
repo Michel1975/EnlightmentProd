@@ -43,7 +43,11 @@ EnlightmentProd::Application.routes.draw do
       post 'send_single_message', :on => :member
     end
     
-    resources :offers 
+    resources :offers  do
+      get 'active', :on => :collection
+      get 'archived', :on => :collection
+    end
+
     resources :welcome_offers
     resources :campaigns
     resources :merchant_users

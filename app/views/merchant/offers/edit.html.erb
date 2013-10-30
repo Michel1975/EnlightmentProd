@@ -1,10 +1,37 @@
-<% provide(:title, "Rediger tilbud") %>
-<h1>Rediger tilbud</h1>
+<% provide(:title, 'Rediger tilbud') %>
+<% provide(:description, 'Redigering af tilbud') %>
+<% content_for :breadcrumps do %>
+  <li>
+    Tilbud
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li class="active">Rediger tilbud</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-user bigger-110"></i>
+  Redigering af tilbud
+</h3>
+<div class="row-fluid">
+  <div class="span12">
+    <%= render 'form' %>
+  </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
 
-<%= render 'form' %>
+<%= render :partial => 'tooltip_new' %>
 
-<%= link_to 'Vis', [:merchant, @offer] %> |
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+      });
+  </script>
+<% end %>
+
 <%= link_to 'Tilbage', merchant_offers_path %>
+
 
 <script>
   $(document).ready(function() {

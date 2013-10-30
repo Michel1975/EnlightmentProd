@@ -1,21 +1,89 @@
-<% provide(:title, 'Rediger brugerprofil') %>
-<h1>Opdater din profil</h1>
-<div class="row">
-  <div class="span6 offset3">
-    <%= form_for [:merchant, @merchant_user] do |f| %>
-      <%= f.label :name %>
-      <%= f.text_field :name %>
-      <%= f.label :role %>
-      <%= f.text_field :role %>
-      <%= f.text_field :phone %>
-      <%= fields_for :user do |f| %>
-      <%= f.label :password %>
-      <%= f.password_field :password %>
-      <%= f.label :password_confirmation, "Bekræft password" %>
-      <%= f.password_field :password_confirmation %>
+<% provide(:title, 'Brugerprofil') %>
+<% provide(:description, 'Redigering af brugeroplysninger') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Brugerprofil</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-user bigger-110"></i>
+  Brugerprofil
+</h3>
+<div class="row-fluid">
+  <div class="span5">
+    <%= render :partial => "/merchant/shared/error_messages", :locals => { :obj => @merchant_user} %>
+    <%= form_for [:merchant, @merchant_user], html: { class: "horizontal"} do |f| %>
+      <div class="control-group">
+        <%= f.label :name, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :name, placeholder: "Fulde navn" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast fulde navn inkl. mellemnavne (max. 40 tegn). Mellemnavn kan forkortes eks. Ole K. Jensen", "Fulde navn") %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :role, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :role, placeholder: "Rolle" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast brugerrolle eks. salgsansvarlig, marketing koordinator eller andet", "Rolle") %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :phone, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :phone, placeholder: "Telefon" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast kun danske telefonnumre uden landekode eks. 24600819", "Telefon") %>
+        </div>
+      </div>
+      <%= f.fields_for :user do |merchant_user| %>
+        <div class="control-group">
+          <%= merchant_user.label :email, class: "control-label" %>
+          <div class="controls">
+            <%= merchant_user.text_field :email, placeholder: "Email" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast gyldig email", "Email") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= merchant_user.label :password, class: "control-label" %>
+          <div class="controls">
+            <%= merchant_user.password_field :password, placeholder: "Nyt password" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast nyt password. Husk slå caps lock fra", "Nyt password") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= merchant_user.label :password_confirmation, class: "control-label" %>
+          <div class="controls">
+            <%= merchant_user.password_field :password_confirmation, placeholder: "Bekræft password" %>&nbsp;&nbsp;
+            <%= tooltip("Gentag nyt password.  Husk slå caps lock fra", "Bekræft password") %>
+          </div>
+        </div>
+      <% end %>
+      <div class="control-group">
+        <div class="controls">
+          <%= button_tag class: "btn btn-primary" do %>
+            <i class="icon-edit bigger-110"></i>
+            Opdater brugerprofil
+          <% end %>
+        </div>
+      </div>
     <% end %>
+    <%= link_to merchant_merchant_user_path(current_merchant_user), class: "btn btn-primary btn-small" do %>
+      <i class="icon-arrow-left bigger-110"></i>
+      Tilbage
+    <% end %>
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
 
-      <%= f.submit "Gem ændringer", class: "btn btn-large btn-primary" %>
-    <% end %>    
-  </div>
-</div>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+      });
+  </script>
+<% end %>
+
+
+
+
+
+
+
+

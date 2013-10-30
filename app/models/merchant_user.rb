@@ -1,5 +1,5 @@
 class MerchantUser < ActiveRecord::Base
-  attr_accessible :name, :role, :phone, :merchant_user_attributes
+  attr_accessible :name, :role, :phone, :user_attributes
 
   has_one :user, :as => :sub
   accepts_nested_attributes_for :user

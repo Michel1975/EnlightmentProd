@@ -192,8 +192,8 @@ da:
   time:
     am: ''
     formats:
-      default: ! '%e. %B %Y, %H.%M'
-      long: ! '%A d. %e. %B %Y, %H.%M'
+      default: ! '%e. %B %Y, kl. %H:%M'
+      long: ! '%A d. %e. %B %Y, kl. %H:%M'
       short: ! '%e. %b %Y, %H.%M'
     pm: ''
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
@@ -255,6 +255,7 @@ da:
       merchant_user:
         name: Navn
         role: Rolle
+        phone: Telefon
         admin: Administrator
       offer:
         title: Overskrift
@@ -349,6 +350,7 @@ da:
       offer_created: Tilbud er oprettet og synligt på clubnovus.dk!
       offer_updated: Tilbud er opdateret!
       offer_deleted: Tilbud er slettet!
+      warning_deletion_offer: Du er ved at slette et aktivt tilbud. Er du sikker?
     subscriber:
       subscriber_removed: Medlem er nu fjernet fra kundeklubben!
       subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!

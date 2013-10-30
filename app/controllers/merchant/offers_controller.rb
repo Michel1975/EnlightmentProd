@@ -1,10 +1,16 @@
 class Merchant::OffersController < Merchant::BaseController
   #If-override-from-base: layout "merchant", except: [:index]
-  
-  def index    
+
+  def active
     @active_offers = current_merchant_store.offers.where(":date_now >= valid_from AND :date_now <= valid_to",
-      {:date_now => Time.zone.now }).paginate(page: params[:page], :per_page => 20) 
-    @inactive_offers = current_merchant_store.offers.where("valid_to < ?", Time.zone.now).paginate(page: params[:page], :per_page => 20)   
+      {:date_now => Time.zone.now }).paginate(page: params[:page], :per_page => 20)
+  end
+
+  def archived
+     @inactive_offers = current_merchant_store.offers.where("valid_to < ?", Time.zone.now).paginate(page: params[:page], :per_page => 20)
+  end
+
+  def index 
   end
 
   def show
@@ -67,7 +73,7 @@ class Merchant::OffersController < Merchant::BaseController
     @offer.destroy
 
     respond_to do |format|
-      format.html { redirect_to merchant_offers_url, notice: t(:offer_deleted, :scope => [:business_validations, :offer]) }
+      format.html { redirect_to active_merchant_offers_url, notice: t(:offer_deleted, :scope => [:business_validations, :offer]) }
     end
   end
 

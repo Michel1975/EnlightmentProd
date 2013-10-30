@@ -1,57 +1,78 @@
-<%= form_for [:merchant, @offer] do |f| %>
-  <% if @offer.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@offer.errors.count, "error") %> prohibited this offer from being saved:</h2>
-
-      <ul>
-      <% @offer.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :title %><br />
-    <%= f.text_field :title %>
-  </div>
-  <div class="field">
-    <%= f.label :description %><br />
-    <%= f.text_area :description %>
-  </div>
-
-  <div class="control-group">
-    <%= f.label :offer_picture %>
-      <div class="form_controls">
-        <div class="upload_button_holder">
-          <%= link_to("Upload", "#", :class => "upload_button") %>
-          <%= f.cl_image_upload(:offer_picture) %>
+ <div class="span6">
+   <%= render :partial => "/merchant/shared/error_messages", :locals => { :obj => @offer } %>
+      <%= form_for [:merchant, @offer], html: { class: "horizontal"} do |f| %>
+        <div class="control-group">
+          <%= f.label :title, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :title, placeholder: "Overskrift" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast en fængende overskrift til tilbuddet", "Overskrift") %>
+          </div>
         </div>
-        <span class="status"></span>
-      </div>
-  </div>
-  <div class="form_line">
-    <div class="form_controls">
-      <div class="preview"><%= cl_image_tag(@offer.offer_picture, :width => 150, :height => 150, :crop => :fit) if @offer.offer_picture %></div>
+        <div class="control-group">
+          <%= f.label :valid_from, class: "control-label" %>
+          <div class="controls">
+            <%= f.date_select :valid_from, placeholder: "Gyldig fra" %>&nbsp;&nbsp;
+            <%= tooltip("Angiv dato for hvornår tilbuddet starter", "Gyldig fra") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :valid_to, class: "control-label" %>
+          <div class="controls">
+            <%= f.date_select :valid_to, placeholder: "Gyldig til" %>&nbsp;&nbsp;
+            <%= tooltip("Angiv dato for hvornår tilbuddet slutter", "Gyldig til") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :description, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_area :description, class: "offer", style:"width:400px", maxlength: "255", rows: "6", 
+                placeholder: "Beskrivelse af tilbud" %>&nbsp;&nbsp;
+            <%= tooltip("Beskriv hvad tilbuddet indeholder samt betingelser for indløsning", "Beskrivelse af tilbud") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <%= button_tag class: "btn btn-primary" do %>
+              <i class="icon-ok bigger-110"></i>
+              Gem
+            <% end %>
+          </div>
+        </div>
+</div><!-- /.span6 -->
+<div class="span6 align-center">
+  <div class="control-group">
+    <% if @offer.offer_picture %>
+    <%= f.label :store_picture, class: "control-label" %>
+    <div id="picture_container">
+      <%= cl_image_tag(@offer.offer_picture, :width => 200, :height => 200, :crop => :fit, class: "img-rounded") %>
     </div>
-    <p>
-    <label>
-      <%= f.check_box :remove_offer_picture %>
-      Fjern billede
-    </label>
-  </p>
-  </div>
+    <% else %>
+    <div class="ace-file-input ace-file-multiple">
+      <label class="file-label" data-title="Intet præsentationsbillede">
+        <span class="file-name" data-title="Upload billede forneden">
+          <i class="icon-picture"></i>
+        </span>
+      </label><a class="remove" href="#"><i class="icon-remove"></i></a></div>
+      <% end %>
 
-  <div class="field">
-    <%= f.label :valid_from %><br />
-    <%= f.date_select :valid_from %>
-  </div>
-  <div class="field">
-    <%= f.label :valid_to %><br />
-    <%= f.date_select :valid_to %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-  <%= f.hidden_field :offer_picture_size %>
-<% end %>
+      <div class="form_controls" style="margin-top:10px">
+        <div class="upload_button_holder">
+          <div class="ace-file-input">
+            <label class="file-label" data-title="Vælg">
+              <span class="file-name" data-title="Upload nyt billede..."> 
+                <%= f.cl_image_upload(:offer_picture) %>
+                <i class="icon-upload-alt"></i>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div id="status_section" class="easy-pie-chart percentage easyPieChart" data-percent="0" data-color="#87CEEB" style="width: 75px; height: 75px; line-height: 75px; color: rgb(135, 206, 235);">
+          <span class="percent"></span>%
+          <canvas width="75" height="75"></canvas>
+        </div>
+      </div>
+    </div>
+    <%= f.hidden_field :offer_picture_size %>
+  <% end %>
+  </div><!-- /.span6 -->

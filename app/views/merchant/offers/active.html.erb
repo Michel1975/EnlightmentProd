@@ -1,0 +1,61 @@
+<% provide(:title, 'Aktive tilbud') %>
+<% provide(:description, 'Liste over aktive tilbud') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Aktive tilbud</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-money bigger-110"></i>
+  Aktive tilbud
+</h3>
+<%= will_paginate @active_offers, class:"pagination"%>
+  <div class="row-fluid">
+    <div class="span12">
+      <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Titel</th>
+            <th>Gyldig fra</th>
+            <th>Gyldig til</th>
+            <th>Oprettet</th>
+            <th>Senest opdateret</th>
+            <th>Handling</th>    
+          </tr>
+        </thead>
+        <tbody>
+          <% @active_offers.order("valid_to DESC").each do |offer| %>
+            <tr>
+              <td> <%= empty_attribute_info( offer.title )%></td>
+              <td> <%= offer.valid_from.present? ? I18n.l( offer.valid_from ) : empty_attribute_info( offer.valid_from ) %></td>
+              <td> <%= offer.valid_to.present? ? I18n.l( offer.valid_to ) : empty_attribute_info( offer.valid_to ) %></td> 
+              <td><%= I18n.l( offer.created_at ) %></td>
+              <td><%= I18n.l( offer.updated_at) %></td>                
+              <td>
+                <%= link_to [:merchant, offer] do %>
+                  <button class="btn btn-small btn-info">
+                    <i class="icon-pencil bigger-110"></i>
+                    Se detaljer
+                  </button>
+                <% end %>
+                <%= link_to [:merchant, offer], 
+                             method: :delete, data: { confirm: t(:warning_deletion_offer, :scope => [:business_validations, :offer]) } do %>
+                  <button class="btn btn-small btn-danger">
+                    <i class="icon-trash bigger-110"></i>
+                    Slet tilbud
+                  </button>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= link_to new_merchant_offer_path do %>
+        <button class="btn btn-primary">
+          <i class="icon-money bigger-110"></i>
+            Opret tilbud
+        </button>
+      <% end %>
+  </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
+<%= render :partial => 'tooltip_index' %>
+
+
