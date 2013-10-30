@@ -99,7 +99,7 @@ class SMSFactory
       recipientString = ""
 
       #Insert placeholder macro for stop-link
-      message = campaign.message + "\n%StopLink%"
+      message = campaign.message + "%StopLink%"
       campaign.campaign_members.each do |campaign_member|
         #Generate safe message-id from log method
         recipient = campaign_member.subscriber.member.phone

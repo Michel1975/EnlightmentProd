@@ -104,21 +104,36 @@
       </div><!-- /.span6 -->
       <div class="span6 align-center">
         <div class="control-group">
-          <%= f.label :store_picture, class: "control-label" %>
-          <%= cl_image_tag(@merchant_store.store_picture, :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
+          <% if @merchant_store.store_picture %>
+            <%= f.label :store_picture, class: "control-label" %>
+            <div id="picture_container">
+              <%= cl_image_tag(@merchant_store.store_picture, :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
+            </div>
+          <% else %>
+             <div class="ace-file-input ace-file-multiple">
+              <label class="file-label" data-title="Intet præsentationsbillede">
+                <span class="file-name" data-title="Upload billede forneden">
+                  <i class="icon-picture"></i>
+                </span>
+              </label><a class="remove" href="#"><i class="icon-remove"></i></a></div>
+          <% end %>
+
+         
           <div class="form_controls" style="margin-top:10px">
             <div class="upload_button_holder">
-              <%= f.cl_image_upload(:store_picture) %>
+              <div class="ace-file-input">
+                <label class="file-label" data-title="Vælg">
+                  <span class="file-name" data-title="Upload nyt billede..."> 
+                    <%= f.cl_image_upload(:store_picture) %>
+                    <i class="icon-upload-alt"></i>
+                  </span>
+                </label>
+              </div>
             </div>
 
             <div id="status_section" class="easy-pie-chart percentage easyPieChart" data-percent="0" data-color="#87CEEB" style="width: 75px; height: 75px; line-height: 75px; color: rgb(135, 206, 235);">
               <span class="percent"></span>%
               <canvas width="75" height="75"></canvas>
-            </div>
-            <span class="status"></span>
-            <div id="preview_section">
-              <h6>Preview af nyt billede</h6>
-              <div class="preview"></div>
             </div>
           </div>
         </div>
@@ -126,12 +141,6 @@
     </div><!-- /.row-fluid -->
     <div class="row-fluid">
       <div class="span11">
-        <div class="input-append bootstrap-timepicker"><div class="bootstrap-timepicker-widget dropdown-menu"><table><tbody><tr><td><a href="#" data-action="incrementHour"><i class="icon-chevron-up"></i></a></td><td class="separator">&nbsp;</td><td><a href="#" data-action="incrementMinute"><i class="icon-chevron-up"></i></a></td><td class="separator">&nbsp;</td><td><a href="#" data-action="incrementSecond"><i class="icon-chevron-up"></i></a></td></tr><tr><td><input type="text" name="hour" class="bootstrap-timepicker-hour" maxlength="2"></td> <td class="separator">:</td><td><input type="text" name="minute" class="bootstrap-timepicker-minute" maxlength="2"></td> <td class="separator">:</td><td><input type="text" name="second" class="bootstrap-timepicker-second" maxlength="2"></td></tr><tr><td><a href="#" data-action="decrementHour"><i class="icon-chevron-down"></i></a></td><td class="separator"></td><td><a href="#" data-action="decrementMinute"><i class="icon-chevron-down"></i></a></td><td class="separator">&nbsp;</td><td><a href="#" data-action="decrementSecond"><i class="icon-chevron-down"></i></a></td></tr></tbody></table></div>
-                              <input id="timepicker1" type="text" class="input-small">
-                              <span class="add-on">
-                                <i class="icon-time"></i>
-                              </span>
-                            </div>
         <h4 class="header blue lighter smaller" style="margin-top:5px">
           Åbningstider
         </h4> 
@@ -148,7 +157,7 @@
               <%= f.fields_for :business_hours, @merchant_store.business_hours.order("day ASC") do |business_hour| %>
                 <tr>
                   <td> <%= (business_hour.label :day_text, business_hour.object.day_text)  %> </td>
-                  <td>  
+                  <td>
                     <div class="input-append bootstrap-timepicker-component">
                       <%= business_hour.text_field :open_time,  class: "timepicker-default input-small" %>
                       <span class="add-on">
@@ -156,7 +165,7 @@
                       </span>
                     </div>
                   </td>
-                  <td>  
+                  <td>
                     <div class="input-append bootstrap-timepicker-component">
                       <%= business_hour.text_field :close_time, class: "timepicker-default input-small" %>
                       <span class="add-on">
@@ -239,9 +248,11 @@
             $('#preview_section').show();
             
             //$(".status").text("");
-            $(".preview").html(
+            //$(".preview").html(
+            $("#picture_container").empty();
+            $("#picture_container").html(
               $.cloudinary.image(data.result.public_id, {
-                format: data.result.format, width: 200, height: 200, crop: "fit"
+                format: data.result.format, width: 300, height: 300, crop: "fit"
               })
             );
           });
@@ -264,20 +275,7 @@
             remText: '%n tegn tilbage...',
             limitText: 'maks tilladt: %n.'
           });
-
-          $(".cloudinary-fileupload").ace_file_input({
-            no_file:'Upload nyt billede...',
-            btn_choose:'Vælg',
-            btn_change:'Skift',
-            droppable:false,
-            onchange:null,
-            thumbnail:false, //| true | large
-            icon_remove:null
-            //whitelist:'gif|png|jpg|jpeg'
-            //blacklist:'exe|php'
-            //onchange:''
-          });
-
+          
           var oldie = /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase());
           $('.easy-pie-chart.percentage').each(function(){
             $(this).easyPieChart({
@@ -291,21 +289,14 @@
             }).css('color', $(this).data('color'));
           });
 
-          $('.timepicker-default').each(function(){
+         $('.timepicker-default').each(function(){
             $(this).timepicker({
               minuteStep: 1,
               showSeconds: true,
               showMeridian: false
             });
           });
-
-          $('#timepicker1').timepicker({
-            minuteStep: 1,
-            showSeconds: true,
-            showMeridian: false
-          });
-
-          });//Close Javascript function
+        });//Close Javascript function
     </script>
   <% end %>
 
