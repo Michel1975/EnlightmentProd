@@ -49,7 +49,10 @@ EnlightmentProd::Application.routes.draw do
     end
 
     resources :welcome_offers
-    resources :campaigns
+    resources :campaigns do
+      get 'active', :on => :collection
+      get 'finished', :on => :collection
+    end
     resources :merchant_users
     resources :merchant_members, :only => [:new, :create]
 

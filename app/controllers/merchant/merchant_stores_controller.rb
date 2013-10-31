@@ -3,18 +3,13 @@ class Merchant::MerchantStoresController < Merchant::BaseController
   
   def edit
     @merchant_store = current_resource
+    if @merchant_store.image.nil?
+      @merchant_store.build_image()
+    end
   end
 
   def update
     @merchant_store = current_resource
-    if params[:merchant_store][:store_picture].present? 
-      preloaded = Cloudinary::PreloadedFile.new(params[:merchant_store][:store_picture])         
-        raise "Invalid upload signature" if !preloaded.valid?
-        @merchant_store.store_picture = preloaded.identifier
-    else
-       @merchant_store.store_picture = nil
-    end
-      
     if @merchant_store.update_attributes(params[:merchant_store])
       	flash[:success] = t(:information_updated, :scope => [:business_validations, :merchant_store])        
       	redirect_to [:merchant, @merchant_store]
@@ -41,3 +36,23 @@ class Merchant::MerchantStoresController < Merchant::BaseController
     end
 
 end
+
+=begin
+def update
+    @merchant_store = current_resource
+    if params[:merchant_store][:store_picture].present? 
+      preloaded = Cloudinary::PreloadedFile.new(params[:merchant_store][:store_picture])         
+        raise "Invalid upload signature" if !preloaded.valid?
+        @merchant_store.store_picture = preloaded.identifier
+    else
+       @merchant_store.store_picture = nil
+    end
+      
+    if @merchant_store.update_attributes(params[:merchant_store])
+        flash[:success] = t(:information_updated, :scope => [:business_validations, :merchant_store])        
+        redirect_to [:merchant, @merchant_store]
+    else
+        render 'edit'
+    end
+  end
+=end

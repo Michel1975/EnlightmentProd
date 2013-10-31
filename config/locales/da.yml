@@ -267,6 +267,7 @@ da:
         day: Dag
         open_time: Åbner kl.
         close_time: Lukker kl.
+        closed: Lukket
       invoice:
         period_start: Start
         period_end: Slut
@@ -310,6 +311,9 @@ da:
       welcome_offer:
         active: Aktiv
         description: Beskrivelse
+      image:
+        picture: Billede
+        size: Størrelse
   business_validations:
     generic:
       not_authenticated: Login er påkrævet!
@@ -339,6 +343,7 @@ da:
       campaign_create_error: Der er opstået en teknisk fejl ved oprettelsen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       campaign_update_error: Der er opstået en teknisk fejl ved opdateringen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       campaign_delete_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
+      warning_deletion_campaign: Du er ved at slette en planlagt kampagne. Er du sikker?
     merchant_member: 
       member_already_exists: Personen er allerede registreret som medlem i din kundeklub!
       member_added: Medlemmet er nu oprettet og tilføjet din kundeklub!

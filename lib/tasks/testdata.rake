@@ -121,7 +121,10 @@ namespace :db do
         valid_from = (Time.now - 50.days)
         valid_to = (Time.now - 10.days)
         store.offers.create!(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
-      end 
+        #Adding dummy container for image
+        store.create_image()
+      end
+
       #Create active offers
       5.times do |n|
         title = "Tilbud på chocolade"
@@ -129,6 +132,8 @@ namespace :db do
         valid_from = (Time.now - 5.days)
         valid_to = (Time.now + 20.days)
         store.offers.create!(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
+        #Adding dummy container for image
+        store.create_image()
       end
 
       #Create business hours

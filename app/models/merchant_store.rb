@@ -1,7 +1,9 @@
 class MerchantStore < ActiveRecord::Base
-  attr_accessible :store_name, :store_picture, :store_picture_size, :email, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes
+  attr_accessible :store_name, :store_picture, :store_picture_size, :email, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes, :image_attributes
   #attr_reader :subscribers_count
-  mount_uploader :store_picture, ImageUploader
+
+  has_one :image, :as => :imageable, dependent: :destroy
+  accepts_nested_attributes_for :image
   
   has_one :welcome_offer, dependent: :destroy
   has_many :offers, dependent: :destroy

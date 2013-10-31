@@ -1,10 +1,16 @@
 class Merchant::CampaignsController < Merchant::BaseController
   #If-override-from-base: layout "merchant", except: [:index]
 
-  def index
+  def active
     @active_campaigns = current_merchant_store.campaigns.where("activation_time > :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)
+  end
+
+  def finished
     @completed_campaigns = current_merchant_store.campaigns.where("activation_time < :date_now", :date_now => Time.now).paginate(page: params[:page], :per_page => 20)
   end 
+
+  def index
+  end
   
   def show
     @campaign = current_resource       

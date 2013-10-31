@@ -3,7 +3,7 @@ module Permissions
     
     def initialize(user, current_merchant_store)
       allow :dashboards, [:store_dashboard]
-      allow :campaigns, [:index, :new, :create]
+      allow :campaigns, [:new, :create, :active, :finished]
       allow :campaigns, [:show, :edit, :update, :destroy] do |campaign|
         campaign.merchant_store_id == current_merchant_store.id
       end

@@ -66,7 +66,7 @@
             }
           })
           .off("cloudinarydone").on("cloudinarydone", function (e, data) {
-            $("#offer_offer_picture_size").val(data.result.bytes);
+            $("#offer_image_attributes_size").val(data.result.bytes);
             $("#status_section").hide();
             $('#preview_section').show();
             
@@ -75,7 +75,7 @@
             $("#picture_container").empty();
             $("#picture_container").html(
               $.cloudinary.image(data.result.public_id, {
-                format: data.result.format, width: 300, height: 300, crop: "fit"
+                format: data.result.format, width: 200, height: 200, crop: "fit"
               })
             );
           });

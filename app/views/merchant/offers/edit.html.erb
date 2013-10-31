@@ -14,65 +14,96 @@
   Redigering af tilbud
 </h3>
 <div class="row-fluid">
-  <div class="span12">
-    <%= render 'form' %>
-  </div><!-- /.span12 -->
+  <%= render 'form' %>
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+    <div class="span11">
+      <%= link_to :back, class: "btn btn-primary btn-small" do %>
+        <i class="icon-arrow-left bigger-110"></i>
+        Tilbage
+      <% end %>
+    </div><!-- /.span11 -->
 </div><!-- /.row-fluid -->
 
-<%= render :partial => 'tooltip_new' %>
+<%= render :partial => 'tooltip_new_edit' %>
 
 <% content_for :scripts do %>
-  <script type="text/javascript">
-      jQuery(function($) {
+    <script>
+      $(document).ready(function() {
+        $('#status_section').hide();
+        $('#preview_section').hide();
+
+        // Cloudinary jQuery integration library uses jQuery File Upload widget
+        // (see http://blueimp.github.io/jQuery-File-Upload/).
+        // Any file input field with cloudinary-fileupload class is automatically
+        // wrapped using the File Upload widget and configured for Cloudinary uploads.
+        // You can further customize the configuration using .fileupload method
+        // as we do below.
+        $(".cloudinary-fileupload")
+          .fileupload({
+            // Uncomment the following lines to enable client side image resizing and validation.
+            // Make sure cloudinary/processing is included the js file
+            //disableImageResize: false,
+            //imageMaxWidth: 800,
+            //imageMaxHeight: 600,
+            //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|bmp|ico)$/i,
+            //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            //maxFileSize: 20000000, // 20MB
+            //maxFileSize: 105000, // 1MB
+            //dropZone: "#direct_upload",
+            start: function (e) {
+              $('#status_section').show();
+              //$(".status").text("Starter upload");
+            },
+            progress: function (e, data) {
+              var progress = Math.round( (data.loaded * 100.0) / data.total) 
+              $('#status_section').find(".percent").text( progress );
+              $('#status_section').data('easyPieChart').update(progress);
+            },
+            fail: function (e, data) {
+              $('#status_section').find(".percent").text( "Fejl" );
+              //$(".status").text("Upload afbrudt");
+            }
+          })
+          .off("cloudinarydone").on("cloudinarydone", function (e, data) {
+            $("#offer_image_attributes_size").val(data.result.bytes);
+            $("#status_section").hide();
+            $('#preview_section').show();
+            
+            //$(".status").text("");
+            //$(".preview").html(
+            $("#picture_container").empty();
+            $("#picture_container").html(
+              $.cloudinary.image(data.result.public_id, {
+                format: data.result.format, width: 200, height: 200, crop: "fit"
+              })
+            );
+          });
+        });
+        
+        jQuery(function($) {
           $('[data-rel=tooltip]').tooltip({container:'body'});
           $('[data-rel=popover]').popover({container:'body'});
-      });
-  </script>
-<% end %>
-
-<%= link_to 'Tilbage', merchant_offers_path %>
-
-
-<script>
-  $(document).ready(function() {
-   // Cloudinary jQuery integration library uses jQuery File Upload widget
-    // (see http://blueimp.github.io/jQuery-File-Upload/).
-    // Any file input field with cloudinary-fileupload class is automatically
-    // wrapped using the File Upload widget and configured for Cloudinary uploads.
-    // You can further customize the configuration using .fileupload method
-    // as we do below.
-
-    $(".cloudinary-fileupload")
-      .fileupload({
-        // Uncomment the following lines to enable client side image resizing and validation.
-        // Make sure cloudinary/processing is included the js file
-        //disableImageResize: false,
-        //imageMaxWidth: 800,
-        //imageMaxHeight: 600,
-        //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|bmp|ico)$/i,
-        //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        //maxFileSize: 20000000, // 20MB
-        //maxFileSize: 105000, // 1MB
-        //dropZone: "#direct_upload",
-        start: function (e) {
-          $(".status").text("Starter upload");
-        },
-        progress: function (e, data) {
-          $(".status").text("Uploader... " + Math.round((data.loaded * 100.0) / data.total) + "%");
-        },
-        fail: function (e, data) {
-          $(".status").text("Upload afbrudt");
-        }
-      })
-      .off("cloudinarydone").on("cloudinarydone", function (e, data) {
-        $("#offer_offer_picture_size").val(data.result.bytes);
-        $(".status").text("");
-        $(".preview").html(
-          $.cloudinary.image(data.result.public_id, {
-            format: data.result.format, width: 200, height: 200, crop: "fit"
-          })
-        );
-      });
-    });
-
-</script>
+          
+          $('textarea.offer').inputlimiter({
+            limit: $(this).data('maxlength'),
+            lineReturnCount: 2,
+            remText: '%n tegn tilbage...',
+            limitText: 'maks tilladt: %n.'
+          });
+          
+          var oldie = /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase());
+          $('.easy-pie-chart.percentage').each(function(){
+            $(this).easyPieChart({
+              barColor: $(this).data('color'),
+              trackColor: '#EEEEEE',
+              scaleColor: false,
+              lineCap: 'butt',
+              lineWidth: 8,
+              animate: oldie ? false : 1000,
+              size:75
+            }).css('color', $(this).data('color'));
+          });
+        });//Close Javascript function
+    </script>
+  <% end %>

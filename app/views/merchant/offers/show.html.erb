@@ -20,49 +20,49 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Titel </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @offer.title %> </span>
+          <span class="editable editable-click" id="title"> <%= @offer.title %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Gyldig fra </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= I18n.l( @offer.valid_from ) %> </span>
+          <span class="editable editable-click" id="valid_from"> <%= I18n.l( @offer.valid_from ) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Gyldig til </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= I18n.l( @offer.valid_to ) %> </span>
+          <span class="editable editable-click" id="valid_to"> <%= I18n.l( @offer.valid_to ) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= I18n.l( @offer.created_at ) %> </span>
+          <span class="editable editable-click" id="created_at"> <%= I18n.l( @offer.created_at ) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Senest opdateret </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= I18n.l( @offer.updated_at ) %> </span>
+          <span class="editable editable-click" id="updated_at"> <%= I18n.l( @offer.updated_at ) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Beskrivelse </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @offer.description %> </span>
+          <span class="editable editable-click" id="description"> <%= @offer.description %> </span>
         </div>
       </div>
     </div><!-- /.profile-user-info -->
   </div><!-- /.span5 -->
   <div class="span7 align-center">
     <label class="control-label">Præsentationsbillede</label>
-   <%= cl_image_tag(@offer.offer_picture, :width => 200, :height => 200, :crop => :fit, class: "img-rounded") %> 
+   <%= cl_image_tag(@offer.image.try(:picture), :width => 200, :height => 200, :crop => :fit, class: "img-rounded") %> 
   </div><!-- /.span7 -->
   <div class="row-fluid">
     <div class="span11">

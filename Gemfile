@@ -15,8 +15,8 @@ gem 'savon', '~> 2.0'
 gem 'htmlentities'
 gem 'gmaps4rails' # Vi bruger dette til at vise kortet
 gem 'geocoder' # vi bruger dette til at indkode adresser i raw-format
-gem 'cloudinary'
 gem 'carrierwave' #Bruges sammen med clodinary på en mærkelig måde..via en uploader klasse
+gem 'cloudinary'
 gem 'rack-mini-profiler' #Se mere info i railscast episode 368
 gem 'httparty' #Used for parsing status updates for sms campaigns
 gem 'bitly' #Used to shorten various urls in 

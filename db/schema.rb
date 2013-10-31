@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131028161919) do
+ActiveRecord::Schema.define(:version => 20131031123714) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -81,6 +81,15 @@ ActiveRecord::Schema.define(:version => 20131028161919) do
   end
 
   add_index "features", ["subscription_type_id"], :name => "index_features_on_subscription_type_id"
+
+  create_table "images", :force => true do |t|
+    t.string   "imageable_type"
+    t.integer  "imageable_id"
+    t.string   "picture"
+    t.integer  "size"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "invoices", :force => true do |t|
     t.date     "period_start"

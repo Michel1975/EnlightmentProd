@@ -20,42 +20,42 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Butiksnavn </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_store.store_name %> </span>
+          <span class="editable editable-click" id="store_name"> <%= @merchant_store.store_name %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Ejer </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_store.owner %> </span>
+          <span class="editable editable-click" id="store_owner"> <%= @merchant_store.owner %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Adresse </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_store.map_address %> </span>
+          <span class="editable editable-click" id="address"> <%= @merchant_store.map_address %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Telefon </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_store.phone %> </span>
+          <span class="editable editable-click" id="phone"> <%= @merchant_store.phone %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Email </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_store.email %> </span>
+          <span class="editable editable-click" id="email"> <%= @merchant_store.email %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_store.created_at %> </span>
+          <span class="editable editable-click" id="created_at"> <%= @merchant_store.created_at %> </span>
         </div>
       </div>
     </div><!-- /.profile-user-info -->
@@ -63,7 +63,7 @@
 
   <div class="span7 align-center">
     <label class="control-label">Præsentationsbillede</label>
-   <%= cl_image_tag(@merchant_store.store_picture, :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %> 
+   <%= cl_image_tag(@merchant_store.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %> 
   </div><!-- /.span7 -->
 </div><!-- /.row-fluid -->
 <div class="row-fluid"><hr></div>
