@@ -89,7 +89,7 @@
           <div class="widget-main padding-6">
             <div class="tab-content">
               <div id="short" class="tab-pane in active">
-                <p> <%= @merchant_store.short_description %> </p>
+                <p> <%= simple_format(@merchant_store.short_description) %> </p>
               </div>
 
               <div id="long" class="tab-pane">

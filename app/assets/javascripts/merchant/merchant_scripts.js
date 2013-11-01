@@ -19,4 +19,6 @@
 //= require jquery.inputlimiter.1.3.1
 //= require jquery.easy-pie-chart
 //= require bootstrap-timepicker
+//= require bootstrap-datepicker
+//= require locales/bootstrap-datepicker.da
 //= require_directory ./utility

@@ -104,6 +104,15 @@
               size:75
             }).css('color', $(this).data('color'));
           });
+
+          $('.date-picker').datepicker().next().on(ace.click_event, function(){
+            $(this).prev().focus();
+          });
+          
+          $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'da'
+          });
         });//Close Javascript function
     </script>
   <% end %>

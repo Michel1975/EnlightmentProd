@@ -14,6 +14,7 @@
  *= require "jquery.ui.all"
  *= require "morris"
  *= require "bootstrap-timepicker"
+ *= require "datepicker"
  *= require_directory ./utility
  */
 
