@@ -128,6 +128,7 @@
                   <%= f.fields_for :image do |image| %> 
                     <%= image.cl_image_upload(:picture, tags: @merchant_store.sms_keyword) %>
                     <%= image.hidden_field :size %>
+                    <%= image.hidden_field :picture_cache %>
                   <% end %>
                     <i class="icon-upload-alt"></i>
                   </span>
