@@ -1,6 +1,61 @@
-<% provide(:title, 'Rediger sms kampagne') %>
-<h1>Rediger sms kampagne</h1>
-
+<% provide(:title, 'Rediger SMS kampagne') %>
+<% provide(:description, 'Rediger SMS kampagne oplysninger') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Rediger SMS kampagne</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-bullhorn bigger-110"></i>
+  Rediger SMS kampagne
+</h3>
 <%= render 'form' %>
+<%= tag("span", :data => {stop_link: @stop_link}, style: "display:none", id:"stop_link") %>
+<%= render :partial => 'tooltip_new_edit' %>
 
-<%= link_to 'Tilbage', merchant_campaigns_path %>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      $(document).ready(function() {
+        var stop_section = $( "#stop_link").data("stop-link");
+        $('#live-preview-display').hide();
+        $('textarea.preview').bind('blur keyup',function() {
+          var display_container = $('#live-preview-display')
+          if ('display_container:hidden'){
+            display_container.show();
+          }
+          var commentNode = $('#sms_text');
+          var text = $('textarea.preview').val() + stop_section
+          //comment
+          commentNode.text(text);
+          commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
+        });
+      });
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+          
+          $('textarea.limited').inputlimiter({
+          limit: $(this).data('maxlength'),
+          lineReturnCount: 2,
+          remText: '%n tegn tilbage...',
+          limitText: 'maks tilladt: %n.'
+          });
+
+          $('.date-picker').datepicker().next().on(ace.click_event, function(){
+            $(this).prev().focus();
+          });
+          
+          $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'da',
+            autoclose: true
+          });
+          
+          $('.timepicker-default').each(function(){
+            $(this).timepicker({
+              minuteStep: 1,
+              showSeconds: true,
+              showMeridian: false
+            });
+          });
+      });
+  </script>
+<% end %>

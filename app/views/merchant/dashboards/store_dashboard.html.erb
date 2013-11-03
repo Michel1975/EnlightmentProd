@@ -105,7 +105,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @merchant_store.event_histories.order("created_at DESC").each do |event| %>
+              <% @merchant_store.event_histories.order("created_at DESC").limit(15).each do |event| %>
                 <tr>
                   <td><%= event.event_type %></td>
                   <td><%= I18n.l( event.created_at )  %></td>

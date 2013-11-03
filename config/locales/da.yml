@@ -291,7 +291,7 @@ da:
         title: Overskrift
         message: Besked
         status: Status
-        activation_time: Tidspunkt
+        activation_time: Dato/Tidspunkt for afsendelse
         instance_activation: Aktiver nu
       message_notifcation:
         recipient: Modtager
@@ -344,6 +344,7 @@ da:
       campaign_update_error: Der er opstået en teknisk fejl ved opdateringen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       campaign_delete_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       warning_deletion_campaign: Du er ved at slette en planlagt kampagne. Er du sikker?
+      invalid_activation_time: skal være i perioden fra d. %{earliest} til %{latest}
     merchant_member: 
       member_already_exists: Personen er allerede registreret som medlem i din kundeklub!
       member_added: Medlemmet er nu oprettet og tilføjet din kundeklub!
@@ -365,8 +366,12 @@ da:
       offer_updated: Velkomstgave er opdateret!
     instant_subscriber_message:
       invalid_message: SMS-beskeden indeholder ugyldige tegn eller fylder mere end 160 tegn.
-      success: Beskeden er nu sendt til medlemmet
-      error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
+      success: Beskeden er nu sendt til medlemmet!
+      error: Der er opstået en teknisk fejl ved afsendelsen af beskeden. Vi arbejder hurtigst muligt på at løse problemet!
+    campaign_test_message:
+      invalid_phone: Ugyldigt telefon nummer
+      success: Beskeden er nu afsendt!
+      error: Der er opstået en teknisk fejl ved afsendelsen af beskeden. Vi arbejder hurtigst muligt på at løse problemet!
   business_messages:
     store_signup: 
       success_with_present: "Tillykke,\ndu er nu tilmeldt %{store_name} i %{city}.\nDin velkomstgave sendes om få minutter.\n\nMvh\nClub Novus"
@@ -414,6 +419,15 @@ da:
       zero: sms-beskeder ialt
       one:  sms-besked ialt
       other: sms-beskeder ialt
+  will_paginate:
+    previous_label: "&#8592; Forrige"
+    next_label: "Næste &#8594;"
+    page_gap: "&hellip;"
+  enums:
+    campaign:
+      scheduled: Planlagt
+      error: Fejl
+      completed: Gennemført
 
 
     

@@ -1,6 +1,71 @@
-<% provide(:title, 'Ny sms kampagne') %>
-<h1>Oprettelse af ny sms kampagne</h1>
+<% provide(:title, 'Ny SMS kampagne') %>
+<% provide(:description, 'Oprettelse af ny SMS kampagne') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Ny SMS kampagne</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-bullhorn bigger-110"></i>
+  Ny SMS kampagne
+</h3>
+<div class="row-fluid">
+	<%= render 'form' %>
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+    <div class="span11">
+      <%= link_to :back, class: "btn btn-primary btn-small" do %>
+        <i class="icon-arrow-left bigger-110"></i>
+        Tilbage
+      <% end %>
+    </div><!-- /.span11 -->
+</div><!-- /.row-fluid -->
+<%= tag("span", :data => {stop_link: @stop_link}, style: "display:none", id:"stop_link") %>
+<%= render :partial => 'tooltip_new_edit' %>
 
-<%= render 'form' %>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      $(document).ready(function() {
+      	stop_section = $( "#stop_link").data("stop-link");
+        $('#live-preview-display').hide();
+        $('textarea.preview').bind('blur keyup',function() {
+          var display_container = $('#live-preview-display')
+          if ('display_container:hidden'){
+            display_container.show();
+          }
+          var commentNode = $('#sms_text');
+          var text = $('textarea.preview').val() + stop_section
+          //comment
+          commentNode.text(text);
+          commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
+        });
+      });
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+          
+          $('textarea.limited').inputlimiter({
+          limit: $(this).data('maxlength'),
+          lineReturnCount: 2,
+          remText: '%n tegn tilbage...',
+          limitText: 'maks tilladt: %n.'
+          });
 
-<%= link_to 'Tilbage', merchant_campaigns_path %>
+          $('.date-picker').datepicker().next().on(ace.click_event, function(){
+            $(this).prev().focus();
+          });
+          
+          $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'da',
+            autoclose: true
+          });
+          
+          $('.timepicker-default').each(function(){
+            $(this).timepicker({
+              minuteStep: 1,
+              showSeconds: true,
+              showMeridian: false
+            });
+          });
+      });
+  </script>
+<% end %>

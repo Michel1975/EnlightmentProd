@@ -51,13 +51,13 @@
 </div><!-- /.row-fluid -->
 
 <%= render :partial => 'tooltip_message' %>
-<%= tag("span", :data => { link: @subscriber.opt_out_link}, style: "display:none", id:"opt-out-link") %>
+<%= tag("span", :data => {stop_link: @stop_link}, style: "display:none", id:"stop_link") %>
 
 <% content_for :scripts do %>
   <script type="text/javascript">
       $(document).ready(function() {
-        var opt_out_section = $( "#opt-out-link").data("link");
-        char_limit = parseInt(160 - opt_out_section.length);
+        var stop_section = $( "#stop_link").data("stop-link");
+        //char_limit = parseInt(160 - stop_section.length);
 
         $('#live-preview-display').hide();
         $('textarea.preview').bind('blur keyup',function() {
@@ -66,7 +66,7 @@
             display_container.show();
           }
           var commentNode = $('#sms_text');
-          var text = $('textarea.preview').val() + opt_out_section
+          var text = $('textarea.preview').val() + stop_section
           //comment
           commentNode.text(text);
           commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
@@ -77,7 +77,7 @@
           $('[data-rel=popover]').popover({container:'body'});
           
           $('textarea.limited').inputlimiter({
-          limit: char_limit,
+          limit: $(this).data('maxlength'),//char_limit,
           lineReturnCount: 2,
           remText: '%n tegn tilbage...',
           limitText: 'maks tilladt: %n.'

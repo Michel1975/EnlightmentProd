@@ -16,6 +16,6 @@ class MessageNotification < ActiveRecord::Base
   validates :status_code_id, :merchant_store_id, presence: true
   validates :message_id, presence: true
   validates :message_id, uniqueness: { case_sensitive: false }, :allow_nil => true
-  validates :notification_type, :inclusion => { :in => %w( campaign single test)}
+  validates :notification_type, :inclusion => { :in => %w( campaign single )}
 
 end

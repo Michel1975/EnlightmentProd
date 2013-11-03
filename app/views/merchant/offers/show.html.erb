@@ -61,30 +61,42 @@
     </div><!-- /.profile-user-info -->
   </div><!-- /.span5 -->
   <div class="span7 align-center">
-    <label class="control-label">Præsentationsbillede</label>
-   <%= cl_image_tag(@offer.image.try(:picture), :width => 200, :height => 200, :crop => :fit, class: "img-rounded") %> 
+    <% if !@offer.image.try(:picture).blank? %>
+      <label class="control-label">Billede</label>
+      <%= cl_image_tag(@offer.image.try(:picture), :width => 200, :height => 200, :crop => :fit, class: "img-rounded") %> 
+    <% else %>
+      <div id="picture_container">
+        <div class="ace-file-input ace-file-multiple">
+          <label class="file-label" data-title="Intet billede">
+            <span class="file-name">
+              <i class="icon-picture"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+    <% end %>
   </div><!-- /.span7 -->
-  <div class="row-fluid">
-    <div class="span11">
-      <hr>
-      <%= link_to :back, class: "btn btn-primary btn-small" do %>
-        <i class="icon-arrow-left bigger-110"></i>
-        Tilbage
-      <% end %>
-  
-      <%= link_to edit_merchant_offer_path(@offer), class: "btn btn-primary btn-small" do %>
-        <i class="icon-edit bigger-110"></i>
-        Rediger
-      <% end %>
-      <%= link_to [:merchant, @offer], 
-                   method: :delete, data: { confirm: t(:warning_deletion_offer, :scope => [:business_validations, :offer]) } do %>
-        <button class="btn btn-small btn-danger">
-          <i class="icon-trash bigger-110"></i>
-          Slet tilbud
-        </button>
-      <% end %>
-    </div><!-- /.span11 -->
-  </div><!-- /.row-fluid -->
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+  <div class="span11">
+    <hr>
+    <%= link_to :back, class: "btn btn-primary btn-small" do %>
+    <i class="icon-arrow-left bigger-110"></i>
+    Tilbage
+    <% end %>
+
+    <%= link_to edit_merchant_offer_path(@offer), class: "btn btn-primary btn-small" do %>
+    <i class="icon-edit bigger-110"></i>
+    Rediger
+    <% end %>
+    <%= link_to [:merchant, @offer], 
+    method: :delete, data: { confirm: t(:warning_deletion_offer, :scope => [:business_validations, :offer]) } do %>
+    <button class="btn btn-small btn-danger">
+      <i class="icon-trash bigger-110"></i>
+      Slet tilbud
+    </button>
+    <% end %>
+  </div><!-- /.span11 -->
 </div><!-- /.row-fluid -->
 
 <%= render :partial => 'tooltip_new_edit' %>

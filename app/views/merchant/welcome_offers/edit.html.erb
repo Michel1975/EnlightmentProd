@@ -5,7 +5,7 @@
 <% end %>
 <h3 class="header blue lighter smaller">
   <i class="icon-gift bigger-110"></i>
-  Velkomstgave
+  Rediger velkomstgave
 </h3>
 <div class="row-fluid">
   <div class="span5">
@@ -61,7 +61,7 @@
       $(document).ready(function() {
         var regards_section = $( "#store_regards").data("store-regards");
         char_limit = parseInt(160 - regards_section.length);
-
+        
         $('#live-preview-display').hide();
         $('textarea.preview').bind('blur keyup',function() {
           var display_container = $('#live-preview-display')

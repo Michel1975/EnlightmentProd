@@ -2,7 +2,7 @@ class Merchant::SubscribersController < Merchant::BaseController
 	#If-override-from-base: layout "merchant", except: [:index]
 	
 	def index
-    	@subscribers = current_merchant_store.subscribers.where(active: true).paginate(page: params[:page])
+    	@subscribers = current_merchant_store.subscribers.where(active: true).page(params[:page]).per_page(10)
 	end
 
 	def show
@@ -23,8 +23,13 @@ class Merchant::SubscribersController < Merchant::BaseController
 
 	def prepare_single_message
 		@subscriber = current_resource
+		@message_limit = 160 - 30 #Safe guess on bitly length.
+    	
+    	#SMS stop link - if we decide to go with this option
+    	@stop_link = "\nStop: send #{current_merchant_store.sms_keyword} til 1276 222"
 		#Used for max-length property in textarea
-		@message_limit = 160 - @subscriber.opt_out_link.length
+		#old: @message_limit = 160 - @subscriber.opt_out_link.length
+
 	end
 
 	def send_single_message

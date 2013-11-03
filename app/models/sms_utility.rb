@@ -5,7 +5,8 @@ module SMSUtility
   VALID_PHONE_REGEX_INCOMING = %r{\A(45|\+45|0045)?[1-9][0-9]{7}\z}
 
   #This reflects the standard in database after conversion
-  VALID_PHONE_REGEX_STANDARD = %r{\A\+45?[1-9][0-9]{7}\z}
+  VALID_PHONE_REGEX_STANDARD = %r{\A(\+45)?[1-9][0-9]{7}\z}
+  #old:VALID_PHONE_REGEX_STANDARD = %r{\A\+45?[1-9][0-9]{7}\z}
 
   #This reflects the standard characters for sms messages
   VALID_SMS_MESSAGE = %r{\A[\w\s@?£!1$"#è?¤é%ù&\\()*:Ø+;øÆ,<æ\-=Å.>å\/§\']+\z}
@@ -76,7 +77,6 @@ class SMSFactory
 
   def self.reschduleOfferReminder?(campaign)
     messageContent = prepareMessage('RescheduleCampaign', campaign, nil, nil, nil)
-    
     #sendMessage?('reschedule_group', messageContent) 
     return true
       
@@ -103,8 +103,8 @@ class SMSFactory
       campaign.campaign_members.each do |campaign_member|
         #Generate safe message-id from log method
         recipient = campaign_member.subscriber.member.phone
-        message_id = register_message_notification(campaign, recipient, merchant_store, default_status_code)
-        recipientString += "<to id='#{message_id}' StopLink='#{campaign_member.subscriber.opt_out_link}' >" + recipient + "</to>" 
+        message_id = register_message_notification(campaign, recipient, merchant_store, default_status_code, "campaign")
+        recipientString += "<to id='#{message_id}' StopLink='#{campaign_member.subscriber.opt_out_link_sms}' >" + recipient + "</to>" 
       end
       recipientXml = "<recipients>" + recipientString + "</recipients>"     
       stringXml = "<bulk>" +    
@@ -128,12 +128,14 @@ class SMSFactory
     builder.tag!("myb:sMessageGroupId",  campaign.message_group_id)
     builder.tag!("myb:sDateTimeToSend", campaign.activation_time.strftime("%Y-%m-%dT%H:%M:%S") ) 
     builder.tag!("myb:timeZone", 'Denmark') 
-  elsif mode == 'InstantSingleMessage' || mode == 'InstantSingleAdminMessage' 
-    message_id = register_message_notification(nil, recipient, merchant_store, default_status_code)
+  elsif mode == 'InstantSingleMessage' || mode == 'InstantSingleAdminMessage'
     #Insert stop-link for single direct messages
     if mode == 'InstantSingleMessage' 
+      message_id = register_message_notification(nil, recipient, merchant_store, default_status_code, "single")
       subscriber = merchant_store.subscribers.joins(:member).where(:members =>{ :phone => recipient}).first
-      message += "\n#{subscriber.opt_out_link}"
+      message += "#{subscriber.opt_out_link_sms}" if !subscriber.nil?
+    else
+      message_id = register_message_notification(nil, recipient, merchant_store, default_status_code, "admin")  
     end
     #Format payload containing message parameters.
     stringXml = "<xml><item>" +    
@@ -168,22 +170,26 @@ end
   #END SAVON
 
   #This method is invoked once for each recipient in campaign or for single message.
-  def self.register_message_notification(campaign, recipient, merchant_store, default_status_code)
+  def self.register_message_notification(campaign, recipient, merchant_store, default_status_code, source)
     #Generate safe message-id
     begin
         message_id = SecureRandom.urlsafe_base64
     end while MessageNotification.exists?(message_id: message_id)
     
-    if campaign
+    if campaign && source == 'campaign'
       #Create entry!
       merchant_store.message_notifications.create!( notification_type: 'campaign', recipient: recipient,
                                                     message_id: message_id, campaign_group_id: campaign.message_group_id, status_code_id: default_status_code.id,
                                                     merchant_store_id: merchant_store.id)
       
-    else
+    elsif source == 'single'
       #Create entry!
       merchant_store.message_notifications.create!( notification_type: 'single', recipient: recipient,
-                                                   message_id: message_id, status_code_id: default_status_code.id) 
+                                                    message_id: message_id, status_code_id: default_status_code.id,
+                                                    merchant_store_id: merchant_store.id) 
+    else
+      merchant_store.message_notifications.create!( notification_type: 'admin', recipient: recipient,
+                                                    message_id: message_id, status_code_id: default_status_code.id) 
     end
     return message_id
   end#End method

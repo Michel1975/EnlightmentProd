@@ -1,29 +1,55 @@
 
-<%= form_for [:merchant, @campaign] do |f| %>  
-<% if @campaign.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
-
-      <ul>
-      <% @campaign.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+  <div class="span5">
+    <%= render :partial => "/merchant/shared/error_messages", :locals => { :obj => @campaign } %>
+    <%= form_for [:merchant, @campaign], html: { class: "horizontal"} do |f| %>
+    <div class="control-group">
+      <%= f.label :title, class: "control-label" %>
+      <div class="controls">
+        <%= f.text_field :title, placeholder: "Overskrift" %>&nbsp;&nbsp;
+        <%= tooltip("Indtast en overskrift til kampagnen", "Overskrift") %>
+      </div>
     </div>
-  <% end %>
-  <div class="field">
-    <%= f.label :title %><br />
-    <%= f.text_field :title %>
-  </div>
-  <div class="field">
-    <%= f.label :message %><br />
-    <%= f.text_field :message %>
-  </div>
-  <div class="field">
-    <%= f.label :activation_time %>
-    <%= f.datetime_select :activation_time, default: DateTime.now %>
-  </div> 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+    <div class="control-group">
+      <div class="input-append date">
+        <%= f.label :start_date, "Dato", class: "control-label" %>
+        <%= f.text_field :start_date, class: "datepicker", placeholder: "Dato"%> &nbsp;&nbsp;
+        <span class="add-on"><i class="icon-calendar"></i></span>
+        <%= tooltip("Angiv dato/tidspunkt for afsendelse af sms'er (interval: mindst 2 timer fra nu og en uge frem)", "Dato") %>
+      </div>          
+    </div>
+    <div class="input-append bootstrap-timepicker-component">
+      <%= f.label :start_time, "Tidspunkt", class: "control-label" %>
+      <%= f.text_field :start_time, class: "timepicker-default input-small open_time", placeholder: "Tidspunkt" %>
+      <span class="add-on">
+        <i class="icon-time"></i>
+      </span>
+      <%= tooltip("Angiv dato/tidspunkt for afsendelse af sms'er (interval: mindst 2 timer fra nu og en uge frem)", "Tidspunkt") %>
+    </div>
+    <div class="control-group">
+      <%= f.label :message, class: "control-label" %>
+      <div class="controls">
+        <%= f.text_area :message, class: "limited preview", style:"width:400px", maxlength: "#{@message_limit}", rows: "6", placeholder: "Skriv kampagneteksten" %>&nbsp;&nbsp;
+        <%= tooltip("Indtast din SMS kampagne tekst som sendes med sms (max. #{@message_limit} tegn). Bemærk at påkrævet stop-link indsættes automatisk i slutningen af beskeden", "Skriv kampagneteksten") %>
+      </div>
+    </div>
+      <div class="control-group">
+        <div class="controls">
+          <%= button_tag class: "btn btn-primary" do %>
+            <i class="icon-edit bigger-110"></i>
+            Gem
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div><!-- /.span5 -->
+  <div class="span5">
+    <div id="live-preview-display" class="widget-box">
+      <div class="widget-header widget-header-flat">
+        <h4 class="smaller">Preview af sms-besked</h4>
+      </div>
+      <div class="widget-body"> 
+        <div id="sms_text" class="widget-main"></div>
+      </div>
+    </div><!-- /.widget-box -->
+  </div><!-- /.span5 -->
+

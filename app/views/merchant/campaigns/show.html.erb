@@ -1,61 +1,162 @@
-<% provide(:title, 'Sms kampagne oplysninger') %>
-<div class="span11">
-  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Titel</th>
-        <th>Besked</th>    
-        <th>Afsendelse</th>
-        <th>Status</th>
-        <th>Omkostninger</th>
-        <th>Oprettet</th>
-        <th>Senest opdateret</th>
-        <th>Handling</th>
-      </tr>
-    </thead>
-    <tbody>     
-      <tr>
-        <td> <%= @campaign.title %> </td>
-        <td> <%= @campaign.message %> </td> 
-        <td> <%= @campaign.activation_time %> </td>
-        <td> <%= @campaign.status %> </td> 
-        <td> <%= @campaign.total_cost %> kr. </td> 
-        <td><%= @campaign.created_at %></td>
-        <td><%= @campaign.updated_at %></td> 
-        <td> 
-          <%= link_to "Slet sms kampagne", [:merchant, @campaign], method: :delete,
-            data: { confirm: "Er du sikker?" } %>         
-        </td>      
-      </tr>      
-    </tbody>
-  </table>
-</div>
+<% provide(:title, 'SMS kampagne') %>
+<% provide(:description, 'SMS kampagne oplysninger') %>
+<% content_for :breadcrumps do %>
+  <li class="active">SMS kampagne</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-bullhorn bigger-110"></i>
+  SMS kampagne
+</h3>
+<div class="row-fluid">
+  <div class="span5">
+    <div class="profile-user-info profile-user-info-striped">
+      
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Overskrift </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="age"> <%= @campaign.title %> </span>
+        </div>
+      </div>
 
-<h4>Modtagere</h4>
-<div class="span10">
-  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Navn</th>
-        <th>Email</th>
-        <th>Telefon</th>  
-        <th>Status</th> 
-      </tr>
-    </thead>
-    <tbody>
-      <% @campaign.campaign_members.each do |campaign_member| %>
-      <tr>
-        <td><%= campaign_member.subscriber.member.name%></td>
-        <td><%= campaign_member.subscriber.member.user.try(:email)%></td>
-        <td><%= campaign_member.subscriber.member.phone %></td>
-        <td><%= campaign_member.status %></td>
-      </tr>
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Afsendelse </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="age"> <%= I18n.l( @campaign.activation_time ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Status </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="age"> <%= I18n.t(@campaign.status.to_sym, :scope => [:enums, :campaign] ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Omkostninger </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="age"> <%= @campaign.total_cost %> kr. </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Oprettet </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="age"> <%= I18n.l( @campaign.created_at ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Opdateret </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="age"> <%= I18n.l( @campaign.updated_at ) %> </span>
+        </div>
+      </div>
+    </div><!-- /.profile-user-info -->
+    
+  </div><!-- /.span5 -->
+  <div class="span7 align-center">
+    <div class="profile-user-info profile-user-info-striped">
+        <div class="profile-info-row">
+          <div class="profile-info-name"> Besked </div>
+          <div class="profile-info-value">
+            <span class="editable editable-click" id="age"> <%= simple_format( @campaign.message ) %> </span>
+          </div>
+        </div>
+    </div><!-- /.profile-user-info -->
+  </div><!-- /.span7 -->
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+  <div class="span7">
+    <hr>
+    <%= link_to :back, class: "btn btn-primary btn-small" do %>
+    <i class="icon-arrow-left bigger-110"></i>
+    Tilbage
+    <% end %>
+
+    <%= link_to edit_merchant_campaign_path(@campaign), class: "btn btn-primary btn-small" do %>
+    <i class="icon-edit bigger-110"></i>
+    Rediger
+    <% end %>
+    <%= link_to [:merchant, @campaign], 
+      method: :delete, data: { confirm: t(:warning_deletion_campaign, :scope => [:business_validations, :campaign]) } do %>
+      <button class="btn btn-small btn-danger">
+        <i class="icon-trash bigger-110"></i>
+        Slet kampagne
+      </button>
+    <% end %>
+  </div><!-- /.span11 -->
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+  <div class="span11">
+    <br/>
+    <h4 class="header blue lighter smaller" style="margin-top:5px">
+      Kampagne medlemmer
+    </h4>
+    <%= will_paginate @campaign_members, class:"pagination"%>
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Navn</th> 
+            <th>Telefon</th>
+            <th>Leveringstatus</th>
+            <th>Medlem fra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @campaign_members.each do |campaign_member| %>
+            <tr>
+              <td> <%= campaign_member.subscriber.member.name %> </td>
+              <td> <%= campaign_member.subscriber.member.phone %> </td>
+              <td> <%= campaign_member.status %> </td>
+              <td> <%= I18n.l( campaign_member.subscriber.start_date ) %> </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  </div><!-- /.span11 -->
+</div><!-- /.row-fluid -->
+<% if @campaign.activation_time > Time.zone.now %>
+  <div class="row-fluid">
+    <div class="span7">
+      <br/>
+      <h4 class="header blue lighter smaller" style="margin-top:5px">
+        Send test sms til dig selv
+      </h4>
+      <%= form_tag send_test_message_merchant_campaign_path(@campaign), html: { class: "horizontal"}, :method => :post do %>
+        <div class="control-group">
+          <%= label_tag :recipient, "Mobilnr." %>
+          <div class="controls">
+            <%= text_field_tag :recipient, nil, placeholder: "Indtast dit mobil nummer."%>&nbsp;&nbsp;
+            <%= tooltip("Mobil nummer", "Indtast dit mobil nummer") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <%= button_tag class: "btn btn-small btn-primary" do %>
+              <i class="icon-envelope bigger-110"></i>
+              Send besked
+            <% end %>
+          </div>
+        </div>
       <% end %>
-    </tbody>
-  </table>
-</div>
+  </div><!-- /.span7 -->
+  </div><!-- /.row-fluid -->
+<% end %>
 
-<div> 
-  <%= link_to 'Rediger', edit_merchant_campaign_path(@campaign) %> |
-  <%= link_to 'Tilbage', merchant_campaigns_path %>
-</div>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+      });
+  </script>
+<% end %>
+
+
+
+
+
+
+
+

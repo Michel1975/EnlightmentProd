@@ -77,8 +77,8 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			keyword = text.gsub('stop', '').gsub(/\s+/, "").downcase
  			merchantStore = MerchantStore.find_by_sms_keyword(keyword)
  			if merchantStore
- 				subscriber = merchantStore.subscribers.find_by_member_id(member.id)
- 				if subscriber && SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone)	
+ 				subscriber = merchantStore.subscribers.find_by_member_id(member.id) 
+ 				if subscriber && SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone, merchantStore)	
  					subscriber.opt_out.save!
  				end
  			else

@@ -52,6 +52,7 @@ EnlightmentProd::Application.routes.draw do
     resources :campaigns do
       get 'active', :on => :collection
       get 'finished', :on => :collection
+      post 'send_test_message', :on => :member
     end
     resources :merchant_users
     resources :merchant_members, :only => [:new, :create]

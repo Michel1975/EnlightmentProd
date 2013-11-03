@@ -13,6 +13,12 @@ class Merchant::WelcomeOffersController < Merchant::BaseController
 
 	def update
 		@welcome_offer = current_resource
+
+		#In case of validation errors, we initialize form attributes again
+		@welcome_offer = current_resource
+		#Used for max-length property in textarea
+		@message_limit = 160 - current_merchant_store.store_regards.length
+
     	respond_to do |format|
       		if @welcome_offer.update_attributes(params[:welcome_offer])
         		format.html { redirect_to [:merchant, @welcome_offer], notice: t(:offer_updated, :scope => [:business_validations, :welcome_offer]) }

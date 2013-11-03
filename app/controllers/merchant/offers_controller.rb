@@ -3,11 +3,11 @@ class Merchant::OffersController < Merchant::BaseController
 
   def active
     @active_offers = current_merchant_store.offers.where(":date_now >= valid_from AND :date_now <= valid_to",
-      {:date_now => Time.zone.now }).paginate(page: params[:page], :per_page => 20)
+      {:date_now => Time.zone.now }).page(params[:page]).per_page(10)
   end
 
   def archived
-     @inactive_offers = current_merchant_store.offers.where("valid_to < ?", Time.zone.now).paginate(page: params[:page], :per_page => 20)
+     @inactive_offers = current_merchant_store.offers.where("valid_to < ?", Time.zone.now).page(params[:page]).per_page(10)
   end
 
   def index 
