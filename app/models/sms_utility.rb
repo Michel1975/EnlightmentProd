@@ -5,7 +5,8 @@ module SMSUtility
   VALID_PHONE_REGEX_INCOMING = %r{\A(45|\+45|0045)?[1-9][0-9]{7}\z}
 
   #This reflects the standard in database after conversion
-  VALID_PHONE_REGEX_STANDARD = %r{\A(\+45)?[1-9][0-9]{7}\z}
+  VALID_PHONE_REGEX_STANDARD = %r{\A(\+45){1}[1-9][0-9]{7}\z}
+  #old2:VALID_PHONE_REGEX_STANDARD = %r{\A(\+45)?[1-9][0-9]{7}\z}
   #old:VALID_PHONE_REGEX_STANDARD = %r{\A\+45?[1-9][0-9]{7}\z}
 
   #This reflects the standard characters for sms messages
@@ -132,8 +133,6 @@ class SMSFactory
     #Insert stop-link for single direct messages
     if mode == 'InstantSingleMessage' 
       message_id = register_message_notification(nil, recipient, merchant_store, default_status_code, "single")
-      subscriber = merchant_store.subscribers.joins(:member).where(:members =>{ :phone => recipient}).first
-      message += "#{subscriber.opt_out_link_sms}" if !subscriber.nil?
     else
       message_id = register_message_notification(nil, recipient, merchant_store, default_status_code, "admin")  
     end

@@ -35,7 +35,7 @@ class Merchant::SubscribersController < Merchant::BaseController
 	def send_single_message
 		@subscriber = current_resource
 		message = params[:message]
-		message = message + @subscriber.opt_out_link
+		message = message + @subscriber.opt_out_link_sms
 		no_characters = message.length
 		if SMSUtility::SMSFactory.validate_sms?(message) || no_characters > 160
 			if SMSUtility::SMSFactory.sendSingleMessageInstant?(message, @subscriber.member.phone, current_merchant_store)

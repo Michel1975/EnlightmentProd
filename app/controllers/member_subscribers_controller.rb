@@ -27,7 +27,7 @@ class MemberSubscribersController < ApplicationController
       @subscriber.opt_out
       @subscriber.save!
       #Send opt-out e-mail to member
-      MemberMailer.web_opt_out(@subscriber.member, @merchant_store).deliver
+      MemberMailer.web_opt_out(@subscriber.member.id, @merchant_store.id).deliver
     end
     #else
       #render :nothing => true

@@ -101,7 +101,7 @@ class Subscriber < ActiveRecord::Base
   end
 
   def opt_out_link_sms 
-    client = Bitly.client
+    #client = Bitly.client
     #No new-line since link is inserted with stop macro
     return "\nStop: send #{merchant_store.sms_keyword} til 1276 222" 
   end

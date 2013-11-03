@@ -19,7 +19,7 @@ class Campaign < ActiveRecord::Base
   validate  :sms_compliance_validation
   validates :activation_time, presence: true
   validate :validate_activatation_time
-  validates :status, :inclusion => { :in => %w(scheduled error completed)}, :allow_blank => true
+  validates :status, :inclusion => { :in => %w( new scheduled error completed)}, :allow_blank => true
   validates :merchant_store_id, presence: true
 
   def start_date

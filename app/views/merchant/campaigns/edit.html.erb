@@ -33,10 +33,10 @@
           $('[data-rel=popover]').popover({container:'body'});
           
           $('textarea.limited').inputlimiter({
-          limit: $(this).data('maxlength'),
-          lineReturnCount: 2,
-          remText: '%n tegn tilbage...',
-          limitText: 'maks tilladt: %n.'
+            limit: $(this).data('maxlength'),
+            lineReturnCount: 2,
+            remText: '%n tegn tilbage...',
+            limitText: 'maks tilladt: %n.'
           });
 
           $('.date-picker').datepicker().next().on(ace.click_event, function(){
@@ -55,6 +55,9 @@
               showSeconds: true,
               showMeridian: false
             });
+          });
+          $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
           });
       });
   </script>

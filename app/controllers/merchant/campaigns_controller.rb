@@ -35,33 +35,33 @@ class Merchant::CampaignsController < Merchant::BaseController
 
   #Eftersom oprettelsen af ordren i gateway sker asynkront, så vil vi oprette selve kampagnen først
   def create
-      #Step 1: Opret selve kampagnen først
-      @campaign = current_merchant_store.campaigns.build(params[:campaign]) 
-      #Default add all members for a store
-      if @campaign.save
-        #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
-        current_merchant_store.subscribers.each do |subscriber| 
-          #Only active subscribers are included
-          if subscriber.active
-            @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 
-          end
+    #Step 1: Opret selve kampagnen først
+    @campaign = current_merchant_store.campaigns.build(params[:campaign]) 
+    #Default add all members for a store
+    if @campaign.save
+      #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
+      current_merchant_store.subscribers.each do |subscriber| 
+        #Only active subscribers are included
+        if subscriber.active
+          @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 
         end
-
-        #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions
-        if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign, current_merchant_store)
-          @campaign.status = 'scheduled'
-          @campaign.save!
-          flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
-          redirect_to [:merchant, @campaign]
-        else
-          @campaign.status = 'error'
-          @campaign.save!
-          flash[:error] = t(:campaign_create_error, :scope => [:business_validations, :campaign])
-          redirect_to [:merchant, @campaign]
-        end
-      else
-        render 'new'
       end
+
+      #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions
+      if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign, current_merchant_store)
+        @campaign.status = 'scheduled'
+        @campaign.save!
+        flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
+        redirect_to [:merchant, @campaign]
+      else
+        @campaign.status = 'error'
+        @campaign.save!
+        flash[:error] = t(:campaign_create_error, :scope => [:business_validations, :campaign])
+        redirect_to [:merchant, @campaign]
+      end
+    else
+      render 'new'
+    end
   end
  
   def destroy
@@ -132,3 +132,40 @@ class Merchant::CampaignsController < Merchant::BaseController
     end
 
 end#end class
+
+
+=begin
+Backup d. 3.11.13 før delayedjob
+def create
+      #Step 1: Opret selve kampagnen først
+      @campaign = current_merchant_store.campaigns.build(params[:campaign]) 
+      #Default add all members for a store
+      if @campaign.save
+        #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
+        current_merchant_store.subscribers.each do |subscriber| 
+          #Only active subscribers are included
+          if subscriber.active
+            @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 
+          end
+        end
+
+        #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions
+        if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign, current_merchant_store)
+          @campaign.status = 'scheduled'
+          @campaign.save!
+          flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
+          redirect_to [:merchant, @campaign]
+        else
+          @campaign.status = 'error'
+          @campaign.save!
+          flash[:error] = t(:campaign_create_error, :scope => [:business_validations, :campaign])
+          redirect_to [:merchant, @campaign]
+        end
+      else
+        render 'new'
+      end
+  end
+
+
+  
+=end

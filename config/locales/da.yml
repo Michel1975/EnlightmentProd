@@ -425,6 +425,7 @@ da:
     page_gap: "&hellip;"
   enums:
     campaign:
+      new: Ny
       scheduled: Planlagt
       error: Fejl
       completed: Gennemført

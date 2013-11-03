@@ -26,7 +26,7 @@
       </div>
       <div class="control-group">
         <div class="controls">
-          <%= button_tag class: "btn btn-primary" do %>
+          <%= button_tag class: "submission btn btn-primary" do %>
             <i class="icon-edit bigger-110"></i>
             Send besked
           <% end %>
@@ -81,6 +81,10 @@
           lineReturnCount: 2,
           remText: '%n tegn tilbage...',
           limitText: 'maks tilladt: %n.'
+          });
+
+          $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
           });
       });
   </script>

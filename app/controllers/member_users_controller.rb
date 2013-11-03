@@ -24,7 +24,7 @@ class MemberUsersController < ApplicationController
   		if @member.save
   			#virker ikke helt efter hensigten: auto_login(@member.user)
         #Send welcome e-mail
-        MemberMailer.welcome_mail_new_member(@member).deliver
+        MemberMailer.delay.welcome_mail_new_member(@member.id)#.deliver
     		redirect_to root_path, :notice => t(:member_created, :scope => [:business_validations, :frontend, :member_user])
   		else
     		render :new
