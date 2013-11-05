@@ -1,7 +1,7 @@
 class MemberUsersController < ApplicationController
   #default layout application is used
-	skip_before_filter :require_login, :only => [:new, :create, :complete_sms_profile, :update_sms_profile]
-  skip_before_filter :authorize, :only => [:new, :create, :complete_sms_profile, :update_sms_profile]
+	skip_before_filter :require_login, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions]
+  skip_before_filter :authorize, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions]
   before_filter :member_user,  :only => [:edit, :update, :show, :destroy]
   
   	#Vigtig! http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for
@@ -34,6 +34,9 @@ class MemberUsersController < ApplicationController
   def edit
   	#logger.info("Michel:" + current_member_user.id + "current_user-id:" + current_user.id)
   	@member = current_resource #Old:current_member_user
+  end
+
+  def terms_conditions
   end
 
   def show

@@ -245,8 +245,8 @@ da:
         postal_code: Postnr.
         gender: Køn
         birthday: Fødselsdag
-        phone: Telefon
-        terms_of_service: Salgs og leveringsbetingelser
+        phone: Mobil
+        terms_of_service: Salgs & Leveringsbetingelser
         origin: Oprindelse
       user:
         email: E-mail

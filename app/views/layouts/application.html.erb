@@ -18,7 +18,7 @@
 <body><!-- Start body-->
   <%= render 'layouts/frontend_top' %>
   <%= render 'layouts/frontend_header' %>
-  <%= render 'layouts/frontend_breadcrumps' unless request.url == root_url %>
+  <%= render 'layouts/frontend_breadcrumps' unless ( controller_name == "root" && action_name == "home" ) %>
   
   <!--=== Content Part ===-->
   <div class="container">

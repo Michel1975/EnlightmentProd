@@ -5,14 +5,75 @@
     <li class="active">Brugerprofil</li>
 <% end %>
 
-<div class="row">
-	<p>Navn: <%= @member_user.name %></p> 
-	<p>Telefon: <%= @member_user.phone %></p>
-	<p>Email: <%= @member_user.user.email %></p>
-	<p>Postnummer: <%= @member_user.postal_code %></p>
-    <p>Køn: <%= @member_user.gender %></p>
-    <p>Fødselsdag <%= @member_user.birthday %></p>
-</div>
+<div class="row-fluid">
+  <div class="span5">
+    <div class="profile-user-info profile-user-info-striped">
+      
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Navn </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="title"> <%= @member_user.name %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Telefon </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="valid_from"> <%= @member_user.phone %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Email </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="valid_to"> <%= @member_user.user.try(:email) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Postnummer </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="valid_to"> <%= @member_user.postal_code %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> By </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="valid_to"> <%= @member_user.city %> test</span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Køn </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="valid_to"> <%= gender( @member_user.gender ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Fødselsdag </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="valid_to"> <%= I18n.l( @member_user.birthday ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Oprettet </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="created_at"> <%= I18n.l( @member_user.created_at ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Senest opdateret </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="updated_at"> <%= I18n.l( @member_user.updated_at ) %> </span>
+        </div>
+      </div>
+    </div><!-- /.profile-user-info -->
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
 
 <%= link_to 'Rediger', edit_member_user_path(@member_user) %>
 <%= link_to "Slet medlem", member_user_path(@member_user), method: :delete,

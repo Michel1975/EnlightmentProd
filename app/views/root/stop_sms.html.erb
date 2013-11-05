@@ -1,3 +1,69 @@
+<% provide(:title, 'Afmeld') %>
+<% provide(:description, 'Afmeld SMS-notifikationer fra butik') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Afmeld SMS-notifikationer</li>
+<% end %>
+    <div class="row-fluid margin-bottom-10">            
+        <%= form_tag stop_sms_save_path, class: "reg-page" do |f| %>
+            <div class="controls"> 
+                <%= label_tag :store %>
+                <%= text_field_tag :store, @merchant_store.store_name, readonly: "true" %>
+                <%= label_tag :phone %>
+                <%= text_field_tag :phone, @member.phone, class: "span12", readonly: "true" %>
+                <%= hidden_field_tag 'member_id', @member.id %> 
+                <%= hidden_field_tag 'merchant_store_id', @merchant_store.id %> 
+                <%= hidden_field_tag 'token', @token %>                  
+            </div> 
+            <div class="controls form-inline">                    
+                <%= button_tag "Afmeld", type: "submit", class: "btn-u pull-right" %>
+            </div>
+            <br/>
+            <hr />
+        <% end %>        
+    </div><!--/row-fluid-->
+    
+<% content_for :scripts do %>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script> 
+<% end %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="container">	
         <% flash.each do |key, value| %>
             <%= content_tag(:div, value, class: "alert alert-#{key}") %>

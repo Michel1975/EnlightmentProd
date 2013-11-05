@@ -7,7 +7,7 @@ class RootController < ApplicationController
   end
 
   def contact   
-  end 
+  end
   
   def home
 		member_ships = Hash.new
@@ -50,9 +50,6 @@ class RootController < ApplicationController
       subscriber = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
     	@subscribed = subscriber && subscriber.active ? true : false
 	end
-
-	
-  
 
   def favorites
     @member_user = current_member_user
@@ -102,7 +99,6 @@ class RootController < ApplicationController
     def current_resource
       @current_resource ||= Campaign.find(params[:id]) if params[:id]
     end
-
 
 end#End class
 

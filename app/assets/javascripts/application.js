@@ -18,6 +18,8 @@
 //= require raphael
 //= require morris
 //= require "gmap"
+//= require bootstrap-datepicker
+//= require locales/bootstrap-datepicker.da
 //= require_directory ./utility
 
 

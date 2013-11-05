@@ -1,56 +1,51 @@
-<% provide(:title, 'Tilmelding') %>
-<h1>Opret nyt medlem</h1>
-
-<%= form_for @member, as: :member, :url => member_users_path do |f| %>
-  <% if @member.errors.any? %>
-    <div class="error_messages">
-      <h2>Form is invalid</h2>
-      <ul>
-        <% for message in @member.errors.full_messages %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-  <div class="field">
-    <%= f.label :first_name %>
-    <%= f.text_field :first_name %>
-  </div>
-  <div class="field">
-    <%= f.label :last_name %>
-    <%= f.text_field :last_name %>
-  </div>
-  <div class="field">
-    <%= f.label :phone %>
-    <%= f.text_field :phone %>
-  </div>
-  <div class="field">
-    <%= f.label :postal_code %>
-    <%= f.text_field :postal_code %>
-  </div>
-  <div class="field">
-    <%= f.label :gender %>
-    <%= f.text_field :gender %>
-  </div>
-  <div class="field">
-    <%= f.label :birthday %>
-    <%= f.date_select :birthday %>
-  </div>
-  <%= f.fields_for :user do |t| %>
-    <div class="field">
-      <%= t.label :email %>
-      <%= t.text_field :email %>
-    </div>
-    <div class="field">
-      <%= t.label :password %>
-      <%= t.password_field :password %>
-    </div>
-    <div class="field">
-      <%= t.label :password_confirmation %>
-      <%= t.password_field :password_confirmation %>
-    </div>
-  <% end %>
-  <div class="actions"><%= f.submit %></div>
+<% provide(:title, 'Nyt medlem') %>
+<% provide(:description, 'Tilmelding - Club Novus') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Nyt medlem</li>
 <% end %>
 
-<%= link_to 'Tilbage', root_path %>
+<div class="row-fluid">
+  <div class="span6 offset3">
+      <div class="headline"><h3>Bliv medlem af Danmarks mest lokale kundeklub</h3></div>
+      <p>Med club novus kan dine favoritbutikker tilbyde dig medlemsfordele og attraktive tilbud, når du vælger at handle lige nede om hjørnet. Som medlem af club novus støtter du samtidig et blomstrende butiksmiljø i dit eget nærområde. </p>
+      <p>Som medlem opnår du følgende fordele:</p>
+      <ul class="unstyled">
+          <li><i class="icon-ok color-green"></i> Universiel kunde-fordelsklub med alle dine favoritbutikker </li>
+          <li><i class="icon-ok color-green"></i> Modtag løbende spændende medlemstilbud fra dit lokalområde </li>
+          <li><i class="icon-ok color-green"></i> Få velkomstgave fra butikken </li>
+          <li><i class="icon-ok color-green"></i> Bliv en del af fællesskabet om at styrke den lokale handel </li>
+      </ul>
+      <p> Udfyld din medlemsprofil forneden og gå opdagelse i vores katalog af butikker i dit lokalområde </p>
+  </div>
+</div>
+
+<%= render 'form' %>
+
+<% content_for :scripts do %>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+
+    jQuery(function($) {
+      $('.date-picker').datepicker().next().on("click", function(){
+        $(this).prev().focus();
+      });
+          
+      $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'da',
+        autoclose: true
+      });
+    });//Close Javascript function
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script> 
+<% end %>

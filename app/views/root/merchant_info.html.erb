@@ -1,17 +1,8 @@
-<!--=== Breadcrumbs ===-->
-<div class="breadcrumbs margin-bottom-40">
-    <div class="container">
-        <h1 class="pull-left">For butikker</h1>
-        <ul class="pull-right breadcrumb">
-            <li><a href="index.html">Forside</a> <span class="divider">/</span></li>            
-            <li class="active">Butikker</li>
-        </ul>
-    </div><!--/container-->
-</div><!--/breadcrumbs-->
-<!--=== End Breadcrumbs ===-->
-
-<!--=== Content Part ===-->
-<div class="container">     
+<% provide(:title, 'For butikker') %>
+<% provide(:description, 'Information om Club Novus for butiksejere') %>
+<% content_for :breadcrumps do %>
+  <li class="active">For butikker</li>
+<% end %>
     <div class="row-fluid">
         <!-- Our Services -->
         <div class="row-fluid">
@@ -259,5 +250,3 @@
         </ul>
     </div><!--/flexslider-->
     <!-- //End Our Clients -->
-</div><!--/container-->     
-<!--=== End Content Part ===-->

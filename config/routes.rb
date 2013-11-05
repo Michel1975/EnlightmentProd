@@ -11,6 +11,8 @@ EnlightmentProd::Application.routes.draw do
   root :to => "root#home"
   match '/merchant_info',  to: 'root#merchant_info'
   match '/contact',  to: 'root#contact'
+  get "favorites" => "root#favorites", :as => "favorites"
+  get "terms_conditions" => "member_users#terms_conditions", :as => "terms_conditions"
 
   #Frontend resources
   resources :member_users
@@ -26,9 +28,6 @@ EnlightmentProd::Application.routes.draw do
   #SMS opt-out from sms-link
   match '/stop_sms_confirm',  to: 'root#stop_sms_subscription_view', via: :get, :as => "stop_sms_confirm"
   match '/stop_sms_save',  to: 'root#stop_sms_subscription_update', via: :post, :as => "stop_sms_save"
-
-  #Member links
-  get "favorites" => "root#favorites", :as => "favorites"
 
   #Complete profile on web after signing up in store
   match '/edit_sms_profile',  to: 'member_users#complete_sms_profile', via: :get

@@ -1,5 +1,5 @@
   <div class="row-fluid">
-    <%= form_for @member, as: :member, :url => member_users_path, html: { class: "reg-page", style: "max-width: 50%"} do |f| %>
+    <%= form_for @member, :url => update_sms_profile_path(@member), html: { class: "reg-page", style: "max-width: 50%"} do |f| %>
       <%= render :partial => "/shared/error_messages", :locals => { :obj => @member } %>
       <div class="controls">
         <div class="row-fluid">
@@ -13,7 +13,7 @@
               <%= f.text_field :last_name, placeholder: "Efternavn" %>
             </div>
             <div class="field">
-              <%= f.label :phone %>
+              <%= f.label :phone, readonly: true %>
               <%= f.text_field :phone, placeholder: "Mobil" %>
             </div>
             <div class="field">

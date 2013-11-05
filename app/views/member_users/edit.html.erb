@@ -1,65 +1,28 @@
-<% provide(:title, 'Rediger brugerprofil') %>
-<% provide(:description, 'Rediger dine brugeroplysninger') %>
+<% provide(:title, 'Rediger medlem') %>
+<% provide(:description, 'Rediger medlemsoplysninger') %>
 <% content_for :breadcrumps do %>
-    <li>Medlemmer<span class="divider">/</span></li>
-    <li class="active">Rediger brugerprofil</li>
+  <li class="active">Rediger medlem</li>
 <% end %>
 
-<%= form_for @member, as: :member, :url => member_user_path(@member) do |f| %>
-  <% if @member.errors.any? %>
-    <div class="error_messages">
-      <h2>Form is invalid</h2>
-      <ul>
-        <% for message in @member.errors.full_messages %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-  <div class="field">
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :phone %>
-    <%= f.text_field :phone %>
-  </div>
-  <div class="field">
-    <%= f.label :postal_code %>
-    <%= f.text_field :postal_code %>
-  </div>
-  <div class="field">
-    <%= f.label :gender %>
-    <%= f.text_field :gender %>
-  </div>
-  <div class="field">
-    <%= f.label :birthday %>
-    <%= f.date_select :birthday %>
-  </div>
-  <%= f.fields_for :user do |t| %>
-    <div class="field">
-      <%= t.label :email %>
-      <%= t.text_field :email %>
-    </div>
-    <div class="field">
-      <%= t.label :password %>
-      <%= t.password_field :password %>
-    </div>
-    <div class="field">
-      <%= t.label :password_confirmation %>
-      <%= t.password_field :password_confirmation %>
-    </div>
-  <% end %>
-  <div class="actions"><%= f.submit %></div>
-<% end %>
-
-<%= link_to 'Tilbage', root_path %>
+<%= render 'form' %>
 
 <% content_for :scripts do %>
 <script type="text/javascript">
     jQuery(document).ready(function() {
         App.init();
     });
+
+    jQuery(function($) {
+      $('.date-picker').datepicker().next().on("click", function(){
+        $(this).prev().focus();
+      });
+          
+      $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'da',
+        autoclose: true
+      });
+    });//Close Javascript function
 
     (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
