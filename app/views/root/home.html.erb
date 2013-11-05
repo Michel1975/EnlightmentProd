@@ -1,11 +1,8 @@
-<% provide(:title, 'Club Novus - Fremtidens lokale kundeklub') %>
-<h1>Welcome</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-<p><%= link_to "Visit secret page", secret_path %></p>
+<% provide(:title, 'Aktive tilbud') %>
+<% provide(:description, 'Liste over aktive tilbud') %>
 
-<div style="width:100%;height:100%"><%= gmaps("markers" => {"data" => @json, "options" => {"custom_infowindow_class" => "infobox-wrapper", 
-	"list_container" => "list_items" } }) %> </div>
-
+<div style="width:100%;height:100%;border-style:none;"><%= gmaps("markers" => {"data" => @json, "options" => {"custom_infowindow_class" => "infobox-wrapper", 
+    "list_container" => "list_items" } }) %> </div>
 <br/>
 
 <div>
@@ -44,9 +41,22 @@
 </div>
 
 </div>
-
+<div id="fb-root"></div>
 <% content_for :scripts do %>
 <script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+
    Gmaps.map.infobox = function(boxText) {
   return {
      content: boxText
@@ -66,8 +76,6 @@
     ,pane: "floatPane"
     ,enableEventPropagation: false
  }};
-
- 
 </script> 
 <% end %>
 

@@ -1,0 +1,67 @@
+<% content_for :head do %>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<% end %>
+<% provide(:title, 'Kontakt') %>
+<% provide(:description, 'Kontakt Club Novus') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Kontakt</li>
+<% end %>
+
+<!-- Google Map -->
+<div class="row-fluid">
+    <div id="map" class="map margin-bottom-40">
+    </div><!---/map-->
+</div>
+<!-- End Google Map -->
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="headline"><h3>Kontaktformular</h3></div>
+            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit landitiis.</p><br />
+            <form>
+                <label>Name</label>
+                <input type="text" class="span7 border-radius-none" />
+                <label>Email <span class="color-red">*</span></label>
+                <input type="text" class="span7 border-radius-none" />
+                <label>Message</label>
+                <textarea rows="8" class="span10"></textarea>
+                <p><button type="submit" class="btn-u">Send Message</button></p>
+            </form>
+        </div><!--/span9-->
+        
+        <div class="span3">
+            <!-- Contacts -->
+            <div class="headline"><h3>Kontakt os</h3></div>
+            <ul class="unstyled who margin-bottom-20">
+                <li><a href="#"><i class="icon-home"></i>Klostervangen 34, DK-3360, Danmark</a></li>
+                <li><a href="#"><i class="icon-envelope-alt"></i>michel@clubnovus.dk</a></li>
+                <li><a href="#"><i class="icon-phone-sign"></i>+45 2460 0819</a></li>
+                <li><a href="#"><i class="icon-globe"></i>http://www.clubnovus.dk</a></li>
+            </ul>
+
+            <!-- Business Hours -->
+            <div class="headline"><h3>Åbningstider</h3></div>
+            <ul class="unstyled">
+                <li><strong>Monday-Friday:</strong> 10am to 8pm</li>
+                <li><strong>Saturday:</strong> 11am to 3pm</li>
+                <li><strong>Sunday:</strong> Closed</li>
+            </ul>
+        </div><!--/span3-->
+    </div><!--/row-fluid-->
+<% content_for :scripts do %>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+        Contact.initMap();
+    });
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script> 
+<% end %>
+

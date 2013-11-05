@@ -1,7 +1,13 @@
 class RootController < ApplicationController
 	#default layout application is used
-	skip_before_filter :require_login, :only => [:home, :show_merchant_store, :stop_sms_subscription_view, :stop_sms_subscription_update]
+	skip_before_filter :require_login, :only => [:home, :merchant_info, :contact, :show_merchant_store, :stop_sms_subscription_view, :stop_sms_subscription_update]
 	skip_before_filter :authorize
+
+  def merchant_info   
+  end
+
+  def contact   
+  end 
   
   def home
 		member_ships = Hash.new

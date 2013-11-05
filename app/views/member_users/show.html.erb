@@ -1,7 +1,10 @@
+<% provide(:title, 'Brugerprofil') %>
+<% provide(:description, 'Din brugerprofil') %>
+<% content_for :breadcrumps do %>
+    <li>Medlemmer<span class="divider">/</span></li>
+    <li class="active">Brugerprofil</li>
+<% end %>
 
-<% provide(:title, 'Brugerprofil - medlem') %>
-
-<h4>Medlemsdetaljer</h4>
 <div class="row">
 	<p>Navn: <%= @member_user.name %></p> 
 	<p>Telefon: <%= @member_user.phone %></p>
@@ -15,3 +18,20 @@
 <%= link_to "Slet medlem", member_user_path(@member_user), method: :delete,
         	data: { confirm: "Er du sikker?" } %> 
 <%= link_to 'Tilbage', root_path %>
+
+<% content_for :scripts do %>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script> 
+<% end %>

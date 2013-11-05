@@ -7,8 +7,10 @@ EnlightmentProd::Application.routes.draw do
 
   #get "password_resets/update"
 
+  #Common frontend paths
   root :to => "root#home"
-  get "secret" => "root#secret", :as => "secret" 
+  match '/merchant_info',  to: 'root#merchant_info'
+  match '/contact',  to: 'root#contact'
 
   #Frontend resources
   resources :member_users

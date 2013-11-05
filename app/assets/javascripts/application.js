@@ -17,6 +17,7 @@
 //= require cloudinary/processing
 //= require raphael
 //= require morris
+//= require "gmap"
 //= require_directory ./utility
 
 
