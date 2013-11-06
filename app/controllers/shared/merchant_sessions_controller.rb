@@ -9,7 +9,7 @@ class Shared::MerchantSessionsController < Shared::BaseController
         	if user.sub_type == 'MerchantUser'
           		name = MerchantUser.find(user.sub_id)
           		update_eventhistory("login", "Test")
-          		redirect_back_or_to merchant_dashboard_url, :notice => t(:logged_in, :scope => [:business_validations, :session_merchant])
+          		redirect_back_or_to merchant_dashboard_url, :success => t(:logged_in, :scope => [:business_validations, :session_merchant])
           else
             #to-do: skal smide en teknisk fejl eller tilpasset unautoirzed  - meget vigtigt hvis medlemmer forsøger at logge ind på butik eller admin
             render :new
@@ -23,6 +23,6 @@ class Shared::MerchantSessionsController < Shared::BaseController
 	def destroy
   		logout
       delete_session_variables
-  		redirect_to root_url, :notice => t(:logged_out, :scope => [:business_validations, :session_merchant])
+  		redirect_to root_url, :success => t(:logged_out, :scope => [:business_validations, :session_merchant])
 	end
 end

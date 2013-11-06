@@ -9,21 +9,25 @@ EnlightmentProd::Application.routes.draw do
 
   #Common frontend paths
   root :to => "root#home"
-  match '/merchant_info',  to: 'root#merchant_info'
-  match '/contact',  to: 'root#contact'
-  get "favorites" => "root#favorites", :as => "favorites"
+  match '/merchant_info', to: 'root#merchant_info'
+  match '/contact', to: 'root#contact'
+  #get "favorites" => "member_subscribers#favorites", :as => "favorites"
+  match '/favorites/:id', to: 'member_users#favorites', :as => "favorites"
   get "terms_conditions" => "member_users#terms_conditions", :as => "terms_conditions"
 
   #Frontend resources
   resources :member_users
 
   #Member signup
-  get "signup_member" => "member_users#new", :as => "signup_member"
+  get "new_member" => "member_users#new", :as => "new_member"
 
   #Member joining specific merchantstore on Map
   match '/display_store/:id',  to: 'root#show_merchant_store', :as => "display_store"
+  #Subscribe + unsubscribe via Google Maps
   match '/signup_member',  to: 'member_subscribers#subscribe', :as => "signup_member", via: :post
   match '/unsubscribe_member/:id',  to: 'member_subscribers#unsubscribe', :as => "unsubscribe_member", via: :delete
+  #Unsubscribe via favorite list in frontend
+  match '/unsubscribe_member_table/:id',  to: 'member_subscribers#unsubscribe_member_table', :as => "unsubscribe_member_table", via: :delete
 
   #SMS opt-out from sms-link
   match '/stop_sms_confirm',  to: 'root#stop_sms_subscription_view', via: :get, :as => "stop_sms_confirm"

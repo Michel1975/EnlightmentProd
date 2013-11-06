@@ -1,6 +1,6 @@
   <div class="row-fluid">
-    <%= form_for @member, as: :member, :url => member_users_path, html: { class: "reg-page", style: "max-width: 50%"} do |f| %>
-      <%= render :partial => "/shared/error_messages", :locals => { :obj => @member } %>
+     <%= form_for @member_user, as: :member, :url => @member_user.new_record? ? member_users_path : member_user_path(@member_user), html: { class: "reg-page", style: "max-width: 50%"} do |f| %>
+      <%= render :partial => "/shared/error_messages", :locals => { :obj => @member_user } %>
       <div class="controls">
         <div class="row-fluid">
           <div class="span6">
@@ -24,13 +24,15 @@
               <%= f.label :city %>
               <%= f.text_field :city, readonly: true %>
             </div>
-            <div class="field">
-              <%= f.label :terms_of_service, class: "checkbox" do %>
+            <% if f.object.new_record? %> 
+              <div class="field">
+                <%= f.label :terms_of_service, class: "checkbox" do %>
                 <%= f.check_box :terms_of_service %>
-                Jeg har læst og accepteret  
-                <%= link_to "Salgs & Leveringsbetingelser", terms_conditions_path, :target => "_blank", style: "text-decoration: underline" %>
-              <% end %>
-            </div>   
+                  Jeg har læst og accepteret  
+                  <%= link_to "Salgs & Leveringsbetingelser", terms_conditions_path, :target => "_blank", style: "text-decoration: underline" %>
+                <% end %>
+              </div> 
+            <% end %>
           </div><!-- /.span6 -->
           <div class="span6">
             <div class="field">
@@ -63,14 +65,14 @@
         <div class="controls form-inline" style="margin-top:20px">
           <% if f.object.new_record? %> 
             <div style="text-align:center;">
-              <%= button_tag class: "btn-u btn-primary" do %>
+              <%= button_tag class: "btn-u btn-primary btn-u-blue" do %>
                 <i class="icon-ok bigger-110"></i>
                 Opret medlem
               <% end %>
             </div>
           <% else %> 
              <div style="text-align:center;">
-              <%= button_tag class: "btn-u btn-primary" do %>
+              <%= button_tag class: "btn-u btn-primary btn-u-blue" do %>
                 <i class="icon-ok bigger-110"></i>
                 Gem
               <% end %>

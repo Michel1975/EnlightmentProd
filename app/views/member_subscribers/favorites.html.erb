@@ -1,0 +1,73 @@
+<% provide(:title, 'Dine Favoritbutikker') %>
+<% provide(:description, 'Liste over dine tilmeldte favoritbutikker') %>
+<% content_for :breadcrumps do %>
+    <li>Medlemmer<span class="divider">/</span></li>
+    <li class="active">Dine Favoritbutikker</li>
+<% end %>
+<%= will_paginate @favorite_stores, class:"paging_bootstrap pagination" %>
+<div class="span11">
+    <% if @favorite_stores.any? %>
+        <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Butik</th>
+                    <th>Adresse</th>
+                    <th>Telefon</th>
+                    <th>Medlem fra</th>
+                    <th>Handling</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @favorite_stores.each do |favorite_store| %>
+                <tr>
+                    <td><%= favorite_store.merchant_store.store_name %></td>
+                    <td><%= favorite_store.merchant_store.map_address %></td>
+                    <td><%= favorite_store.merchant_store.house_number %></td>
+                    <td><%= favorite_store.merchant_store.phone %></td>
+                    <td><%= favorite_store.start_date %></td>
+                    <td>
+                        <%= link_to display_store_path( favorite_store.merchant_store_id ), :target => "_blank" do %>
+                            <button class="btn btn-small btn-info btn-u-blue">
+                                <i class="icon-leaf bigger-110"></i>
+                                Se detaljer
+                            </button>
+                        <% end %>
+                        <%= link_to unsubscribe_member_table_path(favorite_store), method: :delete, data: { confirm: t(:warning_deletion_member, store_name: favorite_store.merchant_store.store_name, city: favorite_store.merchant_store.city, :scope => [:business_validations, :subscriber])} do %>
+                            <button class="btn btn-small btn-danger">
+                                <i class="icon-trash bigger-110"></i>
+                                Afmeld
+                            </button>
+                        <% end %>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    <% else %>
+        <div style="text-align:center">
+            <h4>Du har endnu ikke tilmeldt dig nogle butikker. </h4>
+            <%= link_to root_path do %>
+                <button class="btn btn-large btn-primary btn-u-blue">
+                    <i class="icon-leaf bigger-110"></i>
+                    Find butikker
+                </button>
+            <% end %>
+        </div>
+    <% end %>
+</div>
+<% content_for :scripts do %>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script> 
+<% end %>

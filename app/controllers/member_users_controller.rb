@@ -10,8 +10,8 @@ class MemberUsersController < ApplicationController
 	def new
 		#Fik en fejl på date_select efter vi skiftede til dansk locale
 		#Læs denne artikel: http://i18n.lighthouseapp.com/projects/14947/tickets/12-i18n-and-date_select-exception
-  		@member = Member.new
-  		@member.build_user()
+  		@member_user = Member.new
+  		@member_user.build_user()
 	end
 
   	#Create new member frontend
@@ -19,13 +19,13 @@ class MemberUsersController < ApplicationController
 		#Af en eller anden grund skal man anvende user_attributes i fields_for i formularen til nyt medlem
 		#link: http://stackoverflow.com/questions/10701662/rails-cant-mass-assign-protected-attributes-error-when-using-accepts-nested-att
 		#Husk at bygge tilknyttede objekter ved oprettelse:http://stackoverflow.com/questions/4729672/accepts-nested-attributes-for-keeps-form-fields-from-showing
-  		@member = Member.new(params[:member])
-      @member.origin = 'web'
-  		if @member.save
+  		@member_user = Member.new(params[:member])
+      @member_user.origin = 'web'
+  		if @member_user.save
   			#virker ikke helt efter hensigten: auto_login(@member.user)
         #Send welcome e-mail
-        MemberMailer.delay.welcome_mail_new_member(@member.id)#.deliver
-    		redirect_to root_path, :notice => t(:member_created, :scope => [:business_validations, :frontend, :member_user])
+        MemberMailer.delay.welcome_mail_new_member(@member_user.id)#.deliver
+    		redirect_to root_path, :success => t(:member_created, :scope => [:business_validations, :frontend, :member_user])
   		else
     		render :new
   		end
@@ -33,7 +33,7 @@ class MemberUsersController < ApplicationController
 
   def edit
   	#logger.info("Michel:" + current_member_user.id + "current_user-id:" + current_user.id)
-  	@member = current_resource #Old:current_member_user
+  	@member_user = current_resource #Old:current_member_user
   end
 
   def terms_conditions
@@ -55,11 +55,18 @@ class MemberUsersController < ApplicationController
 
   def destroy
     @member_user = current_resource
-    @member_user.destroy
-    logout
-    respond_to do |format|
-      format.html { redirect_to root_path }
+    if @member_user.destroy
+      logout
+      flash[:success] = t(:member_deleted, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to root_path
+    else
+      render 'show'
     end
+  end
+
+  def favorites
+    @member_user = current_resource
+    @favorite_stores = @member_user.subscribers.active.page( params[:page] ).per_page(10) 
   end
 
   #Show form for completing profile on web
@@ -89,7 +96,7 @@ class MemberUsersController < ApplicationController
   def update_sms_profile 
     @member = current_resource
     if @member.update_attributes(params[:member])
-        flash[:notice] = t(:success, :scope => [:business_messages, :web_profile])
+        flash[:success] = t(:success, :scope => [:business_messages, :web_profile])
         #Overvej at linke direkte til butikken efter profilen er færdig oprettet.
         redirect_to root_path
     else

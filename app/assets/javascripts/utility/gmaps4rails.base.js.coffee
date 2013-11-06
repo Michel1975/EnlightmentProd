@@ -334,7 +334,7 @@ class @Gmaps4Rails
       currentMap = this
       aSel.onclick = @sidebar_element_handler(currentMap, marker_container.serviceObject, 'click')
       li.appendChild(aSel)
-      ul.appendChild(li)
+      ul.appendChild(li) 
 
   #moves map to marker clicked + open infowindow
   sidebar_element_handler : (currentMap, marker, eventType) ->

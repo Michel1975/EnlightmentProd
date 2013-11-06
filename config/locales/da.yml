@@ -321,6 +321,8 @@ da:
       member_user:
         member_created: Du er nu registreret som medlem!
         member_updated: Din profil er nu opdateret!
+        member_deleted: Din profil er nu slettet. Håber vi ses igen!
+        warning_deletion_member: Du er ved at slette din medlemsprofil og dine tilmeldte favoritbutikker. Er du sikker?
     session_merchant:
       logged_in: Du er nu logget ind som partnerbutik!
       logged_out: Du er logget ud som partnerbutik!
@@ -361,7 +363,8 @@ da:
       subscriber_removed: Medlem er nu fjernet fra kundeklubben!
       subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       subscriber_message_sent: Besked er afsendt til medlemmet!
-      warning_deletion_mechant: Du er ved at fjerne et medlem fra din kundeklub. Er du sikker?
+      warning_deletion_merchant: Du er ved at fjerne et medlem fra din kundeklub. Er du sikker?
+      warning_deletion_member: Du er ved at afmelde dit medlemsskab af butikken "%{store_name}" i %{city}. Du vil ikke længere modtage sms-notifikationer. Er du sikker?
     welcome_offer:
       offer_updated: Velkomstgave er opdateret!
     instant_subscriber_message:
@@ -394,6 +397,8 @@ da:
       password_reset: Dit password er blevet nulstillet!
     security:
       not_authorized: Du har ikke adgang til disse data!
+    subscriber:
+      unsubscribe_confirmation: Du er nu afmeldt fra %{store_name} og vil ikke længere modtage sms-notifikationer fra butikken.
   misc:
     members_active:
       zero: aktive medlemmer

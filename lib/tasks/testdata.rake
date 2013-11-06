@@ -108,7 +108,8 @@ namespace :db do
                                   gender: gender,
                                   birthday: Date.today,
                                   phone: phone,
-                                  origin:'store')
+                                  origin:'store',
+                                  terms_of_service: true)
         member_user.sub = member
         member_user.save!
         store.subscribers.create!(start_date: Date.today, member_id: member.id)              
@@ -179,7 +180,8 @@ namespace :db do
                                   gender: gender,
                                   birthday: Date.today,
                                   phone: phone,
-                                  origin: 'store')
+                                  origin: 'store',
+                                  terms_of_service: true)
         member_user.sub = member
         member_user.save!
         #Associate standalone member with one store

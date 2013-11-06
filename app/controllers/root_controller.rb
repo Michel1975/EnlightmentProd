@@ -46,16 +46,11 @@ class RootController < ApplicationController
 	end
 
 	def show_merchant_store
-    	@merchant_store = MerchantStore.find(params[:id])
-      subscriber = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
-    	@subscribed = subscriber && subscriber.active ? true : false
+    @merchant_store = MerchantStore.find(params[:id])
+    @subscriber = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
+    @subscribed = @subscriber && @subscriber.active ? true : false
 	end
-
-  def favorites
-    @member_user = current_member_user
-    @favorite_stores = @member_user.subscribers.paginate(page: params[:page], :per_page => 20)  
-  end
-
+  
  #SMS: Invoked from bit.ly links in sms
   def stop_sms_subscription_view
     @token = params[:token]

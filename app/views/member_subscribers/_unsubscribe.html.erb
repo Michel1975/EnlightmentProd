@@ -1,3 +1,7 @@
-<%= form_for(@merchant_store.subscribers.find_by_member_id(current_member_user.id), :url => unsubscribe_member_path(current_member_user.id), html: { method: :delete }, remote: true ) do |f| %>
-	<%= f.submit "Afmeld", class: "btn btn-large btn-primary" %>
+<%= form_for [:merchant, @subscriber], :url => unsubscribe_member_path(@subscriber), html: { method: :delete }, remote: true do |f| %>
+        <%= f.submit "Afmeld", class: "btn btn-large btn-primary" %>
 <% end %>
+
+
+
+

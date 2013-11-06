@@ -16,7 +16,7 @@ class Member < ActiveRecord::Base
   #http://rubular.com
   #Vi antager at telefonnumre indtastet via forms fylder max. 8 tegn og automatisk opdateres med +45 før oprettelse. 
   #Sidstnævnte skal ske med client-side validering.
-  validates :terms_of_service, :acceptance  => {:accept => true}, :unless => "validation_mode == 'store'"
+  validates :terms_of_service, :acceptance  => {:accept => true}, :unless => "validation_mode == 'store'", :on => :create #Skal kun accepteres ved oprettelse
   validates :first_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :last_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :unless => "validation_mode == 'store'"

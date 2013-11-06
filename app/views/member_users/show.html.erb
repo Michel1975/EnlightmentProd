@@ -74,11 +74,22 @@
     </div><!-- /.profile-user-info -->
   </div><!-- /.span5 -->
 </div><!-- /.row-fluid -->
-
-<%= link_to 'Rediger', edit_member_user_path(@member_user) %>
-<%= link_to "Slet medlem", member_user_path(@member_user), method: :delete,
-        	data: { confirm: "Er du sikker?" } %> 
-<%= link_to 'Tilbage', root_path %>
+<div class="row-fluid">
+  <div class="span5" style="text-align:center;margin-top:10px">
+    <%= link_to edit_member_user_path(@member_user) do %>
+        <button class="btn-u btn-primary btn-u-blue">
+          <i class="icon-edit bigger-110"></i>
+            Rediger
+        </button>
+      <% end %>
+      <%= link_to member_user_path(@member_user), method: :delete, data: { confirm: t(:warning_deletion_member, :scope => [:business_validations,  :frontend, :member_user] ) } do %>
+        <button class="btn-u btn-u-blue btn-small btn-danger">
+          <i class="icon-trash bigger-110"></i>
+            Slet profil
+        </button>
+      <% end %>
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
 
 <% content_for :scripts do %>
 <script type="text/javascript">
