@@ -2,9 +2,11 @@
 <div class="top">
     <div class="container">
       <!-- Logo -->
-    <div class="logo">
-    <%= link_to image_tag("novus_logo.jpg", alt: "Club Novus logo"), root_path %>
-    </div><!-- /logo -->
+    <%= link_to root_path do %>
+      <div class="logo">
+        <%= image_tag("novus_logo.jpg") %>
+      </div><!-- /logo -->
+    <% end %>
      <ul class="loginbar pull-right"> 
         <% if current_member_user.present? && logged_in? %>
           <li><i class="icon-user"></i> Logget ind som <%= current_member_user.name %>

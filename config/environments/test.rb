@@ -34,4 +34,19 @@ EnlightmentProd::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  #Mail settings
+  config.action_mailer.delivery_method = :smtp
+
+  config.action_mailer.smtp_settings = { 
+    :address              => ENV["MAIL_ADDRESS_TEST"],
+    :port                 => ENV["MAIL_PORT_TEST"],
+    :domain               => ENV["MAIL_DOMAIN_TEST"],
+    :user_name            => ENV["MAIL_USER_NAME_TEST"],
+    :password             => ENV["MAIL_PASSWORD_TEST"],
+    :authentication       => 'login',
+    :authentication       => "plain",
+    :enable_starttls_auto => true
+  }
+  config.action_mailer.default_url_options = { host: ENV["MAIL_DOMAIN_TEST"] }
 end

@@ -64,17 +64,18 @@ EnlightmentProd::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+  config.action_mailer.delivery_method = :smtp
 
-  #ActionMailer setup - skal lægges i en fil som ikke gemmes på github
-  config.action_mailer.smtp_settings = {
-    :address              => "smtp.gmail.com",
-    :port                 => 587,
-    :domain               => ENV["GMAIL_USER_NAME"],
-    :user_name            => ENV["GMAIL_PASSWORD"],
-    :password             => ENV["DOMAIN"],
-    :authentication        => "plain",
+  config.action_mailer.smtp_settings = { 
+    :address              => ENV["MAIL_ADDRESS_PROD"],
+    :port                 => ENV["MAIL_PORT_PROD"],
+    :domain               => ENV["MAIL_DOMAIN_PROD"],
+    :user_name            => ENV["MAIL_USER_NAME_PROD"],
+    :password             => ENV["MAIL_PASSWORD_PROD"],
+    :authentication       => 'login',
+    :authentication       => "plain",
     :enable_starttls_auto => true
   }
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { host: ENV["DOMAIN"] }
+  config.action_mailer.default_url_options = { host: ENV["MAIL_DOMAIN_PROD"] }
+  
 end

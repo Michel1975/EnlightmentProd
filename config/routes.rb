@@ -1,12 +1,6 @@
 EnlightmentProd::Application.routes.draw do
   get "message_errors/index"
 
-  #get "password_resets/create"
-
-  #get "password_resets/edit"
-
-  #get "password_resets/update"
-
   #Common frontend paths
   root :to => "root#home"
   match '/merchant_info', to: 'root#merchant_info'
@@ -93,7 +87,11 @@ EnlightmentProd::Application.routes.draw do
     #BackendAdmin session paths
     get "login_admin" => "backend_admin_sessions#new", :as => "login_admin"
     get 'logout_admin',  to: "backend_admin_sessions#destroy", :as => "logout_admin"
-    
+
+    #old:Password resets routes
+    #get "password_resets/create"
+    #get "password_resets/edit"
+    #get "password_resets/update"
   end
 
   namespace :admin do

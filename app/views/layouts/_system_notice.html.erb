@@ -1,10 +1,12 @@
-		<% flash.each do |key, value| %>
-			<%= content_tag(:div, class: "alert alert-#{key}") do %>
-				<button type="button" class="close" data-dismiss="alert">
-					<i class="icon-remove"></i>
-				</button>
-				<%= value %>
+		<div class="span12" style="margin-top:10px;">
+			<% flash.each do |key, value| %>
+				<%= content_tag(:div, class: "alert alert-#{key}") do %>
+					<button type="button" class="close" data-dismiss="alert">
+						<i class="icon-remove"></i>
+					</button>
+					<%= value %>
+				<% end %>
 			<% end %>
-		<% end %>
+		</div>
 		
 	

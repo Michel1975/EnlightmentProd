@@ -63,7 +63,7 @@
   <div class="span7 align-center">
     <% if !@offer.image.try(:picture).blank? %>
       <label class="control-label">Billede</label>
-      <%= cl_image_tag(@offer.image.try(:picture), :width => 200, :height => 200, :crop => :fit, class: "img-rounded") %> 
+      <%= cl_image_tag(@offer.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %> 
     <% else %>
       <div id="picture_container">
         <div class="ace-file-input ace-file-multiple">

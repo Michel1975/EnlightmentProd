@@ -1,7 +1,39 @@
 <% provide(:title, 'Nulstil password') %>
-<%= form_tag shared_password_resets_path, :method => :post do %>
-  <div class="field">
-    <%= label_tag :email %><br />
-    <%= text_field_tag :email %> <%= submit_tag "Nulstil mit password!" %>
-  </div>
+<% provide(:description, 'Nulstilling af password') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Nulstil dit password</li>
 <% end %>
+
+<div class="row-fluid">
+	<%= form_tag shared_password_resets_path, :method => :post, class: "reg-page" do %>
+		<div class="controls">
+			<div class="field">
+				<%= label_tag :email %>
+				<div class="input-prepend">
+          			<span class="add-on"><i class="icon-user"></i></span>
+         			<%= text_field_tag :email, "", placeholder: "Indtast din email" %>    
+        		</div>
+    		</div>
+    	</div>
+    	<div class="controls form-inline">
+        	<%= button_tag "Nulstil password", type: "submit", class: "btn-u btn-primary pull-right btn-u-blue" %>  
+      	</div>
+    <% end %>
+</div><!-- /.row-fluid -->
+
+<% content_for :scripts do %>
+	<script type="text/javascript">
+	    jQuery(document).ready(function() {
+	        App.init();
+	    });
+
+	    (function(d, s, id) {
+	        var js, fjs = d.getElementsByTagName(s)[0];
+	        if (d.getElementById(id)) return;
+	            js = d.createElement(s); js.id = id;
+	            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+	            fjs.parentNode.insertBefore(js, fjs);
+	    }
+	    (document, 'script', 'facebook-jssdk'));
+	</script> 
+ <% end %>

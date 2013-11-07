@@ -13,8 +13,6 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require bootstrap
-//= require cloudinary
-//= require cloudinary/processing
 //= require raphael
 //= require morris
 //= require "gmap"

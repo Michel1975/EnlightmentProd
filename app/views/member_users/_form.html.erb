@@ -80,6 +80,10 @@
           <% end %>
         </div><!-- /.controls form-inline -->
       </div><!-- /.row-fluid -->
+        <% if @member_user.new_record? %>
+          <hr>
+          <p>Allerede medlem? klik <%= link_to "her", shared_login_member_path, class: "color-green" %> for at logge ind</p>
+        <% end %>
     <% end %><!-- /.end form -->
 <div><!-- /.row-fluid -->
 

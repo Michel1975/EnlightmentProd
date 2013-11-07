@@ -11,7 +11,7 @@ class Shared::PasswordResetsController < Shared::BaseController
         
     # Tell the user instructions have been sent whether or not email was found.
     # This is to not leak information to attackers about which emails exist in the system.
-    redirect_to(root_path, :notice => t(:email_sent, :scope => [:business_validations, :password_reset]))
+    redirect_to(root_path, :success => t(:email_sent, :scope => [:business_validations, :password_reset]))
   end
     
   # This is the reset password form.
@@ -30,7 +30,7 @@ class Shared::PasswordResetsController < Shared::BaseController
     @user.password_confirmation = params[:user][:password_confirmation]
     # the next line clears the temporary token and updates the password
     if @user.change_password!(params[:user][:password])
-      redirect_to(root_path, :notice => t(:password_reset_confirmation, :scope => [:business_validations, :password_reset]))
+      redirect_to(root_path, :success => t(:password_reset_confirmation, :scope => [:business_validations, :password_reset]))
     else
       render :action => "edit"
     end

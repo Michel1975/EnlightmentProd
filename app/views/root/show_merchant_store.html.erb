@@ -1,74 +1,121 @@
-<% provide(:title, @merchant_store.store_name) if @merchant_store %>
-
-<p id="notice"><%= notice %></p>
-
-<div id="membership">
-<% if logged_in? && current_member_user && %>
-  <% if @subscribed %>
-    <%= render :partial => "/member_subscribers/unsubscribe", :locals => { :merchant_store => @merchant_store } %>
-  <% else %>
-    <%= render :partial => "/member_subscribers/subscribe", :locals => { :merchant_store => @merchant_store } %>
-  <% end %>
+<% provide(:title, @merchant_store.store_name) %>
+<% provide(:description, 'Præsentationsside for ' + @merchant_store.store_name ) %>
+<% content_for :breadcrumps do %>
+  <li class="active"><%= @merchant_store.store_name %></li>
 <% end %>
-</div>
-<p>
-  <b>Butik:</b>
-  <%= @merchant_store.store_name %>
-</p>
+<div class="row-fluid margin-bottom-10">
+  <div class="span4">
+    <% if !@merchant_store.image.picture.blank? %>
+      <%= cl_image_tag(@merchant_store.image.try(:picture), :width => 400, :height => 400, :crop => :fit, class: "img-rounded") %>
+    <% else %>
+      To-Do: Indsæt "Billede på vej"
+    <% end %>
+  </div><!-- /.span4 -->
 
-<p>
-  <b>Ejer:</b>
-  <%= @merchant_store.owner %>
-</p>
+  <div class="span6">
+    <div class="headline">
+      <h4><%= h @merchant_store.store_name %></h4>
+    </div>
+    <p><%= simple_format(h @merchant_store.description )%></p>
+  </div><!-- /.span6 -->
+  
+  <div class="span2">
+    <h4>Medlemskab</h4>
+    <% if @subscribed %>
+      <div id="membership">
+        <%= render :partial => "/member_subscribers/unsubscribe", :locals => { :merchant_store => @merchant_store } %>
+      </div>
+      <p>Medlem siden: <%= I18n.l( @subscriber.start_date ) %></p>
+  <% else %>
+      <div id="membership">
+        <%= render :partial => "/member_subscribers/subscribe", :locals => { :merchant_store => @merchant_store } %>
+      </div>
+  <% end %>
+  </div><!-- /.span2 -->
+</div><!-- /.row-fluid -->
 
-<p>
-  <b>Description:</b>
-  <%= @merchant_store.description %>
-</p>
+<div class="row-fluid margin-bottom-10">
 
-<p>
-  <b>Gade:</b>
-  <%= @merchant_store.street %>
-</p>
+  <div class="span4 who">
+      <div class="headline">
+        <h4>Kontaktinfo</h4>
+      </div>
+      <ul class="unstyled">
+        <li><i class="icon-home"></i><%= @merchant_store.map_address %></li>
+        <li><i class="icon-envelope-alt"></i><%= @merchant_store.email %></li>
+        <li><i class="icon-phone-sign"></i><%= @merchant_store.phone %></li>
+      </ul>
+      <%= image_tag "http://maps.google.com/maps/api/staticmap?size=400x300&sensor=false&zoom=16&markers=#{@merchant_store.latitude}%2C#{@merchant_store.longitude}" %>
+  </div><!-- /.span4 -->
 
-<p>
-  <b>Husnummer:</b>
-  <%= @merchant_store.house_number %>
-</p>
+  <div class="span6">
+      <div class="headline">
+        <h4 style="margin-bottom:10px">Åbningstider</h4>
+      </div>
+      <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Mandag</th>
+            <th>Tirsdag</th>
+            <th>Onsdag</th>
+            <th>Torsdag</th>
+            <th>Fredag</th>
+            <th>Lørdag</th>
+            <th>Søndag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="text-align:center">
+            <% @merchant_store.business_hours.order("day ASC").each do |business_hour| %>
+              <td> <%= business_hour.opening_hour %> </td>
+            <% end %>
+          </tr>
+        </tbody>
+    </table>
+  </div><!-- /.span6 -->
+</div><!-- /.row-fluid -->
 
-<p>
-  <b>Postnummer:</b>
-  <%= @merchant_store.postal_code %>
-</p> 
+<div class="row-fluid margin-bottom-20">
+  <div class="span10">
+    <div class="headline">
+        <h4 style="margin-bottom:10px">Aktuelle tilbud</h4>
+    </div>
+  </div>
+</div><!-- /.row-fluid -->
 
-<p>
-  <b>By:</b>
-  <%= @merchant_store.city %>
-</p>
+<% @merchant_store.offers.active.order("valid_to DESC").each do |offer| %>
+    <div class="row-fluid" style="margin-bottom:50px">
+        <div class="span3">
+          <%= cl_image_tag(offer.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
+        </div><!-- /.span4 -->
 
-<p>
-  <b>Telefon:</b>
-  <%= @merchant_store.phone %>
-</p>
+        <div class="span6">
+          <div class="headline" style="margin-top:0px">
+            <h4><%= offer.title %></h4>
+          </div>
+          <p><%= simple_format( offer.description ) %></p>
+        </div><!-- /.span6 -->
 
-<h4>Åbningstider</h4>
-<div class="span10">
-  <table id="sample-table-1" class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Dag</th>
-        <th>Åben</th>
-        <th>Lukket</th>  
-      </tr>
-    </thead>
-    <tbody>
-      <% @merchant_store.business_hours.each do |business_hour| %>
-      <tr>
-        <td><%= business_hour.day %></td>
-        <td><%= business_hour.open_time.to_formatted_s(:time) %></td>
-        <td><%= business_hour.close_time.to_formatted_s(:time)  %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+        <div class="span2" style="text-align:right;">
+          <p><small>Gyldig fra: </small><b><%= I18n.l( offer.valid_from) %></b></p>
+          <p><small>Gyldig til: </small><b><%= I18n.l( offer.valid_to) %></b></p> 
+        </div><!-- /.span2 -->
+    </div><!-- /.row-fluid -->
+<% end %>
+
+<% content_for :scripts do %>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+    
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script> 
+<% end %>

@@ -88,7 +88,7 @@
         <div class="control-group">
           <%= f.label :description, class: "control-label" %>
           <div class="controls">
-            <%= f.text_area :description, style:"width:400px", maxlength: "255", rows: "10", placeholder: "Beskrivelse af butik", class: "short" %>&nbsp;&nbsp;
+            <%= f.text_area :description, style:"width:400px", maxlength: "500", rows: "10", placeholder: "Beskrivelse af butik", class: "short" %>&nbsp;&nbsp;
             <%= tooltip("Lav beskrivelse (max. 255 tegn) ", "Beskrivelse af butik") %>
           </div>
         </div>
@@ -107,7 +107,7 @@
           <% if !@merchant_store.image.picture.blank? %>
             <%= f.label :store_picture, class: "control-label" %>
             <div id="picture_container">
-              <%= cl_image_tag(@merchant_store.image.picture, :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
+              <%= cl_image_tag(@merchant_store.image.picture, :width => 400, :height => 400, :crop => :fit, class: "img-rounded") %>
             </div>
           <% else %>
             <div id="picture_container">
@@ -287,7 +287,7 @@
             $("#picture_container").empty();
             $("#picture_container").html(
               $.cloudinary.image(data.result.public_id, {
-                format: data.result.format, width: 300, height: 300, crop: "fit"
+                format: data.result.format, width: 400, height: 400, crop: "fit"
               })
             );
           });

@@ -6,7 +6,7 @@ class MemberMailer < ActionMailer::Base
   	@member = Member.find(member)
   	#attachments["rails.png"] = File.read("#{Rails.root}/public/404.html")
   	#Se også inline attachments
-  	mail(to: member.user.email, subject: t(:welcome_mail_new_member, :scope => [:business_messages, :email]) )  	
+  	mail(to: @member.user.email, subject: t(:welcome_mail_new_member, :scope => [:business_messages, :email]) )  	
   end
 
   #This template is for sign-ups on web. This template does not include any welcome present - non-eligble members
@@ -15,7 +15,7 @@ class MemberMailer < ActionMailer::Base
   	@merchant_store = MerchantStore.find(merchant_store)
   	#attachments["rails.png"] = File.read("#{Rails.root}/public/404.html")
   	#Se også inline attachments
-  	mail(to: member.user.email, subject: t(:web_sign_up, store_name: merchant_store.store_name, :scope => [:business_messages, :email]) )  	
+  	mail(to: @member.user.email, subject: t(:web_sign_up, store_name: @merchant_store.store_name, :scope => [:business_messages, :email]) )  	
   end
 
   #This template is for sign-ups on web
@@ -24,7 +24,7 @@ class MemberMailer < ActionMailer::Base
   	@merchant_store = MerchantStore.find(merchant_store)
   	#attachments["rails.png"] = File.read("#{Rails.root}/public/404.html")
   	#Se også inline attachments
-  	mail(to: member.user.email, subject: t(:web_opt_out, store_name: merchant_store.store_name, :scope => [:business_messages, :email]) )  	
+  	mail(to: @member.user.email, subject: t(:web_opt_out, store_name: @merchant_store.store_name, :scope => [:business_messages, :email]) )  	
   end
 
   #This template is for sign-ups on web
@@ -33,7 +33,7 @@ class MemberMailer < ActionMailer::Base
     @merchant_store = MerchantStore.find(merchant_store)
   	#attachments["rails.png"] = File.read("#{Rails.root}/public/404.html")
   	#Se også inline attachments
-  	mail(to: member.user.email, subject: t(:web_sign_up_present, store_name: merchant_store.store_name, :scope => [:business_messages, :email]) )  	
+  	mail(to: @member.user.email, subject: t(:web_sign_up_present, store_name: @merchant_store.store_name, :scope => [:business_messages, :email]) )  	
   end
 
 end

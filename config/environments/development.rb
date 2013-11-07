@@ -40,17 +40,17 @@ EnlightmentProd::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  #ActionMailer setup
-  config.action_mailer.smtp_settings = {
-    :address              => "smtp.gmail.com",
-    :port                 => 587,
-    :domain               => ENV["GMAIL_USER_NAME"],
-    :user_name            => ENV["GMAIL_PASSWORD"],
-    :password             => ENV["DOMAIN"],
-    :authentication        => "plain",
+  config.action_mailer.delivery_method = :smtp
+
+  config.action_mailer.smtp_settings = { 
+    :address              => ENV["MAIL_ADDRESS_TEST"],
+    :port                 => ENV["MAIL_PORT_TEST"],
+    :domain               => ENV["MAIL_DOMAIN_TEST"],
+    :user_name            => ENV["MAIL_USER_NAME_TEST"],
+    :password             => ENV["MAIL_PASSWORD_TEST"],
+    :authentication       => 'login',
+    :authentication       => "plain",
     :enable_starttls_auto => true
   }
-config.action_mailer.delivery_method = :smtp
-config.action_mailer.default_url_options = { host: ENV["DOMAIN"] }
-
+  config.action_mailer.default_url_options = { host: ENV["MAIL_DOMAIN_TEST"] }
 end

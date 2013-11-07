@@ -55,7 +55,7 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="created_at"> <%= @merchant_store.created_at %> </span>
+          <span class="editable editable-click" id="created_at"> <%= I18n.l( @merchant_store.created_at ) %> </span>
         </div>
       </div>
     </div><!-- /.profile-user-info -->
@@ -63,7 +63,7 @@
 
   <div class="span7 align-center">
     <label class="control-label">Præsentationsbillede</label>
-   <%= cl_image_tag(@merchant_store.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %> 
+   <%= cl_image_tag(@merchant_store.image.try(:picture), :width => 400, :height => 400, :crop => :fit, class: "img-rounded") %> 
   </div><!-- /.span7 -->
 </div><!-- /.row-fluid -->
 <div class="row-fluid"><hr></div>
@@ -77,10 +77,10 @@
           <div class="widget-toolbar no-border">
             <ul class="nav nav-tabs" id="myTab">
               <li class="active">
-                <a data-toggle="tab" href="#short"> Lang </a>
+                <a data-toggle="tab" href="#short"> Kort </a>
               </li>
               <li>
-                <a data-toggle="tab" href="#long"> Kort </a>
+                <a data-toggle="tab" href="#long"> Lang </a>
               </li>
             </ul>
           </div>

@@ -9,13 +9,22 @@ class UserMailer < ActionMailer::Base
   #
 
   def reset_password_email(user)
-    @user = user
+    @user_name = ""
     if user.sub_type == 'MerchantUser'
         @merchant_user = MerchantUser.find(user.sub_id)
+        @user_name = @merchant_user.name
         @url  = edit_shared_password_reset_url(user.reset_password_token)
         mail(:to => user.email,
           :subject => t(:password_reset, :scope => [:business_messages, :email]) )
-    end
+    elsif
+      user.sub_type == 'Member'
+        @member_user = Member.find(user.sub_id)
+        @user_name = @member_user.name
+        @url  = edit_shared_password_reset_url(user.reset_password_token)
+        mail(:to => user.email,
+          :subject => t(:password_reset, :scope => [:business_messages, :email]) )
+      end
   end
+  #handle_asynchronously :reset_password_email
 
 end#end mailer namespace

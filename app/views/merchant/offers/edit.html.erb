@@ -75,7 +75,7 @@
             $("#picture_container").empty();
             $("#picture_container").html(
               $.cloudinary.image(data.result.public_id, {
-                format: data.result.format, width: 200, height: 200, crop: "fit"
+                format: data.result.format, width: 300, height: 300, crop: "fit"
               })
             );
           });
