@@ -126,7 +126,7 @@
                 <label class="file-label" data-title="Vælg">
                   <span class="file-name" data-title="Upload nyt billede...">
                   <%= f.fields_for :image do |image| %> 
-                    <%= image.cl_image_upload(:picture, tags: @merchant_store.sms_keyword) %>
+                    <%= image.cl_image_upload(:picture, tags: @merchant_store.sms_keyword, :folder => @merchant_store.sms_keyword) %>
                     <%= image.hidden_field :size %>
                     <%= image.hidden_field :picture_cache %>
                   <% end %>
@@ -251,6 +251,7 @@
         // wrapped using the File Upload widget and configured for Cloudinary uploads.
         // You can further customize the configuration using .fileupload method
         // as we do below.
+
         $(".cloudinary-fileupload")
           .fileupload({
             // Uncomment the following lines to enable client side image resizing and validation.
@@ -259,7 +260,7 @@
             //imageMaxWidth: 800,
             //imageMaxHeight: 600,
             //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|bmp|ico)$/i,
-            //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             //maxFileSize: 20000000, // 20MB
             //maxFileSize: 105000, // 1MB
             //dropZone: "#direct_upload",
@@ -275,6 +276,9 @@
             fail: function (e, data) {
               $('#status_section').find(".percent").text( "Fejl" );
               //$(".status").text("Upload afbrudt");
+            },
+            processalways: function(e,data){
+            if (data.files.error) alert("Ugyldig billedfil. Billedet må max. fylde 1 mb og skal være i formattet jpeg, gif eller png.\ncheck filen og prøv igen.");
             }
           })
           .off("cloudinarydone").on("cloudinarydone", function (e, data) {

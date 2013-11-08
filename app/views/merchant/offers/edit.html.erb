@@ -47,9 +47,9 @@
             //imageMaxWidth: 800,
             //imageMaxHeight: 600,
             //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|bmp|ico)$/i,
-            //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
             //maxFileSize: 20000000, // 20MB
-            //maxFileSize: 105000, // 1MB
+            maxFileSize: 105000, // 1MB
             //dropZone: "#direct_upload",
             start: function (e) {
               $('#status_section').show();
@@ -63,6 +63,9 @@
             fail: function (e, data) {
               $('#status_section').find(".percent").text( "Fejl" );
               //$(".status").text("Upload afbrudt");
+            },
+            processalways: function(e,data){
+            if (data.files.error) alert("Ugyldig billedfil. Billedet må max. fylde 1 mb og skal være i formattet jpeg, gif eller png.\ncheck filen og prøv igen.");
             }
           })
           .off("cloudinarydone").on("cloudinarydone", function (e, data) {
