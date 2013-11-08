@@ -22,7 +22,6 @@
                 <tr>
                     <td><%= favorite_store.merchant_store.store_name %></td>
                     <td><%= favorite_store.merchant_store.map_address %></td>
-                    <td><%= favorite_store.merchant_store.house_number %></td>
                     <td><%= favorite_store.merchant_store.phone %></td>
                     <td><%= favorite_store.start_date %></td>
                     <td>
@@ -32,7 +31,7 @@
                                 Se detaljer
                             </button>
                         <% end %>
-                        <%= link_to unsubscribe_member_table_path(favorite_store), method: :delete, data: { confirm: t(:warning_deletion_member, store_name: favorite_store.merchant_store.store_name, city: favorite_store.merchant_store.city, :scope => [:business_validations, :subscriber])} do %>
+                        <%= link_to unsubscribe_member_table_path(favorite_store), method: :delete, data: { confirm: t(:warning_deletion_member, store_name: h(favorite_store.merchant_store.store_name), city: favorite_store.merchant_store.city, :scope => [:business_validations, :subscriber])} do %>
                             <button class="btn btn-small btn-danger">
                                 <i class="icon-trash bigger-110"></i>
                                 Afmeld

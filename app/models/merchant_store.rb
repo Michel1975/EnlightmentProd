@@ -1,5 +1,5 @@
 class MerchantStore < ActiveRecord::Base
-  attr_accessible :store_name, :store_picture, :store_picture_size, :email, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes, :image_attributes
+  attr_accessible :store_name, :email, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes, :image_attributes
   #attr_reader :subscribers_count
 
   has_one :image, :as => :imageable, dependent: :destroy

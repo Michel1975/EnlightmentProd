@@ -12,7 +12,7 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Navn </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="title"> <%= @member_user.name %> </span>
+          <span class="editable editable-click" id="title"> <%= h(@member_user.name) %> </span>
         </div>
       </div>
 
@@ -33,14 +33,14 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Postnummer </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="valid_to"> <%= @member_user.postal_code %> </span>
+          <span class="editable editable-click" id="valid_to"> <%= h(@member_user.postal_code) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> By </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="valid_to"> <%= @member_user.city %> test</span>
+          <span class="editable editable-click" id="valid_to"> <%= h(@member_user.city) %> test</span>
         </div>
       </div>
 

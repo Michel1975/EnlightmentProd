@@ -18,6 +18,7 @@
 //= require "gmap"
 //= require bootstrap-datepicker
 //= require locales/bootstrap-datepicker.da
+//= require jquery-validation
 //= require_directory ./utility
 
 

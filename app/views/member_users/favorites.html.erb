@@ -20,9 +20,8 @@
             <tbody>
                 <% @favorite_stores.each do |favorite_store| %>
                 <tr>
-                    <td><%= favorite_store.merchant_store.store_name %></td>
-                    <td><%= favorite_store.merchant_store.map_address %></td>
-                    <td><%= favorite_store.merchant_store.house_number %></td>
+                    <td><%= h(favorite_store.merchant_store.store_name) %></td>
+                    <td><%= h(favorite_store.merchant_store.map_address) %></td>
                     <td><%= favorite_store.merchant_store.phone %></td>
                     <td><%= favorite_store.start_date %></td>
                     <td>
