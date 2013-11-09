@@ -40,7 +40,7 @@ class MerchantStore < ActiveRecord::Base
   geocoded_by :address
   after_validation :geocode
   
-  #Bit.ly link
+  #Bit.ly link for sms
   def store_link
     client = Bitly.client
     return "\nButik:" + client.shorten("http://www.clubnovus.dk/display_store/#{self.id}").short_url
@@ -48,6 +48,14 @@ class MerchantStore < ActiveRecord::Base
 
   def store_regards
     return "\nMvh\n" + self.store_name + store_link
+  end
+  
+  def self.search(city, store_name)
+    if city !="" && store_name !=""
+      where('city=? AND store_name LIKE ?', city, "%#{store_name}%")
+    elsif city !="" && store_name = ""
+      where('city=?', city)
+    end
   end
 
   #Used by GeoCoder

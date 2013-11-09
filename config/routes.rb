@@ -3,8 +3,16 @@ EnlightmentProd::Application.routes.draw do
 
   #Common frontend paths
   root :to => "root#home"
+
+  #Search from home tab
+  match '/search_stores',  to: 'root#search_stores', via: :get, :as => "search_stores"
+
+  #Handle incoming messages from customers
+  match '/contact',  to: 'messages#contact', via: :get, :as => "contact"
+  match '/send_message',  to: 'messages#send_message', via: :post, :as => "send_message"
+
   match '/merchant_info', to: 'root#merchant_info'
-  match '/contact', to: 'root#contact'
+  #match '/contact', to: 'root#contact'
   #get "favorites" => "member_subscribers#favorites", :as => "favorites"
   match '/favorites/:id', to: 'member_users#favorites', :as => "favorites"
   get "terms_conditions" => "member_users#terms_conditions", :as => "terms_conditions"

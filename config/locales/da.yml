@@ -395,6 +395,10 @@ da:
       web_opt_out: Bekræftelse på din afmelding til %{store_name}
       web_sign_up_present: Din velkomstgave fra %{store_name}
       password_reset: Dit password er blevet nulstillet!
+      forward_incoming_email: Ny henvendelse på Club Novus
+      confirm_incoming_email: Tak for din henvendelse
+      confirm_incoming_web: Tak for din henvendelse. Vi vender tilbage til dig hurtigst muligt!
+      invalid_contact_data: Fejl - Du mangler at indtaste enten navn, email eller besked
     security:
       not_authorized: Du har ikke adgang til disse data!
     subscriber:

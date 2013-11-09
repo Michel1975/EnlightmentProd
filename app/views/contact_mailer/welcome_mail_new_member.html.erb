@@ -1,0 +1,15 @@
+<p>Kære <%= @name %>, <br />
+Tak for din henvendelse på clubnovus.dk. Din beskedoplysninger fremgår nedenfor:<br /><br />
+
+Navn: <%= h @name %><br />
+Email: <%= @email %><br />
+
+Besked: <%= simple_format(h @message) %><br /><br />
+
+Vi vil sørge for at vende tilbage til dig så hurtigt som muligt!<br /><br />
+
+Med venlig hilsen<br />
+Michel K. Hansen<br />
+www.clubnovus.dk<br />
+Mobil: +45 2460 0819<br />
+</p>

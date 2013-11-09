@@ -17,6 +17,7 @@
 //= require morris
 //= require "gmap"
 //= require bootstrap-datepicker
+//= require jquery.inputlimiter.1.3.1
 //= require locales/bootstrap-datepicker.da
 //= require jquery-validation
 //= require_directory ./utility

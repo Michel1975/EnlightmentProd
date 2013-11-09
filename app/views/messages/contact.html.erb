@@ -17,15 +17,15 @@
         <div class="span9">
             <div class="headline"><h3>Kontaktformular</h3></div>
             <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit landitiis.</p><br />
-            <form>
-                <label>Navn</label>
-                <input type="text" class="span7 border-radius-none" />
-                <label>Email <span class="color-red">*</span></label>
-                <input type="text" class="span7 border-radius-none" />
-                <label>Besked</label>
-                <textarea rows="8" class="span10"></textarea>
-                <p><button type="submit" class="btn-u">Send besked</button></p>
-            </form>
+            <%= form_tag send_message_path do %> 
+                <%= label_tag :name, "Navn" %>
+                <%= text_field_tag :name, nil, class: "span7 border-radius-none", placeholder: "Indtast navn", required: "required" %>
+                <%= label_tag :email, "Email" %>
+                <%= text_field_tag :email, "", placeholder: "Indtast email", type: "email", class: "span7 border-radius-none", required: "required"   %>
+                <%= label_tag :message, "Besked" %>
+                <%= text_area_tag :message, "", rows: "8", class: "contact_form span10", placeholder: "Indtast besked", required: "required", maxlength: "500" %>
+                <p><%= button_tag "Send besked", type: "submit", class: "btn-u" %></p>
+            <% end %>
         </div><!--/span9-->
         
         <div class="span3">
@@ -50,6 +50,16 @@
     jQuery(document).ready(function() {
         App.init();
         Contact.initMap();
+    });
+
+    jQuery(function($) {
+        $("#contact_form").validate();
+        $('textarea.contact_form').inputlimiter({
+            limit: 500,
+            lineReturnCount: 2,
+            remText: '%n tegn tilbage...',
+            limitText: 'maks tilladt: %n.'
+        });
     });
 
     (function(d, s, id) {

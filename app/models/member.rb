@@ -20,7 +20,7 @@ class Member < ActiveRecord::Base
   validates :first_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :last_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :unless => "validation_mode == 'store'"
-  #validates :city, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
+  validates :city, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :gender, :inclusion => { :in => %w( W M ) }, :unless => "validation_mode == 'store'"
   validates :birthday, presence: true, :unless => "validation_mode == 'store'"
   validates :phone, presence: true, length: { maximum: 12}, uniqueness: { case_sensitive: false }
