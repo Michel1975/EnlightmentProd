@@ -104,7 +104,7 @@ class RootController < ApplicationController
                    }) 
           else
             marker.picture({
-                    :picture => ActionController::Base.helpers.asset_path("map_not_signed_up.png"),
+                    :picture => ActionController::Base.helpers.asset_path("map_signed_up.png"),
                     :width   => 32,
                     :height  => 32
                    })   

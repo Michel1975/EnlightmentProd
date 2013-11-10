@@ -1,25 +1,25 @@
-
-<div class="infobox-wrapper">
-    <div id="infobox">
-            <div>
-                <%= cl_image_tag(merchant.image.try(:picture), :width => 100, :height => 100, :crop => :fit, class: "img-rounded") %> 
-            </div>
-             <div class="title"><%= merchant.store_name %></div>
-    		<div class="signup">
-    		<%= link_to display_store_path(merchant.id) do %>
-              <button class="btn btn-mini btn btn-success">Se detaljer</button>
-            <% end %>
-    		</div>
-       
-    	
-    	<div class="address"><%= merchant.short_description %></div><br/>
-    	<div class="address"><%= merchant.map_address %></div>
-    	<div><%= merchant.phone %></div>
-
-    	<div><span style="font-weight:bold">Medlemsstatus</span><br/>
-    		<%= status ? "Du er medlem" : "Ikke medlem" %>
-    	</div>
-    	
+<div class="span6 booking-blocks" style="border:2px solid black;">
+   <div class="pull-left booking-img">
+      <%= cl_image_tag(merchant.image.try(:picture), :width => 100, :height => 100, :crop => :fit, class: "img-rounded") %>
+      <ul class="unstyled">
+        <li><i class="icon-map-marker"></i><%= h merchant.map_address %></li>
+        <li><i class="icon-phone"></i><%= h merchant.phone %></li>
+        <li><i class="icon-envelope"></i><%= h merchant.email %></li>
+      </ul>
+   </div>
+   <div style="overflow:hidden;">
+    <div>
+        <h4 style="float:left;"><%= h merchant.store_name %></h4>
+        <%= link_to display_store_path(merchant.id), class: "pull-right" do %>
+            <button class="btn btn-mini btn btn-success">Se detaljer</button>
+        <% end %>
     </div>
+    <div style="clear:both">
+      <p><%= h merchant.short_description %></p>
+   </div>
 </div>
+
+
+
+
 

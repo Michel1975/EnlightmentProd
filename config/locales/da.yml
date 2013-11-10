@@ -243,6 +243,7 @@ da:
         last_name: Efternavn
         name: Navn
         postal_code: Postnr.
+        city: By
         gender: Køn
         birthday: Fødselsdag
         phone: Mobil

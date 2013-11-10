@@ -27,7 +27,7 @@ class MerchantStore < ActiveRecord::Base
   validates :store_name, presence: true, length: { maximum: 40 }
   validates :city, :country, presence: true
   validates :description, presence: true, length: { maximum: 500 }
-  validates :short_description, presence: true, length: { maximum: 80 }
+  validates :short_description, presence: true, length: { maximum: 255 }
   validates :owner, presence: true, length: { maximum: 30 }
   validates :street, presence: true, length: { maximum: 30 }
   validates :house_number, :postal_code, numericality: { only_integer: true }, length: { maximum: 4 } 

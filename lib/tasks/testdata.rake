@@ -87,6 +87,7 @@ namespace :db do
         first_name = Faker::Name.first_name
         last_name = Faker::Name.last_name
         postal_code = "3360"
+        city = "Frederiksværk"
         gender = "W"
         email = "test-#{s}-#{n}@clubnovustest.dk"
         
@@ -105,6 +106,7 @@ namespace :db do
         member = Member.create!(  first_name: first_name,
                                   last_name: last_name,
                                   postal_code: postal_code,
+                                  city: city,
                                   gender: gender,
                                   birthday: Date.today,
                                   phone: phone,
@@ -165,9 +167,10 @@ namespace :db do
         first_name = "Michel"
         last_name = "Hansen"
         postal_code = "3360"
+        city = "Liseleje"
         gender = "W"
         email = "scoop751@hotmail.com"
-        phone = "42415210"
+        phone = "48391754"
         password  = "password"
         
         member_user = User.create!(
@@ -177,6 +180,7 @@ namespace :db do
         member = Member.create!(  first_name: first_name,
                                   last_name: last_name,
                                   postal_code: postal_code,
+                                  city: city,
                                   gender: gender,
                                   birthday: Date.today,
                                   phone: phone,
@@ -188,7 +192,7 @@ namespace :db do
         MerchantStore.first.subscribers.create!(start_date: Date.today, member_id: member.id)
       end #end creation of special standalone member
 
-      #Create one standalone member with unique email
+      #Create one backend admin with unique email
       1.times do |n| 
         name = "Niels Hansen"
         postal_code = "3360"
