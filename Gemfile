@@ -10,6 +10,7 @@ gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.6'
 gem 'faker', '1.0.1'
 gem "sorcery"
+gem 'rails_12factor' # for heroku deployment
 gem 'figaro'
 gem 'savon', '~> 2.0'
 gem 'htmlentities'
