@@ -1,7 +1,7 @@
 class MessageNotification < ActiveRecord::Base
   scope :campaign, where(:notification_type => 'campaign')
   scope :single, where(:notification_type => 'single')
-  scope :test, where(:notification_type => 'test')
+
   #Default scopes for message limits
   #http://stackoverflow.com/questions/8197888/how-to-find-records-created-this-month-in-rails-3-1
   scope :month_total_messages, lambda { where( :created_at => Date.today.beginning_of_month..Date.today.end_of_month) }
@@ -16,6 +16,6 @@ class MessageNotification < ActiveRecord::Base
   validates :status_code_id, :merchant_store_id, presence: true
   validates :message_id, presence: true
   validates :message_id, uniqueness: { case_sensitive: false }, :allow_nil => true
-  validates :notification_type, :inclusion => { :in => %w( campaign single )}
+  validates :notification_type, :inclusion => { :in => %w( campaign single admin )}
 
 end

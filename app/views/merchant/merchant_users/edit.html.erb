@@ -57,7 +57,7 @@
       <% end %>
       <div class="control-group">
         <div class="controls">
-          <%= button_tag class: "btn btn-primary" do %>
+          <%= button_tag class: "submission btn btn-primary" do %>
             <i class="icon-edit bigger-110"></i>
             Opdater brugerprofil
           <% end %>
@@ -76,6 +76,10 @@
       jQuery(function($) {
           $('[data-rel=tooltip]').tooltip({container:'body'});
           $('[data-rel=popover]').popover({container:'body'});
+
+          $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
+          });
       });
   </script>
 <% end %>

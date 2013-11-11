@@ -1,3 +1,4 @@
+	<div class="row-fluid">	
 		<div class="span12" style="margin-top:10px;">
 			<% flash.each do |key, value| %>
 				<%= content_tag(:div, class: "alert alert-#{key}") do %>
@@ -8,5 +9,6 @@
 				<% end %>
 			<% end %>
 		</div>
+	</div>
 		
 	

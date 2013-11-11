@@ -32,7 +32,7 @@
     </div>
     <div class="controls form-inline">
       <div style="text-align:center;">
-        <%= button_tag class: "btn-u btn-primary btn-u-blue" do %>
+        <%= button_tag class: "submission btn-u btn-primary btn-u-blue" do %>
           <i class="icon-ok bigger-110"></i>
           Gem
       <% end %>
@@ -47,6 +47,12 @@
   <script type="text/javascript">
       jQuery(document).ready(function() {
           App.init();
+      });
+
+      jQuery(function($) {
+          $("form").on("submit", function () {
+          $(this).find(".submission").prop("disabled", true);
+          });
       });
 
       (function(d, s, id) {

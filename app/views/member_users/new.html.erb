@@ -37,6 +37,11 @@
         language: 'da',
         autoclose: true
       });
+
+      $("form").on("submit", function () {
+          $(this).find(".submission").prop("disabled", true);
+      });
+
     });//Close Javascript function
 
     (function(d, s, id) {

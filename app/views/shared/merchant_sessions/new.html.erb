@@ -18,7 +18,7 @@
       <div class="controls form-inline">
         <%= check_box_tag :remember_me %>
         <%= label_tag :remember_me, "Husk loginoplysninger" %>
-        <%= button_tag "Login", type: "submit", class: "btn-u btn-primary pull-right btn-u-blue" %>  
+        <%= button_tag "Login", type: "submit", class: "submission btn-u btn-primary pull-right btn-u-blue" %>  
       </div>
       <hr />
       <h4>Glemt dit password ?</h4>
@@ -30,6 +30,12 @@
 <script type="text/javascript">
     jQuery(document).ready(function() {
         App.init();
+    });
+    
+    jQuery(function($) {
+      $("form").on("submit", function () {
+        $(this).find(".submission").prop("disabled", true);
+      });
     });
 </script>
 

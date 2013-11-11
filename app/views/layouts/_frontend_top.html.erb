@@ -2,12 +2,13 @@
 <div class="top">
     <div class="container">
       <!-- Logo -->
-    <%= link_to root_path do %>
-      <div class="logo">
-        <%= image_tag("novus_logo.jpg") %>
-        <%= image_tag("beta_version.png") %>
-      </div><!-- /logo -->
-    <% end %>
+        <div class="logo" style="top:-10px;">
+          <%= link_to root_path do %>
+            <%= image_tag("novus_logo.jpg") %>
+          <% end %>
+          <%= image_tag("beta_version.png") %>
+        </div><!-- /logo -->
+      
      <ul class="loginbar pull-right"> 
         <% if current_member_user.present? && logged_in? %>
           <li><i class="icon-user"></i> Logget ind som <%= current_member_user.name %>
@@ -27,6 +28,6 @@
           <li class="devider">&nbsp;</li>    
         <% end %>  
       </ul>
-    </div>      
+    </div><!--/container-->      
 </div><!--/top-->
 <!--=== End Top ===-->    

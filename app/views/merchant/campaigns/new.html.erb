@@ -66,6 +66,10 @@
               showMeridian: false
             });
           });
+
+          $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
+          });
       });
   </script>
 <% end %>

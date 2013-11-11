@@ -16,7 +16,7 @@
     		</div>
     	</div>
     	<div class="controls form-inline">
-        	<%= button_tag "Nulstil password", type: "submit", class: "btn-u btn-primary pull-right btn-u-blue" %>  
+        	<%= button_tag "Nulstil password", type: "submit", class: "submission btn-u btn-primary pull-right btn-u-blue" %>  
       	</div>
     <% end %>
 </div><!-- /.row-fluid -->
@@ -26,6 +26,12 @@
 	    jQuery(document).ready(function() {
 	        App.init();
 	    });
+	    
+	    jQuery(function($) {
+      		$("form").on("submit", function () {
+        	$(this).find(".submission").prop("disabled", true);
+      		});
+    	});
 
 	    (function(d, s, id) {
 	        var js, fjs = d.getElementsByTagName(s)[0];

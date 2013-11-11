@@ -29,7 +29,7 @@
                 <%= f.label :terms_of_service, class: "checkbox" do %>
                 <%= f.check_box :terms_of_service %>
                   Jeg har læst og accepteret  
-                  <%= link_to "Salgs & Leveringsbetingelser", terms_conditions_path, :target => "_blank", style: "text-decoration: underline" %>
+                  <%= link_to "Medlemsbetingelser", terms_conditions_path, :target => "_blank", style: "text-decoration: underline" %>
                 <% end %>
               </div> 
             <% end %>
@@ -65,14 +65,14 @@
         <div class="controls form-inline" style="margin-top:20px">
           <% if f.object.new_record? %> 
             <div style="text-align:center;">
-              <%= button_tag class: "btn-u btn-primary btn-u-blue" do %>
+              <%= button_tag class: "submission btn-u btn-primary btn-u-blue" do %>
                 <i class="icon-ok bigger-110"></i>
                 Opret medlem
               <% end %>
             </div>
           <% else %> 
              <div style="text-align:center;">
-              <%= button_tag class: "btn-u btn-primary btn-u-blue" do %>
+              <%= button_tag class: "submission btn-u btn-primary btn-u-blue" do %>
                 <i class="icon-ok bigger-110"></i>
                 Gem
               <% end %>

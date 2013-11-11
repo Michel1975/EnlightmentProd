@@ -40,7 +40,7 @@
       </div>
       <div class="control-group">
         <div class="controls">
-          <%= button_tag class: "btn btn-primary" do %>
+          <%= button_tag class: "submission btn btn-primary" do %>
             <i class="icon-ok bigger-110"></i>
             Opret medlem
           <% end %>
@@ -60,6 +60,10 @@
       jQuery(function($) {
           $('[data-rel=tooltip]').tooltip({container:'body'});
           $('[data-rel=popover]').popover({container:'body'});
+
+          $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
+          });
       });
   </script>
 <% end %>
