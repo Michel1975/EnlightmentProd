@@ -40,8 +40,10 @@ class Campaign < ActiveRecord::Base
     end
 
     def validate_activatation_time
-      earliest = Time.zone.now + 2.hour
-      latest = Time.zone.now + 7.days + 2.hour
+      #earliest = Time.zone.now + 2.hour
+      #latest = Time.zone.now + 7.days + 2.hour
+      earliest = Time.zone.now + 1.hour
+      latest = Time.zone.now + 1.days
       if self.activation_time.present?
         if (self.activation_time < earliest) && (self.activation_time < latest) 
           errors.add(:activation_time, I18n.t(:invalid_activation_time, earliest: I18n.l(earliest), latest: I18n.l(latest), :scope => [:business_validations, :campaign]) )

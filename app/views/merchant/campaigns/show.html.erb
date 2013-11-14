@@ -28,7 +28,7 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Status </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= I18n.t(@campaign.status.to_sym, :scope => [:enums, :campaign] ) %> </span>
+          <span class="editable editable-click" id="age"> <%= I18n.t(@campaign.status.to_sym, :scope => [:enums, :campaign] ) if @campaign.status %> </span>
         </div>
       </div>
 

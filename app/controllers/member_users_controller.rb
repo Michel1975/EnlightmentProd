@@ -8,21 +8,26 @@ class MemberUsersController < ApplicationController
   	#Create new member frontend
 
 	def new
+    logger.info "Loading MemberUser new action"
 		#Fik en fejl på date_select efter vi skiftede til dansk locale
 		#Læs denne artikel: http://i18n.lighthouseapp.com/projects/14947/tickets/12-i18n-and-date_select-exception
-  		@member_user = Member.new
-  		@member_user.build_user()
+  	logger.debug "Building new member object with user association"
+    @member_user = Member.new
+  	@member_user.build_user()
 	end
 
   	#Create new member frontend
   	def create
-		#Af en eller anden grund skal man anvende user_attributes i fields_for i formularen til nyt medlem
-		#link: http://stackoverflow.com/questions/10701662/rails-cant-mass-assign-protected-attributes-error-when-using-accepts-nested-att
-		#Husk at bygge tilknyttede objekter ved oprettelse:http://stackoverflow.com/questions/4729672/accepts-nested-attributes-for-keeps-form-fields-from-showing
+      logger.info "Loading MemberUser create action"
+		  #Af en eller anden grund skal man anvende user_attributes i fields_for i formularen til nyt medlem
+		  #link: http://stackoverflow.com/questions/10701662/rails-cant-mass-assign-protected-attributes-error-when-using-accepts-nested-att
+		  #Husk at bygge tilknyttede objekter ved oprettelse:http://stackoverflow.com/questions/4729672/accepts-nested-attributes-for-keeps-form-fields-from-showing
   		@member_user = Member.new(params[:member])
       @member_user.origin = 'web'
   		if @member_user.save
+        logger.debug "Member created and saved successfully - attributes hash: #{@member_user.attributes.inspect}"
   			#virker ikke helt efter hensigten: auto_login(@member.user)
+        logger.debug "Sending delayed welcome email to new member"
         #Send welcome e-mail
         MemberMailer.delay.welcome_mail_new_member(@member_user.id)#.deliver
     		redirect_to root_path, :success => t(:member_created, :scope => [:business_validations, :frontend, :member_user])
@@ -32,61 +37,86 @@ class MemberUsersController < ApplicationController
    end
 
   def edit
+    logger.info "Loading MemberUser edit action"
   	#logger.info("Michel:" + current_member_user.id + "current_user-id:" + current_user.id)
   	@member_user = current_resource #Old:current_member_user
+    logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"
   end
 
   def terms_conditions
+    logger.info "Loading MemberUser terms_conditions action"
   end
 
   def show
-  	@member_user = current_resource #Old:current_member_user	
+    logger.info "Loading MemberUser show action"
+  	@member_user = current_resource #Old:current_member_user
+    logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"	
   end
 
   def update
+    logger.info "Loading MemberUser update action"
   	@member_user = current_resource
+    logger.debug "Member attributes hash: #{@member_user.attributes.inspect}" 
     if @member_user.update_attributes(params[:member])
+      logger.debug "Member updated succesfully - attributes hash: #{@member_user.attributes.inspect}" 
     	flash[:success] = t(:member_updated, :scope => [:business_validations, :frontend, :member_user])
     	redirect_to member_user_path(@member_user)
     else
+      logger.debug "Validation errors. Loading edit view with errors"
     	render 'edit'
     end
   end
 
   def destroy
+    logger.info "Loading MemberUser destroy action"
     @member_user = current_resource
+    logger.debug "Member attributes hash: #{@member_user.attributes.inspect}" 
     if @member_user.destroy
+      logger.debug "Member successfully deactivated: #{@member_user.attributes.inspect}" 
       logout
       flash[:success] = t(:member_deleted, :scope => [:business_validations, :frontend, :member_user])
       redirect_to root_path
     else
+      logger.debug "Error when deactivating member"
+      logger.fatal "Error when deactivating member"
       render 'show'
     end
   end
 
   def favorites
+    logger.info "Loading MemberUser favorites action"
     @member_user = current_resource
+    logger.debug "Member attributes hash: #{@member_user.attributes.inspect}" 
     @favorite_stores = @member_user.subscribers.active.page( params[:page] ).per_page(10) 
+    logger.debug "Favorite stores for member: #{@favorite_stores.inspect}" 
   end
 
   #Show form for completing profile on web
   #Eksempel: http://localhost:3000/edit_sms_profile/0f4882b68a
   def complete_sms_profile
+    logger.info "Loading MemberUser complete_sms_profile action"
     token = params[:token]
+    logger.debug "Token: #{@token.inspect}" if token.present?
     if token.present?
+      logger.debug "Token is present..continue trying to lookup member record"
       @member = Member.find_by_access_key(params[:token])
       if @member.nil?
+        logger.debug "Error: Member does not exist with that token"
         flash[:alert] = t(:member_not_exist, :scope => [:business_messages, :web_profile])
         redirect_to root_path
       elsif @member.complete
+        logger.debug "Error: Member profile already completed"
         flash[:alert] = t(:already_finished, :scope => [:business_messages, :web_profile])
         redirect_to root_path
       else
+        logger.debug "Everything OK. We can load form to allow the member to complete profile"
+        logger.debug "Set validation mode to web and build user record association"
         #Set validation mode and build user object
         @member.validation_mode = "web"
         @member.build_user()
       end
     else
+      logger.debug "Error: No token is present in request"
       flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
       redirect_to root_path
     end
@@ -94,12 +124,16 @@ class MemberUsersController < ApplicationController
 
   #Save full profile with all attributes
   def update_sms_profile 
+    logger.info "Loading MemberUser update_sms_profile action"
     @member = current_resource
+    logger.debug "Member attributes hash: #{@member.attributes.inspect}" 
     if @member.update_attributes(params[:member])
+        logger.debug "Member saved and updated successfully - attributes hash: #{@member.attributes.inspect}" 
         flash[:success] = t(:success, :scope => [:business_messages, :web_profile])
         #Overvej at linke direkte til butikken efter profilen er færdig oprettet.
         redirect_to root_path
     else
+      logger.debug "Validation errors. Loading complete_sms_profile with errors"
       render 'complete_sms_profile'      
     end
   end

@@ -85,7 +85,6 @@ class SMSFactory
 
   def self.cancelScheduledOfferReminder?(campaign)
     messageContent = prepareMessage('CancelCampaign', campaign, nil, nil, nil)
-
     #sendMessage?('cancel_group', messageContent)
     return true
   end  

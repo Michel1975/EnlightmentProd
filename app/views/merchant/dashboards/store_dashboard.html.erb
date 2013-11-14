@@ -96,6 +96,7 @@
       <i class="icon-user bigger-110"></i>
       Aktivitetsfeed
     </h3>
+    <%= will_paginate @activity_feeds, class:"pagination"%>
     <div class="widget-box">
       <div class="widget-body">
         <div class="widget-main no-padding">
@@ -108,7 +109,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @merchant_store.event_histories.order("created_at DESC").limit(15).each do |event| %>
+              <% @activity_feeds.order("created_at DESC").each do |event| %>
                 <tr>
                   <td><%= event.event_type %></td>
                   <td><%= I18n.l( event.created_at )  %></td>

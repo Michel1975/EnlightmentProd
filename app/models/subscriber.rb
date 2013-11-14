@@ -52,7 +52,7 @@ class Subscriber < ActiveRecord::Base
       subscribers = subscribers.select("DATE_TRUNC('month', created_at) as created_month, count(id) as total")
       subscribers = subscribers.group("DATE_TRUNC('month', created_at)")
       subscribers.each_with_object({}) do |subscriber, totals|
-        logger.debug("Michel-loggy99: #{subscriber.created_month}: #{subscriber.total}: " + I18n.l(subscriber.created_month.to_date, :format => "%B") )
+        #logger.debug("Michel-loggy99: #{subscriber.created_month}: #{subscriber.total}: " + I18n.l(subscriber.created_month.to_date, :format => "%B") )
         totals[ I18n.l( subscriber.created_month.to_date, :format => "%B") ] = subscriber.total
       end 
     end

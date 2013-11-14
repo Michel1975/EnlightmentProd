@@ -27,7 +27,7 @@
             <tr>        
               <td> <%= campaign.title %> </td>
               <td> <%= campaign.activation_time? ? I18n.l( campaign.activation_time ) : empty_attribute_info( campaign.activation_time ) %> </td>
-              <td> <%= I18n.t(campaign.status.to_sym, :scope => [:enums, :campaign] ) %> </td> 
+              <td> <%= I18n.t(campaign.status.to_sym, :scope => [:enums, :campaign] ) if campaign.status %> </td> 
               <td> <%= campaign.total_cost %> kr. </td> 
               <td> <%= I18n.l( campaign.created_at ) %></td>
               <td> <%= I18n.l( campaign.updated_at) %></td>   
