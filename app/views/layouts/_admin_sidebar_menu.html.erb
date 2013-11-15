@@ -1,0 +1,68 @@
+<!-- /.sidebar start -->
+<div class="sidebar sidebar-fixed" id="sidebar">
+	<ul class="nav nav-list">
+		      <li <%= currentMenuItem('dashboards#overview', controller.controller_name, controller.action_name) %> >
+    			 <%= link_to admin_dashboard_path do %>
+      					<i class="icon-dashboard"></i> 
+      					<span class="menu-text"> Dashboard </span>  
+    			 <% end %>                        
+  				</li>
+  				<li <%= currentMenuItem('message_notifications#index', controller.controller_name, controller.action_name) %> >
+    				<%= link_to admin_message_status_path do %>
+      					<i class="icon-user"></i> 
+      					<span class="menu-text"> SMS logbog </span>  
+    				<% end %>                        
+  				</li>
+  				
+  				<li>
+    				<a href="#" class="dropdown-toggle">
+      					<i class="icon-user"></i>
+      						<span class="menu-text"> Medlemmer </span>
+      						<b class="arrow icon-angle-down"></b>
+    				</a>
+
+    				<ul class="submenu">
+       					<li>           
+          					<%= link_to active_admin_members_path do %>                   
+          						<i class="icon-double-angle-right"></i>
+          						Aktive  
+        					<% end %>                        
+      					</li>
+      					<li>
+          					<%= link_to inactive_admin_members_path do %>                    
+          						<i class="icon-double-angle-right"></i>
+          						Inaktive  
+        					<% end %>                        
+      					</li>              
+    				</ul>
+  				</li>
+
+  				<li>
+    				<a href="#" class="dropdown-toggle">
+      					<i class="icon-bullhorn"></i>
+      						<span class="menu-text"> Butikker </span>
+      						<b class="arrow icon-angle-down"></b>
+    				</a>
+    				<ul class="submenu">
+       					<li>
+          					<%= link_to active_admin_merchant_stores_path do %>                   
+          						 <i class="icon-double-angle-right"></i>
+          						 Aktive  
+        					<% end %>                        
+      					</li>
+      					<li>
+          					<%= link_to active_admin_merchant_stores_path do %>                    
+          						<i class="icon-double-angle-right"></i>
+          						Aktive  
+        					<% end %>                        
+      					</li>              
+    				</ul>
+  				</li>
+          <li <%= currentMenuItem('message_errors#index', controller.controller_name, controller.action_name) %> >
+            <%= link_to admin_message_error_path do %>
+                <i class="icon-user"></i> 
+                <span class="menu-text"> Beskedfejl</span>  
+            <% end %>                        
+          </li>
+	</ul><!-- /.nav-list -->
+</div><!-- /.sidebar -->

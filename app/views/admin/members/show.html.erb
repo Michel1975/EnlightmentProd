@@ -1,0 +1,124 @@
+<% provide(:title, 'Medlemsprofil') %>
+<% provide(:description, 'Medlemsprofil') %>
+<% content_for :breadcrumps do %>
+    <li>Medlemmer<span class="divider">/</span></li>
+    <li class="active">Medlemsprofil</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-user bigger-110"></i>
+Medlemsprofil
+</h3>
+<div class="row-fluid">
+  <div class="span5">
+    <div class="profile-user-info profile-user-info-striped">
+      
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Navn </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="name"> <%= empty_attribute_info( h(@member.name) ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Telefon </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="phone"> <%= empty_attribute_info( @member.phone ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Email </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="email"> <%= empty_attribute_info( @member.user.try(:email) )%> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Postnummer </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="postal_code"> <%= empty_attribute_info( h(@member.postal_code) ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> By </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="city"> <%= empty_attribute_info( h(@member.city) ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Køn </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="gender"> <%= @member.gender.present? ? gender(@member.gender) : empty_attribute_info( @member.gender ) %>
+           </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Fødselsdag </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="birthday"> <%= @member.birthday.present? ? I18n.l( @member.birthday ) : empty_attribute_info( @member.birthday ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Komplet profil </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="complete"> <%= b( @member.complete ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Medlemsbetingelser </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="terms_of_service"> <%= b( @member.terms_of_service ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Oprettet via </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="origin"> <%= I18n.t( @member.origin.to_sym, :scope => [:enums, :member] ) if @member.origin %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Nøgle </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="origin"> <%= empty_attribute_info( @member.access_key ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Oprettet </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="created_at"> <%= I18n.l( @member.created_at ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Senest opdateret </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="updated_at"> <%= I18n.l( @member.updated_at ) %> </span>
+        </div>
+      </div>
+    </div><!-- /.profile-user-info -->
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+  <div class="span5" style="text-align:center;margin-top:10px">
+    <%= link_to edit_admin_member_path(@member) do %>
+        <button class="btn btn-primary btn-small">
+          <i class="icon-edit bigger-110"></i>
+            Rediger
+        </button>
+      <% end %>
+      <%= link_to [:admin, @member], method: :delete, data: { confirm: t(:warning_deletion_member, :scope => [:business_validations, :backend, :member])} do %>
+        <button class="btn btn-small btn-danger">
+          <i class="icon-trash bigger-110"></i>
+            Slet medlem
+        </button>
+      <% end %>
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->

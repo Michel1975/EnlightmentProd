@@ -36,6 +36,12 @@ class Member < ActiveRecord::Base
     client.shorten("http://www.clubnovus.dk?token={}&member_id=#{self.id}&merchant_store_id=#{merchant_store.id}")
   end
 
+  def self.search(search_name)
+    if search_name !="" 
+      where('name LIKE ?', "%#{search_name}%")
+    end
+  end
+
   private
     #Deactivate all memberships on merchant stores
     def check_member_status
@@ -71,6 +77,7 @@ class Member < ActiveRecord::Base
       return SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
     end
 
+    #Token used as verification in shortened links with Bitly
     def create_access_key
       self.access_key ||= [id.to_s, SecureRandom.hex(5)].join
     end

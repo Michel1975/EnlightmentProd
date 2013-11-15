@@ -1,6 +1,4 @@
 class Merchant::SubscribersController < Merchant::BaseController
-	#If-override-from-base: layout "merchant", except: [:index]
-	
 	def index
 		logger.info "Loading subscriber index action"
     	@subscribers = current_merchant_store.subscribers.where(active: true).page(params[:page]).per_page(10)

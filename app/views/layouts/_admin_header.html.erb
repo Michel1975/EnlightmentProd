@@ -1,0 +1,40 @@
+<div class="navbar navbar-fixed-top" id="navbar">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a href="#" class="brand">
+				<small>
+					<i class="icon-tasks"></i>
+					Club Novus - Backend administration
+				</small>
+			</a><!-- /.brand -->
+			<ul class="nav ace-nav pull-right">
+				<li class="light-blue">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+						<span class="user-info" style="max-width:300px">
+							<small>Logget ind som:</small>
+							<%= current_admin_user.name %>
+						</span>
+						<i class="icon-caret-down"></i>
+					</a>
+					<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+						<li>
+          					<%= link_to admin_backend_admin_path(current_admin_user) do %>
+            					<i class="icon-user"></i>
+            					Brugerprofil    
+          					<% end %>                        
+        				</li>
+        				<% if logged_in? %>
+        				<li class="divider"></li>
+          					<li>
+            					<%= link_to shared_logout_admin_path do %>
+              						<i class="icon-off"></i> 
+              						Log ud  
+            					<% end %>                        
+          					</li>
+          				<% end %>
+					</ul>
+				</li>
+			</ul><!-- /.ace-nav -->
+		</div><!-- /.container-fluid -->
+	</div><!-- /.navbar-inner -->
+</div><!-- /.navbar-inner -->

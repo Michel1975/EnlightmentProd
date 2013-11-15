@@ -1,0 +1,41 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require "bootstrap"
+ *= require "bootstrap-responsive"
+ *= require "jquery.ui.all"
+ *= require "morris"
+ *= require "bootstrap-timepicker"
+ *= require "datepicker"
+ *= require_directory ./utility
+ */
+
+/*
+	This is important since otherwise help buttons will jump down to next line if forms have errors.
+	field_with_errors are a standard rails way of associating error text with fields if developers needs this.
+	Link: http://stackoverflow.com/questions/5267998/rails-3-field-with-errors-wrapper-changes-the-page-appearance-how-to-avoid-t;
+*/
+.field_with_errors { display: inline; }
+
+/*
+	Used for live-preview of sms-messages. Link: http://davidwalsh.name/jquery-comment-preview;
+*/
+.lp-block		{ width:400px; float:left; }
+.lp-block input, .lp-block textarea { width:90%; }
+#live-preview-display 	{ background:#eee; padding:10px; margin-left:50px; margin-top:20px; }
+#lp-comment { padding-top:10px; font-style:italic; line-height:19px; }
+
+/*
+	#To ensure scrolling in sms preview div
+*/
+#live-preview-display div.widget-body{
+	overflow: scroll;
+}

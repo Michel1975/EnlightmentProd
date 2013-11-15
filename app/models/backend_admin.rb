@@ -1,5 +1,5 @@
 class BackendAdmin < ActiveRecord::Base
-  attr_accessible :name, :role
+  attr_accessible :name, :role, :user_attributes
 
   has_one :user, :as => :sub
 

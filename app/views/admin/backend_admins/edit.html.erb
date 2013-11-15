@@ -1,0 +1,86 @@
+<% provide(:title, 'Brugerprofil') %>
+<% provide(:description, 'Redigering af brugeroplysninger') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Brugerprofil</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-user bigger-110"></i>
+  Brugerprofil
+</h3>
+<div class="row-fluid">
+  <div class="span5">
+    <%= render :partial => "/admin/shared/error_messages", :locals => { :obj => @backend_admin_user} %>
+    <%= form_for [:admin, @backend_admin_user], html: { class: "horizontal"} do |f| %>
+      <div class="control-group">
+        <%= f.label :name, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :name, placeholder: "Fulde navn" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast fulde navn inkl. mellemnavne (max. 40 tegn). Mellemnavn kan forkortes eks. Ole K. Jensen", "Fulde navn") %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :role, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :role, placeholder: "Rolle" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast brugerrolle eks. salgsansvarlig, marketing koordinator eller andet", "Rolle") %>
+        </div>
+      </div>
+      <%= f.fields_for :user do |backend_admin| %>
+        <div class="control-group">
+          <%= backend_admin.label :email, class: "control-label" %>
+          <div class="controls">
+            <%= backend_admin.text_field :email, placeholder: "Email" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast gyldig email", "Email") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= backend_admin.label :password, class: "control-label" %>
+          <div class="controls">
+            <%= backend_admin.password_field :password, placeholder: "Nyt password" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast nyt password. Husk slå caps lock fra", "Nyt password") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= backend_admin.label :password_confirmation, class: "control-label" %>
+          <div class="controls">
+            <%= backend_admin.password_field :password_confirmation, placeholder: "Bekræft password" %>&nbsp;&nbsp;
+            <%= tooltip("Gentag nyt password.  Husk slå caps lock fra", "Bekræft password") %>
+          </div>
+        </div>
+      <% end %>
+      <div class="control-group">
+        <div class="controls">
+          <%= button_tag class: "submission btn btn-primary" do %>
+            <i class="icon-edit bigger-110"></i>
+            Opdater brugerprofil
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <%= link_to admin_backend_admin_path(current_admin_user), class: "btn btn-primary btn-small" do %>
+      <i class="icon-arrow-left bigger-110"></i>
+      Tilbage
+    <% end %>
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+
+          $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
+          });
+      });
+  </script>
+<% end %>
+
+
+
+
+
+
+
+

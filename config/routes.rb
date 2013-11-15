@@ -56,11 +56,13 @@ EnlightmentProd::Application.routes.draw do
     end
 
     resources :welcome_offers
+    
     resources :campaigns do
       get 'active', :on => :collection
       get 'finished', :on => :collection
       post 'send_test_message', :on => :member
     end
+
     resources :merchant_users
     resources :merchant_members, :only => [:new, :create]
 
@@ -69,7 +71,7 @@ EnlightmentProd::Application.routes.draw do
       get 'active_subscription', :on => :member 
     end
 
-  end
+  end#End namespace :merchant
 
   namespace :shared do
     resources :members do
@@ -100,13 +102,25 @@ EnlightmentProd::Application.routes.draw do
     #get "password_resets/create"
     #get "password_resets/edit"
     #get "password_resets/update"
-  end
+  end#End namespace :shared
 
   namespace :admin do
+    resources :backend_admins
+
+    resources :merchant_stores do
+      get 'active', :on => :collection
+      get 'inactive', :on => :collection 
+    end
+    
+    resources :members do
+      get 'active', :on => :collection
+      get 'inactive', :on => :collection
+      get 'search_members', :on => :collection
+    end
+
     get "dashboard" => "dashboards#overview", :as => "dashboard"
     get "message_status" => "message_notifications#index", :as => "message_status"
     get "message_error" => "message_errors#index", :as => "message_error"
-    
   end
   
   

@@ -1,6 +1,4 @@
 class Merchant::MerchantUsersController < Merchant::BaseController
-	#If-override-from-base: layout "merchant", except: [:index]
-	
 	def show
 		logger.info "Loading MerchantUser show action"
 		@merchant_user = current_resource

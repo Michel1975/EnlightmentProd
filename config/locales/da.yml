@@ -324,6 +324,9 @@ da:
         member_updated: Din profil er nu opdateret!
         member_deleted: Din profil er nu slettet. Håber vi ses igen!
         warning_deletion_member: Du er ved at slette din medlemsprofil og dine tilmeldte favoritbutikker. Er du sikker?
+    backend:
+      member:
+        warning_deletion_member: Du er ved at deaktivere et medlem. Er du sikker?
     session_merchant:
       logged_in: Du er nu logget ind som partnerbutik!
       logged_out: Du er logget ud som partnerbutik!
@@ -355,6 +358,8 @@ da:
     merchant_store:
       information_updated: Oplysninger er nu opdateret!
     merchant_user:
+      profile_updated: Din brugerprofil er nu opdateret!
+    backend_admin:
       profile_updated: Din brugerprofil er nu opdateret!
     offer:
       offer_created: Tilbud er oprettet og synligt på clubnovus.dk!
@@ -440,6 +445,9 @@ da:
       scheduled: Planlagt
       error: Fejl
       completed: Gennemført
+    member:
+      web: Web
+      store: Butik
 
 
     
