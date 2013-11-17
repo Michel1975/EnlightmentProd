@@ -38,7 +38,7 @@ class Member < ActiveRecord::Base
 
   def self.search(search_name)
     if search_name !="" 
-      where('name LIKE ?', "%#{search_name}%")
+      where('name ILIKE ?', "%#{search_name.downcase}%")
     end
   end
 

@@ -29,6 +29,9 @@ class Admin::MembersController < Admin::BaseController
 		logger.info "Loading Members show action"
 		@member = current_resource
 		logger.debug "Member - attributes hash: #{@member.attributes.inspect}"
+
+		@subscriber_stores = @member.subscribers.active.page( params[:page] ).per_page(15)
+		logger.debug "Subscriber stores - attributes hash: #{@subscriber_stores.inspect}"
 	end
 
 	def edit
@@ -51,6 +54,22 @@ class Admin::MembersController < Admin::BaseController
       		logger.debug "Validation errors. Loading edit view with errors"
     		render 'edit'
     	end
+	end
+
+	def remove_subscriber
+		logger.info "Loading Members remove_subscriber action"
+  		subscriber = Subscriber.find(params[:id])
+  		logger.debug "Subscriber - attributes hash: #{subscriber.attributes.inspect}"
+		subscriber.opt_out
+		if subscriber.save!
+			logger.debug "Subscriber status changed successfully to inactive - attributes hash: #{subscriber.attributes.inspect}"
+			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
+    		redirect_to [:admin, subscriber.member]
+		else
+			logger.debug "Error when updating subscriber status. Redirecting to subscribers list"
+			flash[:error] = t(:subscriber_remove_error, :scope => [:business_validations, :subscriber])
+    		redirect_to [:admin, subscriber.member]
+		end
 	end
 
 	def destroy

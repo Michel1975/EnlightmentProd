@@ -30,6 +30,20 @@ class Campaign < ActiveRecord::Base
     @start_time || activation_time.try(:strftime, "%H:%M:%S")
   end
 
+  def self.search(from_date, to_date, status)
+    if from_date !=""
+      result = where("activation_time >= ?", Time.zone.parse(from_date) )
+    end
+
+    if to_date !=""
+      result = result.nil? ? result.where("activation_time <= ?", Time.zone.parse(to_date) ) : result.where("activation_time <= ?", Time.zone.parse(to_date) )
+    end
+    
+    if status !=""
+      result = result.nil? ? where("status = ?", status.downcase) : result.where("status = ?", status.downcase) 
+    end
+  end
+
   private
     def save_activation_time
       self.activation_time = Time.zone.parse(@start_date + " " + @start_time )

@@ -1,0 +1,93 @@
+<% provide(:title, 'Planlagte kampagner') %>
+<% provide(:description, 'Liste over planlagte kampagner') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Planlagte kampagner</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+	<i class="icon-user bigger-110"></i>
+	Planlagte kampagner
+</h3>
+<div class="row-fluid">
+	<div class="span10"> 
+		<%= form_tag search_campaigns_admin_campaigns_path, :method => 'get', class: "form-search" do %>
+			<%= text_field_tag :from_date, "", class: "datepicker", placeholder: "Fra Dato"%> &nbsp;&nbsp;
+            <%= text_field_tag :to_date, "", class: "datepicker", placeholder: "Til Dato"%> &nbsp;&nbsp;
+            Status:
+			<%= select_tag(:status, options_for_select([ ["Planlagt", "scheduled"], ["Gennemført", "completed"], ["Fejl", "error"] ], @status.nil? ? "scheduled" :  @status) ) %>
+            &nbsp;&nbsp;
+            <%= button_tag class: "btn btn-small btn-success" do %>
+            	Søg
+            	<i class="icon-search icon-on-right bigger-110"></i>
+          	<% end %>
+            <%= link_to scheduled_admin_campaigns_path do %>
+                <button class="btn btn-small btn-success">
+                    <i class="icon-reset bigger-110"></i>
+                    Nulstil
+                </button>
+            <% end %>
+		<% end %>
+	    <% if @search && @campaigns.size == 0 %>
+	        <p>Vi kunne desværre ikke finde nogle kampagner som matchede din søgning</p>
+	    <% end %>
+	</div><!-- /.span5 -->
+</div><!-- /.row-fluid -->
+
+<%= will_paginate @campaigns, class:"pagination" %>
+	<div class="row-fluid">
+		<div class="span12">
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Overskrift</th> 
+            			<th>Afsendelse</th>
+            			<th>Status</th>
+            			<th>Kampagne-ID</th>
+            			<th>Butik</th>
+            			<th>Handling</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @campaigns.each do |campaign| %>
+						<tr>
+							<td> <%= empty_attribute_info( campaign.title ) %> </td>
+							<td> <%= campaign.activation_time? ? I18n.l( campaign.activation_time ) : empty_attribute_info( campaign.activation_time ) %> </td>
+							<td> <%= I18n.t( campaign.status.to_sym, :scope => [:enums, :campaign] ) if campaign.status %> </td> 
+							<td> <%= empty_attribute_info( campaign.message_group_id ) %> </td>
+							<td> <%= empty_attribute_info( campaign.merchant_store.store_name ) %> </td>
+							<td>
+								<%= link_to [:admin, campaign] do %>
+		                  			<button class="btn btn-small btn-info">
+		                    			<i class="icon-pencil bigger-110"></i>
+		                    			Se detaljer
+		                  			</button>
+		                		<% end %>
+								<%= link_to [:admin, campaign ], method: :delete, data: { confirm: t(:warning_deletion_store, :scope => [:business_validations, :backend, :store])} do %>
+									<button class="btn btn-small btn-danger">
+										<i class="icon-trash bigger-110"></i>
+										Slet kampagne
+									</button>
+								<% end %>
+							</td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div><!-- /.span12 -->
+	</div><!-- /.row-fluid -->
+	
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      jQuery(function($) {
+          $('.date-picker').datepicker().next().on(ace.click_event, function(){
+            $(this).prev().focus();
+          });
+          
+          $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            language: 'da',
+            autoclose: true
+          });
+      });
+  </script>
+<% end %>
+	

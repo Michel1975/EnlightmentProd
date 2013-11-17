@@ -39,7 +39,7 @@
 
   				<li>
     				<a href="#" class="dropdown-toggle">
-      					<i class="icon-bullhorn"></i>
+      					<i class="icon-leaf"></i>
       						<span class="menu-text"> Butikker </span>
       						<b class="arrow icon-angle-down"></b>
     				</a>
@@ -51,17 +51,39 @@
         					<% end %>                        
       					</li>
       					<li>
-          					<%= link_to active_admin_merchant_stores_path do %>                    
+          					<%= link_to inactive_admin_merchant_stores_path do %>                    
           						<i class="icon-double-angle-right"></i>
-          						Aktive  
+          						Inaktive  
         					<% end %>                        
       					</li>              
     				</ul>
   				</li>
+          <li>
+            <a href="#" class="dropdown-toggle">
+                <i class="icon-bullhorn"></i>
+                  <span class="menu-text"> SMS Kampagner </span>
+                  <b class="arrow icon-angle-down"></b>
+            </a>
+
+            <ul class="submenu">
+                <li>           
+                    <%= link_to scheduled_admin_campaigns_path do %>                   
+                      <i class="icon-double-angle-right"></i>
+                      Aktive  
+                  <% end %>                        
+                </li>
+                <li>
+                    <%= link_to completed_admin_campaigns_path do %>                    
+                      <i class="icon-double-angle-right"></i>
+                      Inaktive  
+                  <% end %>                        
+                </li>              
+            </ul>
+          </li>
           <li <%= currentMenuItem('message_errors#index', controller.controller_name, controller.action_name) %> >
             <%= link_to admin_message_error_path do %>
-                <i class="icon-user"></i> 
-                <span class="menu-text"> Beskedfejl</span>  
+                <i class="icon-tags"></i> 
+                <span class="menu-text"> Beskedfejl </span>  
             <% end %>                        
           </li>
 	</ul><!-- /.nav-list -->

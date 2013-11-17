@@ -44,7 +44,7 @@
     <div class"span12" style="text-align:center">
     <%= form_tag search_stores_path, :method => 'get', style: "margin-top:15px" do %>
         <div class="input-append">
-            <%= select_tag(:city, options_for_select([ "Frederiksværk", "Helsinge", "Liseleje" ], "Frederiksværk"), style: "margin: 5px;" ) %>
+            <%= select_tag(:city, options_for_select([ "Frederiksværk", "Helsinge", "Liseleje" ], @city.nil? ? "Frederiksværk" :  @city), style: "margin: 5px;" ) %>
             &nbsp;&nbsp;
             <%= text_field_tag :store_name, "", class: "input-xlarge", placeholder: "Indtast butiksnavn", style: "margin: 5px;" %> 
             &nbsp;&nbsp;

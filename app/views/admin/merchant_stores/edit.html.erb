@@ -1,0 +1,352 @@
+<% provide(:title, 'Rediger stamdata for butik') %>
+<% provide(:description, 'Rediger stamdata for butik og kundeklub') %>
+<% content_for :breadcrumps do %>
+  <li>
+    Indstillinger
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li class="active">Butik</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-leaf bigger-110"></i>
+  Rediger stamdata
+</h3>
+<div class="well">
+  <div class="row-fluid">
+    <%= render :partial => "/merchant/shared/error_messages", :locals => { :obj => @merchant_store } %>
+    <%= form_for [:merchant, @merchant_store], html: { class: "horizontal"} do |f| %>
+    <fieldset>
+      <div class="span6">
+        <legend>Kontaktinfo</legend>
+        <div class="control-group">
+          <%= f.label :store_name, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :store_name, placeholder: "Butiksnavn" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast navnet på butikken", "Butiksnavn") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :owner, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :owner, placeholder: "Ejer" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast navnet på ejeren (person/virksomhed/kæde)", "Ejer") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :phone, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :phone, placeholder: "Telefon" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast kun danske telefonnumre uden landekode eks. 24600819", "Telefon") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :email, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :email, placeholder: "Email" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast gyldig email", "Email") %>
+          </div>
+        </div>
+      </div><!-- /.span6 -->
+
+      <div class="span6">
+        <legend>Adresse</legend>
+        <div class="control-group">
+          <%= f.label :street, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :street, placeholder: "Gade" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast gade uden husnummer", "Gade") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :house_number, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :house_number, placeholder: "Husnr." %>&nbsp;&nbsp;
+            <%= tooltip("Indtast husnr.", "Husnr.") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :postal_code, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :postal_code, placeholder: "Postnr." %>&nbsp;&nbsp;
+            <%= tooltip("Indtast postnr.", "Postnr.") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :city, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :postal_code, placeholder: "By" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast by", "By") %>
+          </div>
+        </div>
+      </div><!-- /.span6 -->
+  </div><!-- /.row-fluid -->
+  <div class="row-fluid"><h4 class="header blue"></div>
+  <div class="row-fluid">
+      <div class="span6">
+        <div class="control-group">
+          <%= f.label :description, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_area :description, style:"width:400px", maxlength: "500", rows: "10", placeholder: "Beskrivelse af butik", class: "short" %>&nbsp;&nbsp;
+            <%= tooltip("Lav beskrivelse (max. 255 tegn) ", "Beskrivelse af butik") %>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <%= f.label :short_description, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_area :short_description, style:"width:400px", maxlength: "255", rows: "5", class: "short", placeholder: "Kort beskrivelse af butik" %>&nbsp;&nbsp;
+            <%= tooltip("Lav forkortet beskrivelse (max. 255 tegn). Anvendes på Google Maps", "Beskrivelse af butik") %>
+          </div>
+        </div>
+
+      </div><!-- /.span6 -->
+      <div class="span6 align-center">
+        <div class="control-group">
+          <% if !@merchant_store.image.picture.blank? %>
+            <%= f.label :store_picture, class: "control-label" %>
+            <div id="picture_container">
+              <%= cl_image_tag(@merchant_store.image.picture, :width => 400, :height => 400, :crop => :fit, class: "img-rounded") %>
+            </div>
+          <% else %>
+            <div id="picture_container">
+              <div class="ace-file-input ace-file-multiple">
+                <label class="file-label" data-title="Intet præsentationsbillede">
+                  <span class="file-name" data-title="Upload billede forneden">
+                    <i class="icon-picture"></i>
+                  </span>
+                </label><a class="remove" href="#"><i class="icon-remove"></i></a></div>
+            </div>
+          <% end %>
+         
+          <div class="form_controls" style="margin-top:10px">
+            <div class="upload_button_holder">
+              <div class="ace-file-input">
+                <label class="file-label" data-title="Vælg">
+                  <span class="file-name" data-title="Upload nyt billede...">
+                  <%= f.fields_for :image do |image| %> 
+                    <%= image.cl_image_upload(:picture, tags: @merchant_store.sms_keyword, :folder => @merchant_store.sms_keyword) %>
+                    <%= image.hidden_field :size %>
+                    <%= image.hidden_field :picture_cache %>
+                  <% end %>
+                    <i class="icon-upload-alt"></i>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div id="status_section" class="easy-pie-chart percentage easyPieChart" data-percent="0" data-color="#87CEEB" style="width: 75px; height: 75px; line-height: 75px; color: rgb(135, 206, 235);">
+              <span class="percent"></span>%
+              <canvas width="75" height="75"></canvas>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.span6 -->
+    </div><!-- /.row-fluid -->
+    <div class="row-fluid">
+      <div class="span11">
+        <h4 class="header blue lighter smaller" style="margin-top:5px">
+          Åbningstider
+        </h4> 
+        <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>Dag</th>
+              <th>Åbningstid</th>
+              <th>Lukketid</th>
+              <th>Lukket</th>
+            </tr>
+          </thead>
+          <tbody>
+              <%= f.fields_for :business_hours, @merchant_store.business_hours.order("day ASC") do |business_hour| %>
+                <tr>
+                  <td> <%= (business_hour.label :day_text, business_hour.object.day_text)  %> </td>
+                  <td>
+                    <div class="input-append bootstrap-timepicker-component">
+                      <% if business_hour.object.closed %>
+                        <%= business_hour.text_field :open_time, class: "timepicker-default input-small open_time", disabled: "disabled" %>
+                      <% else %>
+                        <%= business_hour.text_field :open_time, class: "timepicker-default input-small open_time" %>
+                      <% end %>
+                      <span class="add-on">
+                        <i class="icon-time"></i>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="input-append bootstrap-timepicker-component">
+                      <% if business_hour.object.closed %>
+                        <%= business_hour.text_field :close_time, class: "timepicker-default input-small close_time", disabled: "disabled" %>
+                      <% else %>
+                        <%= business_hour.text_field :close_time, class: "timepicker-default input-small close_time" %>
+                      <% end %>
+                      <span class="add-on">
+                        <i class="icon-time"></i>
+                      </span>
+                    </div>
+                  </td> 
+                  <td> 
+                    <%= business_hour.label :closed, class: "ace" do %>
+                      <%= business_hour.check_box :closed, class: "timepicker_checkbox" %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+          </tbody>
+        </table>
+      </div><!-- /.span11 -->
+    </div><!-- /.row-fluid -->
+    
+    <div class="row-fluid">
+      <div class="span11">
+        <div class="control-group align-center">
+          <div class="controls">
+            <%= button_tag class: "submission btn btn-primary" do %>
+              <i class="icon-edit bigger-110"></i>
+              Opdater stamdata
+            <% end %>
+          </div>
+        </div>
+      </div><!-- /.span11 -->
+    </div><!-- /.row-fluid -->
+  </fieldset><!-- /.fieldset -->
+</div><!-- /.well -->
+  <% end %><!-- /.form -->
+ 
+  <%= link_to merchant_merchant_store_path(current_merchant_store), class: "btn btn-primary btn-small" do %>
+    <i class="icon-arrow-left bigger-110"></i>
+    Tilbage
+  <% end %>
+
+
+  <% content_for :scripts do %>
+    <script>
+      $(document).ready(function() {
+        $('#status_section').hide();
+        $('#preview_section').hide();
+
+        $( ".timepicker_checkbox" ).bind( "click", function() {
+          open_time = $(this).closest("tr").find("td div .open_time").get(0);
+          if(open_time.hasAttribute('disabled')) {
+            open_time.removeAttribute('disabled');
+          }
+          else{
+            open_time.setAttribute('disabled' , 'disabled');
+          }
+
+          close_time = $(this).closest("tr").find("td div .close_time").get(0);
+          if(close_time.hasAttribute('disabled')) {
+            close_time.removeAttribute('disabled');
+          }
+          else{
+            close_time.setAttribute('disabled' , 'disabled');
+          }
+        });
+
+
+        // Cloudinary jQuery integration library uses jQuery File Upload widget
+        // (see http://blueimp.github.io/jQuery-File-Upload/).
+        // Any file input field with cloudinary-fileupload class is automatically
+        // wrapped using the File Upload widget and configured for Cloudinary uploads.
+        // You can further customize the configuration using .fileupload method
+        // as we do below.
+
+        $(".cloudinary-fileupload")
+          .fileupload({
+            // Uncomment the following lines to enable client side image resizing and validation.
+            // Make sure cloudinary/processing is included the js file
+            //disableImageResize: false,
+            //imageMaxWidth: 800,
+            //imageMaxHeight: 600,
+            //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|bmp|ico)$/i,
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            //maxFileSize: 20000000, // 20MB
+            //maxFileSize: 105000, // 1MB
+            //dropZone: "#direct_upload",
+            start: function (e) {
+              $('#status_section').show();
+              //$(".status").text("Starter upload");
+            },
+            progress: function (e, data) {
+              var progress = Math.round( (data.loaded * 100.0) / data.total) 
+              $('#status_section').find(".percent").text( progress );
+              $('#status_section').data('easyPieChart').update(progress);
+            },
+            fail: function (e, data) {
+              $('#status_section').find(".percent").text( "Fejl" );
+              //$(".status").text("Upload afbrudt");
+            },
+            processalways: function(e,data){
+            if (data.files.error) alert("Ugyldig billedfil. Billedet må max. fylde 1 mb og skal være i formattet jpeg, gif eller png.\ncheck filen og prøv igen.");
+            }
+          })
+          .off("cloudinarydone").on("cloudinarydone", function (e, data) {
+            $("#merchant_store_image_attributes_size").val(data.result.bytes);
+            $("#status_section").hide();
+            $('#preview_section').show();
+            
+            //$(".status").text("");
+            //$(".preview").html(
+            $("#picture_container").empty();
+            $("#picture_container").html(
+              $.cloudinary.image(data.result.public_id, {
+                format: data.result.format, width: 400, height: 400, crop: "fit"
+              })
+            );
+          });
+        });
+        
+        jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+          
+          $('textarea.long').inputlimiter({
+            limit: $(this).data('maxlength'),
+            lineReturnCount: 2,
+            remText: '%n tegn tilbage...',
+            limitText: 'maks tilladt: %n.'
+          });
+
+          $('textarea.short').inputlimiter({
+            limit: $(this).data('maxlength'),
+            lineReturnCount: 2,
+            remText: '%n tegn tilbage...',
+            limitText: 'maks tilladt: %n.'
+          });
+          
+          var oldie = /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase());
+          $('.easy-pie-chart.percentage').each(function(){
+            $(this).easyPieChart({
+              barColor: $(this).data('color'),
+              trackColor: '#EEEEEE',
+              scaleColor: false,
+              lineCap: 'butt',
+              lineWidth: 8,
+              animate: oldie ? false : 1000,
+              size:75
+            }).css('color', $(this).data('color'));
+          });
+
+         $('.timepicker-default').each(function(){
+            $(this).timepicker({
+              minuteStep: 1,
+              showSeconds: true,
+              showMeridian: false
+            });
+          });
+
+         $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
+          });
+        });//Close Javascript function
+    </script>
+  <% end %>
+
+
+
+
+
+
+
+  

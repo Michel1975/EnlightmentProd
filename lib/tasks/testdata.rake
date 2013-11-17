@@ -27,15 +27,15 @@ namespace :db do
     5.times do |s|
       if s == 1#!MerchantStore.all.any?
         store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', email: "test@store345.dk", short_description: 'Michels karameller er bare dejlige', phone: "48391754", street: 'Klostervangen', house_number: '34', 
-            postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "cn#{s+1}" )
+            postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "cn#{s+1}", active: true)
     
         store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_basic.id)
 
         #Create backend admin user
         user = User.create!(
                  email: "michelhansen75@hotmail.com",
-                 password: 'password',
-                 password_confirmation: 'password')
+                 password: 'testtest75',
+                 password_confirmation: 'testtest75')
         merchant_user = store.merchant_users.create!(name: "Michel Kenneth Hansen",
                 role: "Sales clerk", phone: '99999999')
         user.sub = merchant_user
@@ -54,12 +54,12 @@ namespace :db do
         phone = "41415210"
         sms_keyword = "CN#{s+1}"  
         store = MerchantStore.create(description: description, short_description: short_description, email: email, phone: phone, street: street, house_number: house_number, 
-          postal_code: postal_code, city: city, country:'Denmark', owner: owner, store_name: store_name, sms_keyword: sms_keyword)
+          postal_code: postal_code, city: city, country:'Denmark', owner: owner, store_name: store_name, sms_keyword: sms_keyword, active: true)
 
         #Create average user record for merchant user
         name  = Faker::Name.name
         email = "test-#{s+1}@clubnovustest.dk"
-        password  = "password"
+        password  = "testtest75"
 
         user = User.create!(
                  email: email,
@@ -98,7 +98,7 @@ namespace :db do
         end while Member.exists?(phone: phone)
           
         
-        password  = "password"
+        password  = "testtest75"
         member_user = User.create!(
                  email: email,
                  password: password,
@@ -171,7 +171,7 @@ namespace :db do
         gender = "W"
         email = "scoop751@hotmail.com"
         phone = "48391754"
-        password  = "password"
+        password  = "testtest75"
         
         member_user = User.create!(
                  email: email,
@@ -199,7 +199,7 @@ namespace :db do
         gender = "W"
         email = "info@disruptx.dk"
         phone = "48391754"
-        password  = "password"
+        password  = "testtest75"
         
         admin_user = User.create!(
                  email: email,

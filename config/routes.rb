@@ -110,6 +110,13 @@ EnlightmentProd::Application.routes.draw do
     resources :merchant_stores do
       get 'active', :on => :collection
       get 'inactive', :on => :collection 
+      get 'search_stores', :on => :collection
+    end
+
+    resources :campaigns do
+      get 'scheduled', :on => :collection
+      get 'completed', :on => :collection 
+      get 'search_campaigns', :on => :collection
     end
     
     resources :members do
@@ -117,10 +124,12 @@ EnlightmentProd::Application.routes.draw do
       get 'inactive', :on => :collection
       get 'search_members', :on => :collection
     end
+    match 'remove_subscriber/:id' => "members#remove_subscriber", :as => "remove_subscriber"
 
     get "dashboard" => "dashboards#overview", :as => "dashboard"
     get "message_status" => "message_notifications#index", :as => "message_status"
     get "message_error" => "message_errors#index", :as => "message_error"
+
   end
   
   
