@@ -11,6 +11,10 @@ class MerchantUser < ActiveRecord::Base
   validates :phone, presence: true, length: { maximum: 12 }
   validates :admin, :inclusion => { :in => [true, false] }
 
+  def login_as(merchant_store_id)
+    self.merchant_store_id = merchant_store_id
+  end
+
   private
     def convert_phone_standard
       self.phone = SMSUtility::SMSFactory.convert_phone_number(self.phone)

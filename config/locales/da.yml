@@ -266,8 +266,9 @@ da:
         offer_picture: Billede
       business_hour:
         day: Dag
-        open_time: Åbner kl.
-        close_time: Lukker kl.
+        day_text: Dag
+        open_time: Åbningstid
+        close_time: Lukketid
         closed: Lukket
       invoice:
         period_start: Start
@@ -329,6 +330,11 @@ da:
         warning_deletion_member: Du er ved at deaktivere et medlem. Er du sikker?
       store:
         warning_deletion_store: Du er ved at deaktivere en butik. Er du sikker?
+        store_created: Butik er nu oprettet!
+        store_updated: Stamdata på butik er opdateret!
+        login_as_success: Du kan nu logge ind på %{store_name} med admin-brugeren admin@clubnovus.dk!
+        login_as_error: Der opstod en fejl i opdateringen af standardbrugeren admin@clubnovus.dk til den valgte butik!
+        notification_login_as: Du er ved at oprette et login-link for standardbrugeren admin@clubnovus.dk til den valgte butik. Er du sikker?
       campaign:
         warning_deletion_campaign: Du er ved at slette en SMS kampagne. Er du sikker?
       subscriber:
@@ -419,14 +425,30 @@ da:
     subscriber:
       unsubscribe_confirmation: Du er nu afmeldt fra %{store_name} og vil ikke længere modtage sms-notifikationer fra butikken.
   misc:
+    stores_active:
+      zero: aktive butikker
+      one: aktiv butik
+      other: aktive butikker
     members_active:
       zero: aktive medlemmer
       one: aktivt medlem
       other: aktive medlemmer
     members_inactive:
+      zero: inaktive medlemmer
+      one: inaktivt medlem
+      other: inaktive medlemmer
+    memberships_active:
+      zero: aktive tilmeldinger
+      one: aktiv tilmelding
+      other: aktive tilmeldinger
+    memberships_inactive:
       zero: afmeldinger ialt
       one: afmelding ialt
       other: afmeldinger ialt
+    members_inactive:
+      zero: inaktive medlemmer ialt
+      one: inaktivt medlem ialt
+      other: inaktive medlemmer ialt
     offers:
       zero: aktive tilbud
       one: aktivt tilbud
@@ -443,6 +465,10 @@ da:
       zero: sms-beskeder ialt
       one:  sms-besked ialt
       other: sms-beskeder ialt
+    month_total_sms_messages:
+      zero: sms-beskeder denne måned
+      one:  sms-besked denne måned
+      other: sms-beskeder denne måned
   will_paginate:
     previous_label: "&#8592; Forrige"
     next_label: "Næste &#8594;"

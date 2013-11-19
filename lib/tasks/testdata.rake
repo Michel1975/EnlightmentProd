@@ -27,7 +27,7 @@ namespace :db do
     5.times do |s|
       if s == 1#!MerchantStore.all.any?
         store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', email: "test@store345.dk", short_description: 'Michels karameller er bare dejlige', phone: "48391754", street: 'Klostervangen', house_number: '34', 
-            postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "cn#{s+1}", active: true)
+            postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "cn#{s+1}", active: false)
     
         store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_basic.id)
 
@@ -38,6 +38,16 @@ namespace :db do
                  password_confirmation: 'testtest75')
         merchant_user = store.merchant_users.create!(name: "Michel Kenneth Hansen",
                 role: "Sales clerk", phone: '99999999')
+        user.sub = merchant_user
+        user.save! 
+
+        #Create special user for switching to other stores - log in as
+        user = User.create!(
+                 email: "admin_user@clubnovus.dk",
+                 password: 'testtest75',
+                 password_confirmation: 'testtest75')
+        merchant_user = store.merchant_users.create!(name: "Club Novus Administrator",
+                role: "Administrator", phone: '88888888')
         user.sub = merchant_user
         user.save! 
       else

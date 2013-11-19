@@ -59,10 +59,16 @@
 		                    			Se detaljer
 		                  			</button>
 		                		<% end %>
+		                		<%= link_to login_as_admin_merchant_store_path(store), data: { confirm: t(:notification_login_as, :scope => [:business_validations, :backend, :store])} do %>
+		                  			<button class="btn btn-small btn-info">
+		                    			<i class="icon-user bigger-110"></i>
+		                    			 Login
+		                  			</button>
+		                		<% end %>
 								<%= link_to [:admin, store ], method: :delete, data: { confirm: t(:warning_deletion_store, :scope => [:business_validations, :backend, :store])} do %>
 									<button class="btn btn-small btn-danger">
 										<i class="icon-trash bigger-110"></i>
-										Deaktiver butik
+										Deaktiver
 									</button>
 								<% end %>
 							</td>

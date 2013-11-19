@@ -19,7 +19,7 @@ class SMSFactory
   #Primarily used by search functionality
   def self.convert_phone_number(phone_number)
     Rails.logger.info "Into convert_phone_number"
-    Rails.Rails.logger.debug "Phone number: #{phone_number.inspect}"
+    Rails.logger.debug "Phone number: #{phone_number.inspect}"
     if validate_phone_number_converted?(phone_number)
       Rails.logger.debug "Phone number already valid. Returning..."
       return phone_number

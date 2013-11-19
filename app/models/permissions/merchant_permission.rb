@@ -14,7 +14,7 @@ module Permissions
 
       allow :merchant_members, [:new, :create]
 
-      allow :merchant_stores, [:edit, :show, :update, :active_subscription] do |store|
+      allow :merchant_stores, [:edit, :show, :update, :active_subscription, :sms_qrcode] do |store|
         store.id == current_merchant_store.id
       end
 

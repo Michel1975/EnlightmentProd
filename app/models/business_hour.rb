@@ -3,7 +3,7 @@ class BusinessHour < ActiveRecord::Base
 
   belongs_to :merchant_store
 
-  validates :day, :day_text, :open_time, :close_time, :merchant_store_id, presence: true, :unless => "self.closed == 'true'"
+  validates :day_text, :open_time, :close_time,  presence: true, :unless => "self.closed == true"
   validates :closed, :inclusion => { :in => [true, false] }
 
   def opening_hour

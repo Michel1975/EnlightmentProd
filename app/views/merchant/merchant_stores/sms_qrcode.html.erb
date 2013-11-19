@@ -1,0 +1,49 @@
+<% provide(:title, 'SMS og QR-kode') %>
+<% provide(:description, 'SMS og QR-kode for butikken') %>
+<% content_for :breadcrumps do %>
+  <li>
+  </li>
+  <li class="active">SMS &amp; QR kode</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-qrcode bigger-110"></i>
+  SMS &amp; QR kode
+</h3>
+<div class="row-fluid">
+  <div class="span3">
+    <div class="profile-user-info profile-user-info-striped">
+      
+      <div class="profile-info-row">
+        <div class="profile-info-name"> SMS-kode </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="title"> <%= empty_attribute_info( @merchant_store.sms_keyword.upcase ) %> </span>
+        </div>
+      </div>
+
+    </div><!-- /.profile-user-info -->
+  </div><!-- /.span3 -->
+  <div class="span9">
+    <% if !@merchant_store.qr_image.try(:picture).blank? %>
+      <div>
+        <label>Butikkens QR-kode i forskellige størrelser</label>
+          <%= cl_image_tag(@merchant_store.qr_image.try(:picture), :width => 200, :height => 200) %> 
+          <%= cl_image_tag(@merchant_store.qr_image.try(:picture), :width => 175, :height => 175) %>
+          <%= cl_image_tag(@merchant_store.qr_image.try(:picture), :width => 150, :height => 150) %>
+          <%= cl_image_tag(@merchant_store.qr_image.try(:picture), :width => 125, :height => 125) %>
+          <%= cl_image_tag(@merchant_store.qr_image.try(:picture), :width => 100, :height => 100) %>
+          <%= cl_image_tag(@merchant_store.qr_image.try(:picture), :width => 50, :height => 50) %>
+      </div>
+    <% else %>
+      <div id="picture_container">
+        <div class="ace-file-input ace-file-multiple">
+          <label class="file-label" data-title="Ingen tildelt QR-kode">
+            <span class="file-name">
+              <i class="icon-picture"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+    <% end %>
+  </div><!-- /.span7 -->
+</div><!-- /.row-fluid -->
+<%= render :partial => 'tooltip_sms_qr' %>

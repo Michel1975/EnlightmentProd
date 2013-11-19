@@ -46,9 +46,37 @@
       </div>
 
       <div class="profile-info-row">
+        <div class="profile-info-name"> Aktiv </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="active"> <%= b( @merchant_store.active ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
         <div class="profile-info-name"> Email </div>
         <div class="profile-info-value">
           <span class="editable editable-click" id="email"> <%= @merchant_store.email %> </span>
+        </div>
+      </div>
+
+       <div class="profile-info-row">
+        <div class="profile-info-name"> Tildelt SMS-kode </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="sms_keyword"> <%= @merchant_store.sms_keyword %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Latitude </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="latitude"> <%= @merchant_store.latitude %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Longitude </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="latitude"> <%= @merchant_store.longitude %> </span>
         </div>
       </div>
 
@@ -99,11 +127,11 @@
           </div>
         </div>
       </div>
-      <%= link_to edit_merchant_merchant_store_path(current_merchant_store), class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
+      <%= link_to edit_admin_merchant_store_path(@merchant_store), class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
         <i class="icon-edit bigger-110"></i>
         Rediger
       <% end %>
-      <%= link_to display_store_path(current_merchant_store), class: "btn btn-primary btn-small", target: "_new", style: "margin-top:10px" do %>
+      <%= link_to display_store_path(@merchant_store), class: "btn btn-primary btn-small", target: "_new", style: "margin-top:10px" do %>
         <i class="icon-eye-open bigger-110"></i>
         Preview
       <% end %>
@@ -132,5 +160,12 @@
           </tr>
         </tbody>
       </table>
+      <div class="row-fluid"><hr></div>
+      <% if !@merchant_store.qr_image.nil? %>
+        <h4 class="header blue lighter smaller" style="margin-top:5px">
+            QR-kode
+        </h4> 
+          <%= cl_image_tag(@merchant_store.qr_image.try(:picture), :width => 200, :height => 200, :crop => :fit) %> 
+      <% end %>
     </div><!-- /.span7 -->
   </div><!-- /.row-fluid -->

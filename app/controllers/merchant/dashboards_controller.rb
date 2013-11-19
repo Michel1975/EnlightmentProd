@@ -1,5 +1,4 @@
 class Merchant::DashboardsController < Merchant::BaseController
-	#If-override-from-base: layout "merchant", except: [:index]
     
     #Note om tidszoner: http://www.elabs.se/blog/36-working-with-time-zones-in-ruby-on-rails
     #Link til charts-kode fra episode223: https://github.com/railscasts/223-charts-graphs-revised

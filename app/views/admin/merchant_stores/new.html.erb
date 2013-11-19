@@ -1,0 +1,138 @@
+<% provide(:title, 'Ny butik') %>
+<% provide(:description, 'Stamdata for ny butik og kundeklub') %>
+<% content_for :breadcrumps do %>
+  <li>
+    Indstillinger
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li class="active">Ny butik</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+  <i class="icon-leaf bigger-110"></i>
+  Ny butik
+</h3>
+  <%= render 'form' %>
+  <% content_for :scripts do %>
+    <script>
+      $(document).ready(function() {
+        $('#status_section').hide();
+        $('#preview_section').hide();
+
+        $( ".timepicker_checkbox" ).bind( "click", function() {
+          open_time = $(this).closest("tr").find("td div .open_time").get(0);
+          if(open_time.hasAttribute('disabled')) {
+            open_time.removeAttribute('disabled');
+          }
+          else{
+            open_time.setAttribute('disabled' , 'disabled');
+          }
+
+          close_time = $(this).closest("tr").find("td div .close_time").get(0);
+          if(close_time.hasAttribute('disabled')) {
+            close_time.removeAttribute('disabled');
+          }
+          else{
+            close_time.setAttribute('disabled' , 'disabled');
+          }
+        });
+
+
+        // Cloudinary jQuery integration library uses jQuery File Upload widget
+        // (see http://blueimp.github.io/jQuery-File-Upload/).
+        // Any file input field with cloudinary-fileupload class is automatically
+        // wrapped using the File Upload widget and configured for Cloudinary uploads.
+        // You can further customize the configuration using .fileupload method
+        // as we do below.
+
+        $(".cloudinary-fileupload")
+          .fileupload({
+            // Uncomment the following lines to enable client side image resizing and validation.
+            // Make sure cloudinary/processing is included the js file
+            //disableImageResize: false,
+            //imageMaxWidth: 800,
+            //imageMaxHeight: 600,
+            //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|bmp|ico)$/i,
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            //maxFileSize: 20000000, // 20MB
+            //maxFileSize: 105000, // 1MB
+            //dropZone: "#direct_upload",
+            start: function (e) {
+              $('#status_section').show();
+              //$(".status").text("Starter upload");
+            },
+            progress: function (e, data) {
+              var progress = Math.round( (data.loaded * 100.0) / data.total) 
+              $('#status_section').find(".percent").text( progress );
+              $('#status_section').data('easyPieChart').update(progress);
+            },
+            fail: function (e, data) {
+              $('#status_section').find(".percent").text( "Fejl" );
+              //$(".status").text("Upload afbrudt");
+            },
+            processalways: function(e,data){
+            if (data.files.error) alert("Ugyldig billedfil. Billedet må max. fylde 1 mb og skal være i formattet jpeg, gif eller png.\ncheck filen og prøv igen.");
+            }
+          })
+          .off("cloudinarydone").on("cloudinarydone", function (e, data) {
+            $("#merchant_store_image_attributes_size").val(data.result.bytes);
+            $("#status_section").hide();
+            $('#preview_section').show();
+            
+            //$(".status").text("");
+            //$(".preview").html(
+            $("#picture_container").empty();
+            $("#picture_container").html(
+              $.cloudinary.image(data.result.public_id, {
+                format: data.result.format, width: 400, height: 400, crop: "fit"
+              })
+            );
+          });
+        });
+        
+        jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+          
+          $('textarea.long').inputlimiter({
+            limit: $(this).data('maxlength'),
+            lineReturnCount: 2,
+            remText: '%n tegn tilbage...',
+            limitText: 'maks tilladt: %n.'
+          });
+
+          $('textarea.short').inputlimiter({
+            limit: $(this).data('maxlength'),
+            lineReturnCount: 2,
+            remText: '%n tegn tilbage...',
+            limitText: 'maks tilladt: %n.'
+          });
+          
+          var oldie = /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase());
+          $('.easy-pie-chart.percentage').each(function(){
+            $(this).easyPieChart({
+              barColor: $(this).data('color'),
+              trackColor: '#EEEEEE',
+              scaleColor: false,
+              lineCap: 'butt',
+              lineWidth: 8,
+              animate: oldie ? false : 1000,
+              size:75
+            }).css('color', $(this).data('color'));
+          });
+
+         $('.timepicker-default').each(function(){
+            $(this).timepicker({
+              minuteStep: 15,
+              showSeconds: false,
+              showMeridian: false
+            });
+          });
+
+         $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
+          });
+        });//Close Javascript function
+    </script>
+  <% end %>

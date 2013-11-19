@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131103135722) do
+ActiveRecord::Schema.define(:version => 20131118162540) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -211,6 +211,15 @@ ActiveRecord::Schema.define(:version => 20131103135722) do
   end
 
   add_index "offers", ["merchant_store_id"], :name => "index_offers_on_merchant_store_id"
+
+  create_table "qr_images", :force => true do |t|
+    t.string   "qrimageable_type"
+    t.integer  "qrimageable_id"
+    t.string   "picture"
+    t.integer  "size"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false

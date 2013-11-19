@@ -69,6 +69,7 @@ EnlightmentProd::Application.routes.draw do
     resources :merchant_stores do
       #Kunne også være en match-rute uden id idet vi altid viser merchant-store fra session storage.
       get 'active_subscription', :on => :member 
+      get 'sms_qrcode', :on => :member 
     end
 
   end#End namespace :merchant
@@ -111,6 +112,7 @@ EnlightmentProd::Application.routes.draw do
       get 'active', :on => :collection
       get 'inactive', :on => :collection 
       get 'search_stores', :on => :collection
+      get 'login_as', :on => :member
     end
 
     resources :campaigns do

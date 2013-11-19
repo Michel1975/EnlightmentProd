@@ -1,5 +1,7 @@
 class Member < ActiveRecord::Base
   include ActiveModel::Dirty
+  scope :active, where(:status => true)
+  scope :inactive, where(:status => false)
   attr_accessible :first_name, :last_name, :name, :postal_code, :city, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
 
   has_one :user, :as => :sub, dependent: :destroy
@@ -39,6 +41,27 @@ class Member < ActiveRecord::Base
   def self.search(search_name)
     if search_name !="" 
       where('name ILIKE ?', "%#{search_name.downcase}%")
+    end
+  end
+
+  #To-Do: Group by month, når vi installerer postgress på lokal maskine.
+  def self.chart_data(start_date = 2.weeks.ago)
+    total_new_members = new_members_by_period(start_date)
+      (start_date.to_date..Date.today).map do |date|
+        {
+          #Standard date format is applied using I18n
+          date: I18n.l(date),
+          no_new_members: total_new_members[date] || 0
+        }
+      end
+  end
+
+  def self.new_members_by_period(start_date)
+    members = Member.where(created_at: start_date.beginning_of_day..Time.zone.now) 
+    members = members.select("date(created_at) as created_date, count(id) as total")
+    members = members.group("created_date")
+    members.each_with_object({}) do |member, totals|
+      totals[member.created_date.to_date] = member.total
     end
   end
 

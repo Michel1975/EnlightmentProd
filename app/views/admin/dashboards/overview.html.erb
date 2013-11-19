@@ -1,3 +1,4 @@
+
 <% provide(:title, 'Backend Dashboard') %>
 <% provide(:description, 'Overblik og statistik') %>
 <% content_for :breadcrumps do %>
@@ -7,8 +8,151 @@
   <i class="icon-dashboard bigger-110"></i>
   Backend Dashboard
 </h3>
-<div class="row-fluid">
-	<div class="span10">
-		Indhold
- 	</div> <!-- /.span10 -->
 </div><!-- /.row-fluid -->
+<div class="row-fluid">
+  <div class="span10 infobox-container">
+
+  	<div class="infobox infobox-green">
+      <div class="infobox-icon">
+        <i class="icon-leaf"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @active_stores_count %> </span>
+        <div class="infobox-content"> <%= t('misc.stores_active', :count => @active_stores_count ) %> </div>
+      </div>
+    </div>
+
+    <div class="infobox infobox-green">
+        <div class="infobox-icon">
+          <i class="icon-user"></i>
+        </div>
+        <div class="infobox-data">
+          <span class="infobox-data-number"> <%= @active_members_count %> </span>
+          <div class="infobox-content"> <%= t('misc.members_active', :count => @active_members_count ) %> </div>
+      </div>
+    </div>
+
+    <div class="infobox infobox-blue">
+      <div class="infobox-icon">
+        <i class="icon-heart"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @active_memberships_count %> </span>
+        <div class="infobox-content"> <%= t('misc.memberships_active', :count => @active_memberships_count ) %> </div>
+      </div>
+    </div>
+    
+  </div><!-- /.span10 infobox-container-->
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+  <div class="span10 infobox-container">
+
+    <div class="infobox infobox-blue">
+      <div class="infobox-icon">
+        <i class="icon-envelope"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @total_sms_messages_count %> </span>
+        <div class="infobox-content"> <%= t('misc.total_sms_messages', :count => @total_sms_messages_count ) %> </div>
+      </div>
+    </div>
+
+    <div class="infobox infobox-blue">
+      <div class="infobox-icon">
+        <i class="icon-envelope"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @month_total_sms_messages_count %> </span>
+        <div class="infobox-content"> <%= t('misc.month_total_sms_messages', :count => @month_total_sms_messages_count ) %> </div>
+      </div>
+    </div>
+
+    <div class="infobox infobox-orange2">
+      <div class="infobox-icon">
+        <i class="icon-bullhorn"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @completed_campaigns_count %> </span>
+        <div class="infobox-content"> <%= t('misc.campaigns_finished', :count => @completed_campaigns_count ) %> </div>
+      </div>
+    </div>
+ </div><!-- /.infobox container -->
+</div><!-- /.row-fluid -->
+
+<div class="row-fluid">
+  <div class="span10 infobox-container">
+
+    <div class="infobox infobox-green">
+      <div class="infobox-icon">
+        <i class="icon-money"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @active_offers_count %> </span>
+        <div class="infobox-content"> <%= t('misc.offers', :count => @active_offers_count ) %> </div>
+      </div>
+    </div>
+
+    <div class="infobox infobox-red">
+      <div class="infobox-icon">
+        <i class="icon-user"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @opt_outs_total %> </span>
+        <div class="infobox-content"> <%= t('misc.memberships_inactive', :count => @opt_outs_total ) %> </div>
+      </div>
+    </div>
+
+    <div class="infobox infobox-red">
+      <div class="infobox-icon">
+        <i class="icon-user"></i>
+      </div>
+      <div class="infobox-data">
+        <span class="infobox-data-number"> <%= @inactive_members_count %> </span>
+        <div class="infobox-content"> <%= t('misc.members_inactive', :count => @inactive_members_count ) %> </div>
+      </div>
+    </div>
+    
+ </div><!-- /.infobox container -->
+</div><!-- /.row-fluid -->
+
+<div class="row-fluid">
+  <div class="span10">
+    <h3 class="header blue lighter smaller">
+      <i class="icon-user bigger-110"></i>
+      Nye medlemmer (14 dage)
+    </h3>
+    <%= content_tag :div, "", id: "members_recent", style: "width: 100%;", data: { members: @new_member_data } %>
+ </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
+
+
+<div class="row-fluid">
+  <div class="span10">
+    <h3 class="header blue lighter smaller">
+      <i class="icon-user bigger-110"></i>
+      Tilmelding og afmelding (seneste 14 dage)
+    </h3>
+    <%= content_tag :div, "", id: "subscribers_recent", style: "width: 100%;", data: { subscribers: @recent_subscriber_data } %>
+ </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <h3 class="header blue lighter smaller">
+      <i class="icon-user bigger-110"></i>
+      Tilmelding og afmelding (seneste 3 mdr.)
+    </h3>
+    <%= content_tag :div, "", id: "subscribers_bar", style: "width: 100%;", data: { subscribers: @months_subscriber_data } %>
+ </div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
+
+
+
+
+
+
+
+
+
+
+

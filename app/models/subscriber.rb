@@ -41,7 +41,12 @@ class Subscriber < ActiveRecord::Base
   end
 
   def self.new_subscribers_by_period(start_date, merchant_store, mode)
-    subscribers = Subscriber.where(created_at: start_date.beginning_of_day..Time.zone.now, merchant_store_id: merchant_store.id)
+    #Two modes: Specific store or entire network (backend)
+    if merchant_store.present?
+      subscribers = Subscriber.where(created_at: start_date.beginning_of_day..Time.zone.now, merchant_store_id: merchant_store.id)
+    else
+      subscribers = Subscriber.where(created_at: start_date.beginning_of_day..Time.zone.now) 
+    end
     if mode == "day"
       subscribers = subscribers.select("date(created_at) as created_date, count(id) as total")
       subscribers = subscribers.group("created_date")
@@ -59,7 +64,13 @@ class Subscriber < ActiveRecord::Base
   end
 
   def self.opt_outs_by_period(start_date, merchant_store, mode)
-    opt_outs = Subscriber.where(cancel_date: start_date.beginning_of_day..Time.zone.now, merchant_store_id: merchant_store.id)
+    #Two modes: Specific store or entire network (backend)
+    if merchant_store.present?
+      opt_outs = Subscriber.where(cancel_date: start_date.beginning_of_day..Time.zone.now, merchant_store_id: merchant_store.id)
+    else
+      opt_outs = Subscriber.where(cancel_date: start_date.beginning_of_day..Time.zone.now)
+    end
+
     if mode == "day"
       opt_outs = opt_outs.select("date(cancel_date) as cancel_date, count(id) as total")
       opt_outs = opt_outs.group("cancel_date")

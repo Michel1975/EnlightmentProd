@@ -27,7 +27,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def start_time
-    @start_time || activation_time.try(:strftime, "%H:%M:%S")
+    @start_time || activation_time.try(:strftime, "%H:%M")
   end
 
   def self.search(from_date, to_date, status)

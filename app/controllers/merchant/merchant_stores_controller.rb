@@ -1,6 +1,12 @@
 class Merchant::MerchantStoresController < Merchant::BaseController
   #If-override-from-base: layout "merchant", except: [:index]
   
+  def sms_qrcode
+    logger.info "Loading merchant_store sms_qrcode action"
+    @merchant_store = current_resource
+    logger.debug "Merchant_store attributes hash: #{@merchant_store.attributes.inspect}"
+  end
+
   def edit
     logger.info "Loading merchant_store edit action"
     @merchant_store = current_resource
