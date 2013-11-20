@@ -26,6 +26,7 @@ namespace :db do
     
     5.times do |s|
       if s == 1#!MerchantStore.all.any?
+        #Creates default inactive store for admin purposes
         store = MerchantStore.create!(description: 'Michels karameller er bare dejlige', email: "test@store345.dk", short_description: 'Michels karameller er bare dejlige', phone: "48391754", street: 'Klostervangen', house_number: '34', 
             postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Hansen', store_name: 'Michels karameller', sms_keyword: "cn#{s+1}", active: false)
     

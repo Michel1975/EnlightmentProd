@@ -16,25 +16,32 @@ class MemberUsersController < ApplicationController
   	@member_user.build_user()
 	end
 
-  	#Create new member frontend
-  	def create
-      logger.info "Loading MemberUser create action"
-		  #Af en eller anden grund skal man anvende user_attributes i fields_for i formularen til nyt medlem
-		  #link: http://stackoverflow.com/questions/10701662/rails-cant-mass-assign-protected-attributes-error-when-using-accepts-nested-att
-		  #Husk at bygge tilknyttede objekter ved oprettelse:http://stackoverflow.com/questions/4729672/accepts-nested-attributes-for-keeps-form-fields-from-showing
-  		@member_user = Member.new(params[:member])
-      @member_user.origin = 'web'
-  		if @member_user.save
-        logger.debug "Member created and saved successfully - attributes hash: #{@member_user.attributes.inspect}"
-  			#virker ikke helt efter hensigten: auto_login(@member.user)
-        logger.debug "Sending delayed welcome email to new member"
+  #Create new member frontend
+  def create 
+    logger.info "Loading MemberUser create action"  
+    @member_user = Member.new(params[:member])
+    logger.debug "New member form values - attributes hash: #{@member_user.attributes.inspect}"
+    @member_user.origin = 'web'
+    if @member_user.valid_with_captcha?
+      logger.debug "Member form values incl captcha valid...proceeding"
+      if @member_user.save_with_captcha
+        logger.debug "New member saved successfully..."
         #Send welcome e-mail
-        MemberMailer.delay.welcome_mail_new_member(@member_user.id)#.deliver
-    		redirect_to root_path, :success => t(:member_created, :scope => [:business_validations, :frontend, :member_user])
-  		else
-    		render :new
-  		end
-   end
+        logger.debug "Sending delayed welcome email to new member"
+        MemberMailer.delay.welcome_mail_new_member(@member_user.id)
+        flash[:success] = t(:member_created, :scope => [:business_validations, :frontend, :member_user])
+        redirect_to root_path
+      else
+        logger.debug "Error when creating member"
+        logger.fatal "Error when creating member"
+        flash[:error] = t(:member_create_error, :scope => [:business_validations, :frontend, :member_user])
+        redirect_to root_path
+      end
+    else
+      logger.debug "Member form values not valid. Loading new view with validation errors"
+      render :new
+    end
+  end
 
   def edit
     logger.info "Loading MemberUser edit action"
@@ -71,14 +78,15 @@ class MemberUsersController < ApplicationController
     logger.info "Loading MemberUser destroy action"
     @member_user = current_resource
     logger.debug "Member attributes hash: #{@member_user.attributes.inspect}" 
+    logger.debug "Deleting member and related data..."
     if @member_user.destroy
-      logger.debug "Member successfully deactivated: #{@member_user.attributes.inspect}" 
+      logger.debug "Member successfully deleted" 
       logout
       flash[:success] = t(:member_deleted, :scope => [:business_validations, :frontend, :member_user])
       redirect_to root_path
     else
-      logger.debug "Error when deactivating member"
-      logger.fatal "Error when deactivating member"
+      logger.debug "Error when deleting member"
+      logger.fatal "Error when deleting member"
       render 'show'
     end
   end
@@ -87,7 +95,7 @@ class MemberUsersController < ApplicationController
     logger.info "Loading MemberUser favorites action"
     @member_user = current_resource
     logger.debug "Member attributes hash: #{@member_user.attributes.inspect}" 
-    @favorite_stores = @member_user.subscribers.active.page( params[:page] ).per_page(10) 
+    @favorite_stores = @member_user.subscribers.page( params[:page] ).per_page(10) 
     logger.debug "Favorite stores for member: #{@favorite_stores.inspect}" 
   end
 
@@ -117,6 +125,7 @@ class MemberUsersController < ApplicationController
       end
     else
       logger.debug "Error: No token is present in request"
+      logger.fatal "Error: No token is present in request"
       flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
       redirect_to root_path
     end

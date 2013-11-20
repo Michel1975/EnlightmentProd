@@ -1,5 +1,5 @@
 <p><%= link_to image_tag("map_signed_up.png", alt: "Club Novus logo", style: "margin-right:10px"), root_path %>Du er medlem</p>
-<%= form_for [:merchant, @subscriber], :url => unsubscribe_member_path(@subscriber), html: { method: :delete }, remote: true do |f| %>
+<%= form_for @merchant_store.subscribers.find_by_member_id(current_member_user), :url => unsubscribe_member_path(@merchant_store.subscribers.find_by_member_id(current_member_user) ), html: { method: :delete }, remote: true do |f| %>
         <%= f.submit "Afmeld", class: "btn-u btn-u-red btn-small btn-primary" %>
 <% end %>
 

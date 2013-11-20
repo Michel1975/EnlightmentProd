@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131118162540) do
+ActiveRecord::Schema.define(:version => 20131120190738) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -133,7 +133,6 @@ ActiveRecord::Schema.define(:version => 20131118162540) do
     t.boolean  "complete",         :default => false
     t.string   "origin"
     t.string   "access_key"
-    t.boolean  "status",           :default => true
     t.string   "first_name"
     t.string   "last_name"
     t.string   "city"
@@ -231,11 +230,28 @@ ActiveRecord::Schema.define(:version => 20131118162540) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
+  create_table "simple_captcha_data", :force => true do |t|
+    t.string   "key",        :limit => 40
+    t.string   "value",      :limit => 6
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "simple_captcha_data", ["key"], :name => "idx_key"
+
   create_table "status_codes", :force => true do |t|
     t.string   "name"
     t.text     "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "subscriber_histories", :force => true do |t|
+    t.string   "event_type"
+    t.integer  "member_id"
+    t.integer  "merchant_store_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "subscribers", :force => true do |t|
@@ -245,7 +261,6 @@ ActiveRecord::Schema.define(:version => 20131118162540) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.boolean  "active",            :default => true
-    t.date     "cancel_date"
   end
 
   add_index "subscribers", ["member_id"], :name => "index_subscribers_on_member_id"

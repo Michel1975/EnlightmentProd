@@ -111,6 +111,14 @@ class Merchant::CampaignsController < Merchant::BaseController
     logger.info "Loading campaign destroy action"
     @campaign = current_resource
     logger.debug "Campaign attributes hash: #{@campaign.attributes.inspect}"
+
+    #Manual validation rule to prevent deleting already active or launched campaigns due to billing reasons
+    if (Time.zone.now + 5.minutes) >= @campaign.activation_time 
+      flash[:success] = t(:campaign_delete_error, :scope => [:business_validations, :campaign])
+      redirect_to active_merchant_campaigns_path 
+      return
+    end
+
     if SMSUtility::SMSFactory.cancelScheduledOfferReminder?(@campaign)  
       logger.debug "Campaign confirmed deleted in SMS gateway OK"
       @campaign.destroy
@@ -142,6 +150,13 @@ class Merchant::CampaignsController < Merchant::BaseController
     end
 
     logger.debug "Activation time change: #{new_activation_time.inspect}"
+    
+    #Manual validation rule to prevent updating already completed or launched campaigns due to billing reasons
+    if (Time.zone.now + 5.minutes) >= @campaign.activation_time 
+      flash[:success] = t(:campaign_late_update_error, :scope => [:business_validations, :campaign])
+      redirect_to active_merchant_campaigns_path 
+      return
+    end
 
     if @campaign.update_attributes(params[:campaign])
       logger.debug "Campaign updated successfully - attributes hash: #{@campaign.attributes.inspect}"

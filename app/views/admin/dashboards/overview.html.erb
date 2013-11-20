@@ -27,8 +27,8 @@
           <i class="icon-user"></i>
         </div>
         <div class="infobox-data">
-          <span class="infobox-data-number"> <%= @active_members_count %> </span>
-          <div class="infobox-content"> <%= t('misc.members_active', :count => @active_members_count ) %> </div>
+          <span class="infobox-data-number"> <%= @total_members_count %> </span>
+          <div class="infobox-content"> <%= t('misc.total_members', :count => @total_members_count ) %> </div>
       </div>
     </div>
 
@@ -37,8 +37,8 @@
         <i class="icon-heart"></i>
       </div>
       <div class="infobox-data">
-        <span class="infobox-data-number"> <%= @active_memberships_count %> </span>
-        <div class="infobox-content"> <%= t('misc.memberships_active', :count => @active_memberships_count ) %> </div>
+        <span class="infobox-data-number"> <%= @total_memberships_count %> </span>
+        <div class="infobox-content"> <%= t('misc.memberships', :count => @total_memberships_count ) %> </div>
       </div>
     </div>
     
@@ -97,8 +97,8 @@
         <i class="icon-user"></i>
       </div>
       <div class="infobox-data">
-        <span class="infobox-data-number"> <%= @opt_outs_total %> </span>
-        <div class="infobox-content"> <%= t('misc.memberships_inactive', :count => @opt_outs_total ) %> </div>
+        <span class="infobox-data-number"> <%= @sign_outs_total %> </span>
+        <div class="infobox-content"> <%= t('misc.memberships_sign_outs', :count => @sign_outs_total ) %> </div>
       </div>
     </div>
 
@@ -107,8 +107,8 @@
         <i class="icon-user"></i>
       </div>
       <div class="infobox-data">
-        <span class="infobox-data-number"> <%= @inactive_members_count %> </span>
-        <div class="infobox-content"> <%= t('misc.members_inactive', :count => @inactive_members_count ) %> </div>
+        <span class="infobox-data-number"> <%= @sign_ups_total %> </span>
+        <div class="infobox-content"> <%= t('misc.memberships_sign_ups', :count => @sign_ups_total ) %> </div>
       </div>
     </div>
     

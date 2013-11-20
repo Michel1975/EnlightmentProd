@@ -25,7 +25,7 @@ class Merchant::MerchantMembersController < Merchant::BaseController
 		end
 		logger.debug "Trying to determine if member is already a subscriber"
 		subscriber = current_merchant_store.subscribers.find_by_member_id(@member)
-		if subscriber && subscriber.active
+		if subscriber 
 			logger.debug "Error: Member is already a subscriber. Loading new view with errors"
 			flash.now[:alert] = t(:member_already_exists, :scope => [:business_validations, :merchant_member]) 
 			render action: 'new'
@@ -33,7 +33,7 @@ class Merchant::MerchantMembersController < Merchant::BaseController
 			logger.debug "Member is not a subscriber. New subscriber record must be created"
 			logger.debug "Calling process-signup method"
 			#Make call to base_controller class
-			processSignup(@member, subscriber, current_merchant_store, "store")
+			processSignup(@member, current_merchant_store, "store")
 			flash[:success] = t(:member_added, :scope => [:business_validations, :merchant_member])
 			redirect_to merchant_subscribers_path
 		end

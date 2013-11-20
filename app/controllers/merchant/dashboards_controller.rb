@@ -8,19 +8,19 @@ class Merchant::DashboardsController < Merchant::BaseController
         logger.debug "Merchant_store attributes hash: #{@merchant_store.attributes.inspect}"
         
         #Calling custom cache
-        @recent_subscriber_data = Subscriber.chart_data(14.day.ago, @merchant_store, "day")
+        @recent_subscriber_data = SubscriberHistory.chart_data(14.day.ago, @merchant_store, "day")
         logger.debug "Recent subscriber data: #{@recent_subscriber_data.inspect}"
         #To-Do: Skal ændres til group by month når postgress installeres på lokal maskine
-        @months_subscriber_data = Subscriber.chart_data(16.weeks.ago, @merchant_store, "month")
+        @months_subscriber_data = SubscriberHistory.chart_data(16.weeks.ago, @merchant_store, "month")
         logger.debug "Monthly subscriber data: #{@months_subscriber_data.inspect}"
 
         #Diverse medlemsstatistikker
-    	@active_subscribers_count = @merchant_store.subscribers_count
+    	@active_subscribers_count = @merchant_store.subscribers.count
         logger.debug "Active subscribers count: #{@active_subscribers_count.inspect}"
     	date_range = (Date.today - 14.day)..Date.today
-    	@opt_outs_last_14_days = @merchant_store.subscribers.inactive.where(:cancel_date => date_range).count
+    	@opt_outs_last_14_days = @merchant_store.subscriber_histories.sign_outs.where(:created_at => date_range).count
         logger.debug "Opt-outs 14 days: #{@opt_outs_last_14_days.inspect}"
-    	@new_subscribers_last_14_days = @merchant_store.subscribers.active.where(:start_date => date_range).count
+    	@new_subscribers_last_14_days = @merchant_store.subscriber_histories.sign_ups.where(:created_at => date_range).count
         logger.debug "New subscribers 14 days: #{@new_subscribers_last_14_days.inspect}"
     	
         #Tilbud
@@ -36,9 +36,9 @@ class Merchant::DashboardsController < Merchant::BaseController
     	@completed_campaigns = @merchant_store.campaigns.completed.count
         logger.debug "Completed campaigns count: #{@completed_campaigns.inspect}"
 
-        #SMS-beskeder ialt
-        @total_sms_messages = @merchant_store.message_notifications.length #.month_total_messages.size
-        logger.debug "Total sms messages count: #{@total_sms_messages.inspect}"
+        #SMS-beskeder ialt- admin messages not included
+        @total_sms_messages = @merchant_store.message_notifications.store.count#length-size
+        logger.debug "Total sms messages (admin messages excluded) count: #{@total_sms_messages.inspect}"
 
         #SMS beskeder denne måned
         #@total_sms_messages_campaign = @merchant_store.message_notifications.month_total_messages.length #.month_total_messages.size
@@ -46,7 +46,7 @@ class Merchant::DashboardsController < Merchant::BaseController
         #@total_sms_messages_test = @merchant_store.message_notifications.month_total_messages.test.length #.month_total_messages.size
 
         #Gns. daglig medlemstilgang
-        @opt_outs_total = @merchant_store.subscribers.inactive.count
+        @opt_outs_total = @merchant_store.subscriber_histories.sign_outs.count
         logger.debug "Opt-outs total: #{@opt_outs_total.inspect}"
 
         #Activity feed with paginate functionality

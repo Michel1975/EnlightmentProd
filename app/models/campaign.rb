@@ -9,6 +9,9 @@ class Campaign < ActiveRecord::Base
   after_initialize :set_default_activation_time
   before_create :generate_message_group 
   before_create :calculate_cost
+
+  #Customers must only pay for sent messages - thus we delete if message entries if campaign is deleted.
+  before_destroy :delete_message_notifications 
   
   before_save :save_activation_time
 
@@ -63,6 +66,14 @@ class Campaign < ActiveRecord::Base
           errors.add(:activation_time, I18n.t(:invalid_activation_time, earliest: I18n.l(earliest), latest: I18n.l(latest), :scope => [:business_validations, :campaign]) )
         end
       end
+    end
+
+    def delete_message_notifications
+        sms_message_entries = self.merchant_store.message_notifications.where(campaign_group_id: self.message_group_id)
+        #Bulk delete in this situation
+        if sms_message_entries.size !=0
+          sms_message_entries.delete_all
+        end
     end
 
     def calculate_cost

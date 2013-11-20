@@ -21,6 +21,8 @@ gem 'rack-mini-profiler' #Se mere info i railscast episode 368
 gem 'httparty' #Used for parsing status updates for sms campaigns
 gem 'bitly' #Used to shorten various urls in 
 gem 'delayed_job_active_record'# for delayed jobs such as sending e-mail and communicating with sms-gateway.
+gem 'simple_captcha', :git => 'git://github.com/galetahub/simple-captcha.git'
+gem 'rmagick', '2.13.2'
 #gem 'railties' #for heroku deploy. Følg op på versionen ved næste deploy til heroku.
 
 

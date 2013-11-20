@@ -1,5 +1,7 @@
 #encoding: utf-8
 class ApplicationController < ActionController::Base
+  include SimpleCaptcha::ControllerHelpers
+  
 	before_filter :require_login
   before_filter :authorize
 
@@ -57,32 +59,25 @@ class ApplicationController < ActionController::Base
   #Detailed logic for sign-up - used by several controllers
   #To-Do: For completed profiles or web profiles, we send e-mails instead of sms if signed up on web
   #If signed up in store, we always send sms to member - more logic and analysis is needed for this.
-  def processSignup(member, subscriber, merchant_store, origin)
+  def processSignup(member, merchant_store, origin)
     logger.info "Loading processSignup method"
     logger.debug "Member parameter: #{member.attributes.inspect}" if member.present?
-    logger.debug "Subscriber parameter: #{subscriber.attributes.inspect}" if subscriber.present?
     logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store.present?
     logger.debug "Origin parameter: #{origin.inspect}" 
     
     sign_up_status = false
+    #Check if subscriber record already exists for specific merchant_store
+    subscriber = merchant_store.subscribers.find_by_member_id(@member.id)
     if subscriber.nil?
       #Create new subscriber record
-      if subscriber = merchant_store.subscribers.create!(member_id: member.id, start_date: Time.zone.now) 
+      if subscriber = merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
         logger.debug "Subscriber does not exist. New subscriber created: #{subscriber.attributes.inspect}"
         sign_up_status = true 
       end
-    elsif subscriber.active && origin == "store"
-      logger.debug "Subscriber already exist in active state. Sending notification message to member..."
-      #We only send sms for incorrect signups in stores - not on web since message is shown directly in interface
+    elsif subscriber && origin == "store"
+       #We only send sms for incorrect signups in stores - not on web since validation message is shown directly in interface
       result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
-      logger.debug "Notification message sent successfully in SMS Gateway" if result
-    else
-      logger.debug "Subscriber record already exists in inactive state. Signing up again..." 
-      subscriber.signup
-      if subscriber.save!
-        sign_up_status = true
-        logger.debug "Subscriber signup saved successfully: #{subscriber.attributes.inspect}"
-      end
+      logger.debug "Notification message sent successfully in SMS Gateway" if result 
     end
 
     if sign_up_status
@@ -99,7 +94,7 @@ class ApplicationController < ActionController::Base
           logger.debug "Subscriber origin: #{origin.inspect}"
           logger.debug "Sending one e-mail with welcome message and present to member"
           #Send welcome e-mail with welcomepresent
-          MemberMailer.delay.web_sign_up_present(member.id, merchant_store.id)#.deliver
+          MemberMailer.delay.web_sign_up_present(member.id, merchant_store.id)
         end
 
         #Send welcome present if active for particular merchant - default is active.
@@ -125,7 +120,7 @@ class ApplicationController < ActionController::Base
           logger.debug "Subscriber origin: #{origin.inspect}"
           logger.debug "Sending email with welcome message but no present"
           #Send welcome e-mail without welcomepresent
-          MemberMailer.delay.web_sign_up(member.id, merchant_store.id)#.deliver
+          MemberMailer.delay.web_sign_up(member.id, merchant_store.id)
         end
       end
     end

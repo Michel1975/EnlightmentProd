@@ -1,7 +1,7 @@
 class Merchant::SubscribersController < Merchant::BaseController
 	def index
 		logger.info "Loading subscriber index action"
-    	@subscribers = current_merchant_store.subscribers.where(active: true).page(params[:page]).per_page(10)
+    	@subscribers = current_merchant_store.subscribers.page(params[:page]).per_page(10)
     	logger.debug "Subscribers - attributes hash: #{@subscribers.inspect}"
 	end
 
@@ -15,9 +15,8 @@ class Merchant::SubscribersController < Merchant::BaseController
 		logger.info "Loading subscriber destroy action"
   		subscriber = current_resource
   		logger.debug "Subscriber - attributes hash: #{subscriber.attributes.inspect}"
-		subscriber.opt_out
-		if subscriber.save!
-			logger.debug "Subscriber status changed successfully to inactive - attributes hash: #{subscriber.attributes.inspect}"
+		if subscriber.destroy
+			logger.debug "Subscriber deleted successfully"
 			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
     		redirect_to merchant_subscribers_url
 		else

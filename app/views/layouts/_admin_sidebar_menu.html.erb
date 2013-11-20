@@ -13,29 +13,13 @@
       					<span class="menu-text"> SMS logbog </span>  
     				<% end %>                        
   				</li>
-  				
-  				<li>
-    				<a href="#" class="dropdown-toggle">
-      					<i class="icon-user"></i>
-      						<span class="menu-text"> Medlemmer </span>
-      						<b class="arrow icon-angle-down"></b>
-    				</a>
 
-    				<ul class="submenu">
-       					<li>           
-          					<%= link_to active_admin_members_path do %>                   
-          						<i class="icon-double-angle-right"></i>
-          						Aktive  
-        					<% end %>                        
-      					</li>
-      					<li>
-          					<%= link_to inactive_admin_members_path do %>                    
-          						<i class="icon-double-angle-right"></i>
-          						Inaktive  
-        					<% end %>                        
-      					</li>              
-    				</ul>
-  				</li>
+          <li <%= currentMenuItem('members#index', controller.controller_name, controller.action_name) %> >
+            <%= link_to admin_members_path do %>
+                <i class="icon-user"></i> 
+                <span class="menu-text"> Medlemmer </span>  
+            <% end %>                        
+          </li>
 
   				<li>
     				<a href="#" class="dropdown-toggle">

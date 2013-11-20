@@ -1,20 +1,16 @@
 class Subscriber < ActiveRecord::Base
-  scope :active, where(:active => true)
-  scope :inactive, where(:active => false)
-  
-  attr_accessible :member_id, :start_date, :cancel_date
+  attr_accessible :member_id, :start_date
 
   has_many :campaign_members #no dependent destroy due to historic campaign tracking for merchant
-  belongs_to :merchant_store #Only custom counter cache
+  belongs_to :merchant_store, counter_cache: true 
   belongs_to :member
 
-  #Custom counter cache for active subscribers. After_destroy er med for en sikkerheds skyld selvom vi ikke sletter subscribers.
-  after_save :after_save
-  after_destroy :after_destroy
+  #Update subscriber history on sign_up and sign_out
+  after_create :after_create_subscriber
+  before_destroy :before_destroy_subscriber
 
   validates :merchant_store_id, :member_id, :start_date,  presence: true
-  validates :active, :inclusion => { :in => [ true, false ] }
-
+  
   #To-Do: Group by month, når vi installerer postgress på lokal maskine.
   def self.chart_data(start_date = 2.weeks.ago, merchant_store, mode)
     total_new_subscribers = new_subscribers_by_period(start_date, merchant_store, mode)
@@ -86,16 +82,6 @@ class Subscriber < ActiveRecord::Base
     end
   end
 
-  def signup
-  	self.active = true
-  	self.start_date = Time.zone.now
-  end
-
-  def opt_out
-  	self.active = false
-  	self.cancel_date = Time.zone.now
-  end
-
   def eligble_welcome_present?
   	if self.cancel_date.blank? 
   		return true
@@ -117,19 +103,28 @@ class Subscriber < ActiveRecord::Base
     return "\nStop: send #{merchant_store.sms_keyword} til 1276 222" 
   end
 
+  #Updates eventhistory for subscriber - for reporting purposes
+  def after_create_subscriber
+      self.merchant_store.subscriber_histories.create(event_type: "sign_up", member_id: self.member_id )
+  end
+
+  def before_destroy_subscriber
+    self.merchant_store.subscriber_histories.create(event_type: "sign_out", member_id: self.member_id )   
+  end
+
   #Custom counter cache - note that counter cache is not displayed next to merchant_store above
   #http://blog.douglasfshearer.com/post/17495285851/custom-counter-cache-with-conditions
-  def after_save
-      self.update_counter_cache
-  end
+  #def after_save
+      #self.update_counter_cache
+  #end
 
-  def after_destroy
-      self.update_counter_cache
-  end
+  #def after_destroy
+      #self.update_counter_cache
+  #end
 
-  def update_counter_cache
-      self.merchant_store.subscribers_count = Subscriber.count( :conditions => { :active => true, :merchant_store_id => self.merchant_store.id} )
-      self.merchant_store.save(validate: false)
-  end
+  #def update_counter_cache
+      #self.merchant_store.subscribers_count = Subscriber.count( :conditions => { :active => true, :merchant_store_id => self.merchant_store.id} )
+      #self.merchant_store.save(validate: false)
+  #end
 
 end#end class

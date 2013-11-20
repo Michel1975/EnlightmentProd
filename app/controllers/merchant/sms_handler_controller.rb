@@ -73,18 +73,21 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			logger.debug "Member does NOT exist in database. New member is created"
  			member = Member.new(phone: converted_phone_number, origin: 'store')
  			member.validation_mode = 'store'
- 			member.save!
- 			logger.debug "New member saved successfully: #{member.attributes.inspect}"
+ 			if member.save
+ 				logger.debug "New member saved successfully: #{member.attributes.inspect}"
+ 			else
+ 				logger.debug "Error when saving new member created in-store"
+ 				logger.fatal "Error when saving new member created in-store"	
+ 			end
  		end
 
  		if member
  			merchant_store = MerchantStore.find_by_sms_keyword(keyword)
  			if merchant_store.present?
  				logger.debug "Merchant-store look-up: #{merchant_store.attributes.inspect}"
- 				subscriber = merchant_store.subscribers.find_by_member_id(member.id)
- 				logger.debug "Calling processSignup method"
+ 				logger.debug "Calling processSignup method..."
  				#Make call to base_controller method for detailed signup
- 				processSignup(member, subscriber, merchant_store, "store")
+ 				processSignup(member, merchant_store, "store")
  			else
  				logger.debug "Merchant-store not found from received keyword"
  				logger.fatal "Merchant-store not found from received keyword"
@@ -112,12 +115,19 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			if merchantStore
  				logger.debug "Merchant-store found in database: #{merchantStore.attributes.inspect}"
  				logger.debug "Trying to find subscriber record in database from keyword"
- 				subscriber = merchantStore.subscribers.find_by_member_id(member.id) 
- 				if subscriber && SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone, merchantStore)	
- 					logger.debug "Subscriber record found: #{subscriber.attributes.inspect}"
- 					logger.debug "Confirmation message sent to member"
- 					subscriber.opt_out.save!
- 					logger.debug "Subscriber record saved successfully: #{subscriber.attributes.inspect}"
+ 				subscriber = merchantStore.subscribers.find_by_member_id(member.id)
+ 				logger.debug "Subscriber record found"
+ 				if subscriber && subscriber.destroy 
+ 					logger.debug "Subscriber record deleted. Sending message notification to user"
+ 					if SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone, merchantStore)
+ 						logger.debug "Confirmation message sent to member about opt-out"
+ 					else
+ 						logger.debug "Error when sending confirmation message sent to member about opt-out"
+ 						logger.fatal "Error when sending confirmation message sent to member about opt-out"
+ 					end
+ 				else
+ 					logger.debug "Subscriber not found. Could not destroy record."	
+ 					logger.fatal "Subscriber not found. Could not destroy record."
  				end
  			else
  				logger.debug "Merchant-store not found from received keyword"

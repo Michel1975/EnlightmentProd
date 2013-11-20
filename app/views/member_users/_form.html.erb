@@ -61,10 +61,22 @@
           </div><!-- /.span6 -->
         </div><!-- /.controls-->
      </div><!-- /.inside row-fluid end-->
+     <% if f.object.new_record? %>
       <div class="row-fluid">
+        <hr>
+        <div class="span3 offset4">
+          <div>
+            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bekræftelseskode</label>
+            <%= f.simple_captcha :label => "", :code_type => "" %>
+          </div>
+        </div><!-- /.inside span12 end-->
+      </div><!-- /.inside row-fluid end-->
+     <% end %>
+     <div class="row-fluid">
         <div class="controls form-inline" style="margin-top:20px">
           <% if f.object.new_record? %> 
             <div style="text-align:center;">
+              &nbsp;&nbsp;&nbsp;&nbsp;
               <%= button_tag class: "submission btn-u btn-primary btn-u-blue" do %>
                 <i class="icon-ok bigger-110"></i>
                 Opret medlem

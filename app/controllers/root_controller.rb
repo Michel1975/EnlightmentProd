@@ -22,7 +22,6 @@ class RootController < ApplicationController
     logger.debug "Merchant-stores attributes hash: #{@merchant_stores.inspect}"
     logger.debug "Loading Google Maps markers..."
     @json = showMarkers(@merchant_stores)
-
 	end
 
   def search_stores
@@ -52,11 +51,11 @@ class RootController < ApplicationController
     @merchant_store = MerchantStore.find(params[:id])
     logger.debug "Merchant-store - attributes hash: #{@merchant_store.attributes.inspect}"
     @subscriber = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
-    @subscribed = @subscriber && @subscriber.active ? true : false
+    @subscribed = @subscriber.present? ? true : false
     logger.debug "Subscribed?: #{@subscribed.inspect}"
 	end
   
- #SMS: Invoked from bit.ly links in sms
+  #SMS: Invoked from Bit.ly links in sms
   def stop_sms_subscription_view
     logger.info "Loading Root stop_sms_subscription_view action"
     @token = params[:token]
@@ -93,34 +92,34 @@ class RootController < ApplicationController
       subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
       if subscriber
         logger.debug "Subscriber found in database: #{subscriber.attributes.inspect}"
-        subscriber.opt_out
-        if subscriber.save!
-          logger.debug "Subscriber unsubscribed successfully: #{subscriber.attributes.inspect}"
+        if subscriber.destroy
+          logger.debug "Subscriber unsubscribed successfully"
           logger.debug "Sending delayed confirmation email to member"
+          
           #Send opt-out e-mail to member
           MemberMailer.delay.web_opt_out(@member, @merchant_store)
           flash[:success] = t(:opt_out, store_name: @merchant_store.store_name, :scope => [:business_messages, :web_profile])
+          render 'stop_sms'
+        else
+          logger.debug "Error when deleting subscriber"
+          logger.fatal "Error when deleting subscriber"
+          flash.now[:alert] = t(:opt_out_error, :scope => [:business_messages, :web_profile])
           render 'stop_sms'
         end
       else
         logger.debug "Error: Subscriber not found in merchant-store"
         logger.fatal "Error: Subscriber not found in merchant-store"
-        flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
+        flash.now[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
         render 'stop_sms'
       end
     else
       logger.debug "Error: Subscriber could not be found. Invalid token used - does not match member access key"
-      flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
+      flash.now[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
       render 'stop_sms'
     end  
   end
 
   private
-    #Only for subscriber part - perhaps this should be moved to separate controller
-    def current_resource
-      @current_resource ||= Campaign.find(params[:id]) if params[:id]
-    end
-
     def showMarkers(merchant_stores)
       logger.debug "Creating markers from store search array..."
       member_ships = Hash.new

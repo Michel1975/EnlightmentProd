@@ -24,8 +24,9 @@ class User < ActiveRecord::Base
 	#Validering virker i browser og test-rake, men skal testes yderligere: if: ->{ crypted_password.blank? }#, :on => :create
   	
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
-            uniqueness: { case_sensitive: false }
+  validates :email, presence: true
+  validates :email, format: { with: VALID_EMAIL_REGEX },
+            uniqueness: { case_sensitive: false }, :allow_blank => true
   validates :active, :inclusion => { :in => [true, false] }
 
     private

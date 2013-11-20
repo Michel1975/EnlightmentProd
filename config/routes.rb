@@ -122,10 +122,9 @@ EnlightmentProd::Application.routes.draw do
     end
     
     resources :members do
-      get 'active', :on => :collection
-      get 'inactive', :on => :collection
       get 'search_members', :on => :collection
     end
+    
     match 'remove_subscriber/:id' => "members#remove_subscriber", :as => "remove_subscriber"
 
     get "dashboard" => "dashboards#overview", :as => "dashboard"

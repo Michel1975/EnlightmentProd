@@ -2,6 +2,7 @@ class MerchantStore < ActiveRecord::Base
   attr_accessible :store_name, :email, :active, :description, :short_description, :owner, :phone, :street, :house_number, :postal_code, :city, :country, :latitude, :longitude, :sms_keyword, :business_hours_attributes, :image_attributes, :qr_image_attributes
   #attr_reader :subscribers_count
   scope :active, where(:active => true)
+  scope :inactive, where(:active => false)
 
   has_one :image, :as => :imageable, dependent: :destroy
   has_one :qr_image, :as => :qrimageable, dependent: :destroy
@@ -11,6 +12,7 @@ class MerchantStore < ActiveRecord::Base
   has_one :welcome_offer, dependent: :destroy
   has_many :offers, dependent: :destroy
   has_many :business_hours, dependent: :destroy
+  has_many :subscriber_histories, dependent: :destroy
   has_many :message_notifications, dependent: :destroy
   has_many :campaigns, dependent: :destroy
   has_one  :subscription_plan, dependent: :destroy
@@ -60,9 +62,9 @@ class MerchantStore < ActiveRecord::Base
   
   def self.search(city, store_name)
     if city !="" && store_name !=""
-      where('city ILIKE ? AND store_name ILIKE ?', "%#{city.downcase}%", "%#{store_name.downcase}%")
+      where("city ILIKE ? AND store_name ILIKE ? AND active = true", "%#{city.downcase}%", "%#{store_name.downcase}%")
     elsif city !="" && store_name = ""
-      where('city ILIKE ?', "%#{city.downcase}%")
+      where('city ILIKE ? AND active = true', "%#{city.downcase}%")
     end
   end
 

@@ -5,19 +5,17 @@ class MemberSubscribersController < ApplicationController
   def subscribe
     logger.info "Loading MemberSubscriber subscribe action - remote"
     @member = Member.find( params[:subscriber][:member_id] )
-    logger.debug "Member attributes hash: #{@member.attributes.inspect}"
+    logger.debug "Member attributes hash: #{@member.attributes.inspect}" if @member
     @merchant_store = MerchantStore.find( params[:subscriber][:merchant_store_id] )
-    logger.debug "Merchant-store attributes hash: #{@merchant_store.attributes.inspect}"
-    @subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
-    #Two states: New subscriber or inactive subscriber. In the latter case, subscriber has been active before for this store
-    if @subscriber.nil? || !@subscriber.active
-      logger.debug "Calling processSignup method"
-      processSignup(@member, @subscriber, @merchant_store, "web")
-      #Necessary to reload since @subscriber is used in unsubscribe view - after a subscribe action, the unsubscribe view snippet is loaded
-      @subscriber_reload
-      logger.debug "Subscriber reloaded"
+    logger.debug "Merchant-store attributes hash: #{@merchant_store.attributes.inspect}" if @merchant_store
+    if @member && @merchant_store
+      @subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
+      if @subscriber.nil? 
+        logger.debug "Calling processSignup method"
+        processSignup(@member, @merchant_store, "web")
+      end
     end
-    
+
     respond_to do |format|
       #format.html { redirect_to root_path }
       format.js  
@@ -31,18 +29,18 @@ class MemberSubscribersController < ApplicationController
     logger.debug "Subscriber attributes hash: #{@subscriber.attributes.inspect}" if @subscriber
     @merchant_store = MerchantStore.find(@subscriber.merchant_store.id)
     logger.debug "Merchant-store attributes hash: #{@merchant_store.attributes.inspect}" if @merchant_store
-    if @subscriber.present? && @subscriber.active && @merchant_store.present?
+    if @subscriber.present? && @merchant_store.present?
       logger.debug "Subscriber found in database. Starting unsubscribe process: #{@subscriber.attributes}"
-      @subscriber.opt_out
-      @subscriber.save!
-      logger.debug "Unsubscribe completed successfully: #{@subscriber.attributes}"
-      #Send opt-out e-mail to member
-      MemberMailer.delay.web_opt_out(@subscriber.member.id, @merchant_store.id)
-      logger.debug "Sending delayed unsubscribe email to member"
+      if @subscriber.destroy
+        logger.debug "Unsubscribe completed successfully: #{@subscriber.attributes}"
+        #Send opt-out e-mail to member
+        MemberMailer.delay.web_opt_out(@subscriber.member.id, @merchant_store.id)
+        logger.debug "Sending delayed unsubscribe email to member"
+      else
+        logger.debug "Error unsubscribing via Google Maps" 
+        logger.fatal "Error unsubscribing via Google Maps" 
+      end
     end
-    #else
-      #render :nothing => true
-    #redirect_to root_path
     respond_to do |format|
       format.html { redirect_to root_path }
       format.js  
@@ -53,27 +51,33 @@ class MemberSubscribersController < ApplicationController
   def unsubscribe_member_table
     logger.info "Loading MemberSubscriber unsubscribe_member_table action"
     @subscriber = @current_resource
-    logger.debug "Subscriber attributes hash: #{@subscriber.attributes.inspect}"
+    logger.debug "Subscriber attributes hash: #{@subscriber.attributes.inspect}" if @subscriber
     @merchant_store = MerchantStore.find(@subscriber.merchant_store.id)
-    logger.debug "Merchant-store attributes hash: #{@merchant_store.attributes.inspect}"
-
-    if @subscriber.present? && @subscriber.active && @merchant_store.present?
+    logger.debug "Merchant-store attributes hash: #{@merchant_store.attributes.inspect}" if @merchant_store
+    error = false
+    if @subscriber.present? && @merchant_store.present?
       logger.debug "Subscriber found in database. Starting unsubscribe process: #{@subscriber.attributes}"
-      @subscriber.opt_out
-      @subscriber.save!
-      logger.debug "Unsubscribe completed successfully: #{@subscriber.attributes}"
-
-      #Send opt-out e-mail to member
-      MemberMailer.delay.web_opt_out(@subscriber.member.id, @merchant_store.id)
-      logger.debug "Sending delayed unsubscribe email to member"
-
-      flash[:success] = t( :unsubscribe_confirmation, store_name: @merchant_store.store_name, :scope => [:business_messages, :subscriber])
-      redirect_to favorites_path(@subscriber.member.id)
+        if @subscriber.destroy
+          logger.debug "Unsubscribe completed successfully"
+          
+          #Send opt-out e-mail to member
+          MemberMailer.delay.web_opt_out(@subscriber.member.id, @merchant_store.id)
+          logger.debug "Sending delayed unsubscribe email to member"
+          flash[:success] = t( :unsubscribe_confirmation, store_name: @merchant_store.store_name, :scope => [:business_messages, :subscriber])
+          redirect_to favorites_path(current_member_user)
+          return
+        else
+          error = true
+          logger.debug "Error when deleting subscriber record"
+        end
     else
+      error = true
       logger.debug "Error: Invalid unsubscribe request. Missing attributes"
       logger.fatal "Error: Invalid unsubscribe request. Missing attributes"
-      #To-Do: Tekniske fejl kan fanges her.
-      render 'favorites'
+    end
+    if error
+        flash[:error] = t( :unsubscribe_error, store_name: @merchant_store.store_name, :scope => [:business_messages, :subscriber])
+        redirect_to favorites_path(current_member_user)
     end
   end
 
@@ -83,4 +87,4 @@ class MemberSubscribersController < ApplicationController
       @current_resource ||= Subscriber.find( params[:id] ) if params[:id]
     end
 
-end
+end#End class

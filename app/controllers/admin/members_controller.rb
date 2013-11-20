@@ -1,15 +1,9 @@
 class Admin::MembersController < Admin::BaseController
-	def active
-		logger.info "Loading Members active action"
+	def index
+		logger.info "Loading Members index action"
 		@search = false
 		logger.debug "Search flag: #{@search.inspect}"
     	@members = Member.where(status: true).page(params[:page]).per_page(15)
-    	logger.debug "Members - attributes hash: #{@members.inspect}"
-	end
-
-	def inactive
-		logger.info "Loading Members inactive action"
-    	@members = @members = Member.where(status: false).page(params[:page]).per_page(15)
     	logger.debug "Members - attributes hash: #{@members.inspect}"
 	end
 
@@ -21,8 +15,8 @@ class Admin::MembersController < Admin::BaseController
 	    logger.debug "Search flag: #{@search.inspect}"
 	    @members = Member.search(@name).page( params[:page] ).per_page(15)
 	    logger.debug "Search result: #{@members.inspect}"
-	    logger.debug "Loading active view with search result..."
-	    render 'active'
+	    logger.debug "Loading index view with search result..."
+	    render 'index'
   	end
 
 	def show
@@ -60,31 +54,33 @@ class Admin::MembersController < Admin::BaseController
 		logger.info "Loading Members remove_subscriber action"
   		subscriber = Subscriber.find(params[:id])
   		logger.debug "Subscriber - attributes hash: #{subscriber.attributes.inspect}"
-		subscriber.opt_out
-		if subscriber.save!
-			logger.debug "Subscriber status changed successfully to inactive - attributes hash: #{subscriber.attributes.inspect}"
+  		member = Member.find(subscriber.member_id)
+  		logger.debug "Member - attributes hash: #{member.attributes.inspect}"
+		if subscriber.destroy
+			logger.debug "Subscriber deleted successfully"
 			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
-    		redirect_to [:admin, subscriber.member]
+    		redirect_to [:admin, member]
 		else
-			logger.debug "Error when updating subscriber status. Redirecting to subscribers list"
+			logger.debug "Error when deleting subscriber"
+			logger.fatal "Error when deleting subscriber"
 			flash[:error] = t(:subscriber_remove_error, :scope => [:business_validations, :subscriber])
-    		redirect_to [:admin, subscriber.member]
+    		redirect_to [:admin, member]
 		end
 	end
 
 	def destroy
 		logger.info "Loading Members destroy action"
-  		subscriber = current_resource
-  		logger.debug "Subscriber - attributes hash: #{subscriber.attributes.inspect}"
-		subscriber.opt_out
-		if subscriber.save!
-			logger.debug "Subscriber status changed successfully to inactive - attributes hash: #{subscriber.attributes.inspect}"
-			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
-    		redirect_to merchant_subscribers_url
+  		member = current_resource
+  		logger.debug "Member - attributes hash: #{member.attributes.inspect}"
+		if member.destroy
+			logger.debug "Member successfully deleted"
+			flash[:success] = t(:member_removed, :scope => [:business_validations, :subscriber])
+    		redirect_to admin_members_path
 		else
-			logger.debug "Error when updating subscriber status. Redirecting to subscribers list"
-			flash[:error] = t(:subscriber_remove_error, :scope => [:business_validations, :subscriber])
-    		redirect_to merchant_subscribers_url
+			logger.debug "Error deleting member. Redirecting to member list"
+			logger.fatal "Error deleting member. Redirecting to member list"
+			flash[:error] = t(:member_remove_error, :scope => [:business_validations, :subscriber])
+    		redirect_to admin_members_path
 		end
 	end
 

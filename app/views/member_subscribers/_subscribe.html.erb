@@ -1,4 +1,4 @@
- <p><%= link_to image_tag("map_not_signed_up.png", alt: "Club Novus logo", style: "margin-right:10px"), root_path %>Du er ikke medlem</p>
+<p><%= link_to image_tag("map_not_signed_up.png", alt: "Club Novus logo", style: "margin-right:10px"), root_path %>Du er ikke medlem</p>
 <%= form_for @merchant_store.subscribers.build(member_id: current_member_user.id), :url => signup_member_path, remote: true do |f| %>
 	<div><%= f.hidden_field :member_id %></div>
     <div><%= f.hidden_field :merchant_store_id %></div>

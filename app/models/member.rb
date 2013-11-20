@@ -1,15 +1,14 @@
 class Member < ActiveRecord::Base
-  include ActiveModel::Dirty
-  scope :active, where(:status => true)
-  scope :inactive, where(:status => false)
-  attr_accessible :first_name, :last_name, :name, :postal_code, :city, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes
+  #include ActiveModel::Dirty
+  apply_simple_captcha :message => "Koden du indtastede matcher ikke billed-koden", :add_to_base => true
+
+  
+  attr_accessible :first_name, :last_name, :name, :postal_code, :city, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes, :captcha, :captcha_key
 
   has_one :user, :as => :sub, dependent: :destroy
   accepts_nested_attributes_for :user
-  has_many :subscribers 
+  has_many :subscribers, dependent: :destroy
   before_save :convert_phone_standard, :check_status, :name_convert
-  before_save :check_member_status, :if => "self.status_changed?"
-
 
   #Used for completing profiles on web if they signed up in-store
   before_create :create_access_key
@@ -29,8 +28,8 @@ class Member < ActiveRecord::Base
   validate  :validate_phone_standard
   validates :terms_of_service, :inclusion => { :in => [true, false] }, :unless => "validation_mode == 'store'"
   validates :complete, :inclusion => { :in => [true, false] }
-  validates :status, :inclusion => { :in => [true, false] }
   validates :origin, :inclusion => { :in => %w( web store ) }
+
 
   #This method is called in sms-utility before sending a message to subscriber
   def opt_out_link(merchant_store)
@@ -66,17 +65,6 @@ class Member < ActiveRecord::Base
   end
 
   private
-    #Deactivate all memberships on merchant stores
-    def check_member_status
-      if self.status == false
-        #To-do: self.deactivation_date = Time.zone.now
-        subscribers.each do |subscriber|
-          subscriber.opt_out
-          subscriber.save
-        end
-      end
-    end
-
     def name_convert
       self.name = self.first_name + " " + self.last_name
     end

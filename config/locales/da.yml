@@ -325,9 +325,12 @@ da:
         member_updated: Din profil er nu opdateret!
         member_deleted: Din profil er nu slettet. Håber vi ses igen!
         warning_deletion_member: Du er ved at slette din medlemsprofil og dine tilmeldte favoritbutikker. Er du sikker?
+        member_create_error: Vi kunne ikke oprette medlemmet grundet en teknisk fejl. Kontakt venligst support!
     backend:
       member:
         warning_deletion_member: Du er ved at deaktivere et medlem. Er du sikker?
+        member_removed: Medlem er nu slettet!
+        member_remove_error: Medlem kunne ikke slettes pga. en teknisk fejl!
       store:
         warning_deletion_store: Du er ved at deaktivere en butik. Er du sikker?
         store_created: Butik er nu oprettet!
@@ -359,6 +362,8 @@ da:
     campaign:
       campaign_created: Kampagne er oprettet og udføres på det angivne tidspunkt!
       campaign_deleted: Kampagne er nu slettet!
+      campaign_delete_error: Sletning ikke mulig. Kampagne skal slettes mindst 5 minutter før afsendelse!
+      campaign_late_update_error: Redigering ikke mulig. Kampagne må senest redigeres 5 minutter før afsendelse!
       campaign_updated: Kampagne er nu opdateret!
       campaign_create_error: Kampagne kan ikke oprettes i øjeblikket. Kontakt venligst support, hvis problemet fortsætter.
       campaign_update_error: Kampagne kan ikke opdateres i øjeblikket. Kontakt venligst support, hvis problemet fortsætter.
@@ -410,6 +415,7 @@ da:
       already_finished: Medlemsprofil er allerede færdigoprettet
       success: Tillykke! din medlemsprofil er nu færdigoprettet.
       opt_out: Du er nu afmeldt og vil ikke længere modtage sms-notifikationer fra %{store_name}
+      opt_out_error: Butikken kunne ikke afmeldes grundet en teknisk fejl. Kontakt venligst support!
     email:
       welcome_mail_new_member: Velkommen som nyt medlem i Club Novus
       web_sign_up: Din tilmelding til %{store_name}
@@ -424,31 +430,28 @@ da:
       not_authorized: Du har ikke adgang til disse data!
     subscriber:
       unsubscribe_confirmation: Du er nu afmeldt fra %{store_name} og vil ikke længere modtage sms-notifikationer fra butikken.
+      unsubscribe_error: Butikken kunne ikke afmeldes pga. en teknisk fejl. Kontakt venligst support!
   misc:
     stores_active:
       zero: aktive butikker
       one: aktiv butik
       other: aktive butikker
-    members_active:
-      zero: aktive medlemmer
-      one: aktivt medlem
-      other: aktive medlemmer
-    members_inactive:
-      zero: inaktive medlemmer
-      one: inaktivt medlem
-      other: inaktive medlemmer
-    memberships_active:
+    total_members:
+      zero: medlemmer
+      one: medlem
+      other: medlemmer
+    memberships:
       zero: aktive tilmeldinger
-      one: aktiv tilmelding
+      one: aktive tilmelding
       other: aktive tilmeldinger
-    memberships_inactive:
-      zero: afmeldinger ialt
-      one: afmelding ialt
-      other: afmeldinger ialt
-    members_inactive:
-      zero: inaktive medlemmer ialt
-      one: inaktivt medlem ialt
-      other: inaktive medlemmer ialt
+    memberships_sign_outs:
+      zero: afmeldinger
+      one: afmelding
+      other: afmeldinger  
+    memberships_sign_ups:
+      zero: tilmeldinger
+      one: tilmelding
+      other: tilmeldinger
     offers:
       zero: aktive tilbud
       one: aktivt tilbud
@@ -482,6 +485,12 @@ da:
     member:
       web: Web
       store: Butik
+  simple_captcha:
+    placeholder: Indtast tal
+    label: Indtast tal
+    message:
+      default: Koden du indtastede matcher ikke billed-koden
+      user: Den indtastede kode stemte ikke overens med billed-koden
 
 
     
