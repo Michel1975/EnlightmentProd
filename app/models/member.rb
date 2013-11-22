@@ -11,7 +11,7 @@ class Member < ActiveRecord::Base
   before_save :convert_phone_standard, :check_status, :name_convert
 
   #Used for completing profiles on web if they signed up in-store
-  before_create :create_access_key
+  before_create :create_access_key, :create_phone_confirmation_code
   #Used to determine current validation_mode
   attr_accessor :validation_mode
   #http://rubular.com
@@ -96,6 +96,10 @@ class Member < ActiveRecord::Base
     #Token used as verification in shortened links with Bitly
     def create_access_key
       self.access_key ||= [id.to_s, SecureRandom.hex(5)].join
+    end
+
+    def create_phone_confirmation_code
+      self.phone_confirmation_code ||= Random.rand(1000..9999)
     end
     
 end#end class

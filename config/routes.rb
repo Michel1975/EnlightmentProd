@@ -19,8 +19,9 @@ EnlightmentProd::Application.routes.draw do
 
   #Frontend resources
   resources :member_users do
-    get 'confirm_mobile_sms_view', :on => :member 
-    post 'confirm_mobile_with_sms', :on => :member 
+    get 'send_mobile_confirmation_with_sms', :on => :member 
+    post 'confirm_mobile_sms_code', :on => :member 
+    get 'resend_email_confirmation', :on => :member
   end
 
   #Member signup
@@ -129,6 +130,8 @@ EnlightmentProd::Application.routes.draw do
     
     resources :members do
       get 'search_members', :on => :collection
+      get 'resend_email_confirmation', :on => :member
+      get 'send_mobile_confirmation_with_sms', :on => :member 
     end
     
     match 'remove_subscriber/:id' => "members#remove_subscriber", :as => "remove_subscriber"

@@ -75,6 +75,8 @@ module ApplicationHelper
   	end
 
 	def store_session_variables(user)
+		#Reset session variables on each login
+		delete_session_variables
 		session[:current_user_id] = user.sub_id
 		session[:current_user_type] = user.sub_type
 		if user.sub_type == "MerchantUser"

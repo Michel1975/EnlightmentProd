@@ -10,7 +10,7 @@
         </div><!-- /logo -->
       
      <ul class="loginbar pull-right"> 
-        <% if current_member_user.present? && logged_in? %>
+        <% if current_member_user.present? && member_user? && logged_in? %>
           <li><i class="icon-user"></i> Logget ind som <%= current_member_user.name %>
               <ul class="nav-list">
                   <li> <%= link_to "Log ud", shared_logout_member_path %></li>

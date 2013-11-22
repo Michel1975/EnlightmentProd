@@ -1,8 +1,8 @@
 module Permissions
   class MemberPermission < BasePermission
     def initialize(user)
-      allow :member_users, [:favorites]
-      allow :member_users, [:show, :edit, :update, :destroy] do |member|
+      #allow :member_users, [:test_action]
+      allow :member_users, [:show, :edit, :update, :destroy, :favorites, :resend_email_confirmation, :send_mobile_confirmation_with_sms, :confirm_mobile_sms_code] do |member|
       	#Member users can only see, edit and destroy their own profiles.
       	member.id == user.sub_id	
       end

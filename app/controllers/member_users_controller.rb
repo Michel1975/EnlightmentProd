@@ -6,7 +6,7 @@ class MemberUsersController < ApplicationController
   
   #Vigtig! http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for
   
-  #Create new member frontend
+  #Create new member frontend - invoked from email link
   def confirm_email
     logger.info "Loading MemberUser confirm_email action" 
     token = params[:token]
@@ -21,6 +21,68 @@ class MemberUsersController < ApplicationController
       if member.save
         @confirmed_status = true
       end
+    end
+  end
+
+  def resend_email_confirmation
+    logger.info "Loading MemberUser resend_email_confirmation action"
+    @member_user = current_resource
+    logger.debug "Member found - attributes hash: #{@member_user.attributes.inspect}"
+    #Only send if email is not confirmed
+    if !@member_user.email_confirmed
+      logger.debug "Email is not confirmed - sending new activation link"
+      MemberMailer.delay.email_confirmation_link(@member_user.id)
+      flash[:success] = t(:email_confirmation_sent, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to member_user_path(@member_user)
+    else
+      logger.debug "Email already confirmed. Reloading view with notification"
+      flash[:alert] = t(:email_confirmation_error, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to member_user_path(@member_user)
+    end
+  end
+
+  def send_mobile_confirmation_with_sms 
+    logger.info "Loading MemberUser send_mobile_confirmation_with_sms action"
+    @member_user = current_resource
+    logger.debug "Member found - attributes hash: #{@member_user.attributes.inspect}"
+    message = t(:sms_code_message, sms_code: @member_user.phone_confirmation_code, :scope => [:business_messages, :web_profile])
+    logger.debug "SMS message to be sent: #{message.inspect}"
+    if SMSUtility::SMSFactory.sendSingleAdminMessageInstant?(message, @member_user.phone, nil )
+      logger.debug "SMS message sent successfully to #{@member_user.phone}"
+      flash[:success] = t(:sms_confirmation_sent, phone_number: @member_user.phone, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to member_user_path(@member_user)
+    else
+      logger.debug "Error when sending sms to member phone"
+      logger.fatal "Error when sending sms to member phone"
+      flash[:alert] = t(:sms_confirmation_error, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to member_user_path(@member_user)
+    end
+  end
+
+  def confirm_mobile_sms_code 
+    logger.info "Loading MemberUser confirm_mobile_sms_code action"
+    @member_user = current_resource
+    logger.debug "Member found - attributes hash: #{@member_user.attributes.inspect}"
+    sms_code = params[:sms_code]
+    logger.debug "SMS-code - param: #{sms_code.inspect}"
+    @confirmed_status = false
+    if @member_user && @member_user.phone_confirmation_code.to_s == sms_code
+      logger.debug "Match between codes..proceeding with save"
+      @member_user.phone_confirmed = true
+      if @member_user.save
+        @confirmed_status = true
+      end
+    end
+
+    if @confirmed_status
+      logger.debug "SMS-code match..phone number is now confirmed"
+      flash[:success] = t(:phone_confirmed_success, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to member_user_path(@member_user)
+    else
+      logger.debug "Phone not confirmed due to invalid sms-code or technical error"
+      logger.fatal "Phone not confirmed due to invalid sms-code or technical error"
+      flash[:alert] = t(:phone_confirmed_error, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to member_user_path(@member_user)
     end
   end
 

@@ -326,11 +326,22 @@ da:
         member_deleted: Din profil er nu slettet. Håber vi ses igen!
         warning_deletion_member: Du er ved at slette din medlemsprofil og dine tilmeldte favoritbutikker. Er du sikker?
         member_create_error: Vi kunne ikke oprette medlemmet grundet en teknisk fejl. Kontakt venligst support!
+        email_confirmation_sent: Du modtager en email med bekræftelseslink om få minutter!
+        email_confirmation_error: Din email er allerede bekræftet!
+        sms_confirmation_sent: Vi har sendt en sms til %{phone_number} med din bekræftelseskode
+        sms_confirmation_error: Vi kunne ikke sende en sms til din telefon grundet en teknisk fejl. Kontakt venligst support!
+        phone_confirmed_success: Dit telefonnummer er nu bekræftet!
+        phone_confirmed_error: Dit telefonnummer kunne ikke bekræftes. Prøv venligst igen eller kontakt support!
     backend:
       member:
         warning_deletion_member: Du er ved at deaktivere et medlem. Er du sikker?
+        member_updated: Din profil er nu opdateret!
         member_removed: Medlem er nu slettet!
         member_remove_error: Medlem kunne ikke slettes pga. en teknisk fejl!
+        email_confirmation_sent: Email med bekræftelseslink er nu sendt til medlemmet!
+        email_confirmation_error: Medlemmets email er allerede bekræftet!
+        sms_confirmation_sent: Vi har sendt en sms til medlemmets mobil (%{phone_number}) med bekræftelseskode
+        sms_confirmation_error: Vi kunne ikke sende en sms til medlemmet grundet en teknisk fejl.
       store:
         warning_deletion_store: Du er ved at deaktivere en butik. Er du sikker?
         store_created: Butik er nu oprettet!
@@ -342,8 +353,8 @@ da:
         warning_deletion_campaign: Du er ved at slette en SMS kampagne. Er du sikker?
       subscriber:
         warning_deletion_subscriber: Du er ved at fjerne medlemsskabet til en butik. Er du sikker?
-        subscriber_removed: Medlem er nu fjernet fra kundeklubben!
-        subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
+        subscriber_removed: Medlemskab er nu fjernet for den valgte butik!
+        subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af medlemsskabet. Vi arbejder hurtigst muligt på at løse problemet!
     user:
       invalid_password: Ugyldigt password. Password skal fylde mindst 8 tegn og have mindst et tal.
     session_merchant:
@@ -418,6 +429,7 @@ da:
       success: Tillykke! din medlemsprofil er nu færdigoprettet.
       opt_out: Du er nu afmeldt og vil ikke længere modtage sms-notifikationer fra %{store_name}
       opt_out_error: Butikken kunne ikke afmeldes grundet en teknisk fejl. Kontakt venligst support!
+      sms_code_message: Kære medlem,\nIndtast sms-koden på vores hjemmeside for at bekræfte dit mobilnummer.\nKode:%{sms_code}.\n\nMvh\nClub Novus"
     email:
       welcome_mail_new_member: Velkommen som nyt medlem i Club Novus
       email_confirmation: Bekræft din emailadresse - Club Novus

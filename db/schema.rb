@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131121100601) do
+ActiveRecord::Schema.define(:version => 20131122130522) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -127,17 +127,18 @@ ActiveRecord::Schema.define(:version => 20131121100601) do
     t.string   "postal_code"
     t.string   "gender"
     t.date     "birthday"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.boolean  "terms_of_service", :default => false
-    t.boolean  "complete",         :default => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+    t.boolean  "terms_of_service",        :default => false
+    t.boolean  "complete",                :default => false
     t.string   "origin"
     t.string   "access_key"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "city"
-    t.boolean  "email_confirmed",  :default => false
-    t.boolean  "phone_confirmed",  :default => false
+    t.boolean  "email_confirmed",         :default => false
+    t.boolean  "phone_confirmed",         :default => false
+    t.integer  "phone_confirmation_code"
   end
 
   add_index "members", ["phone"], :name => "index_members_on_phone", :unique => true

@@ -29,7 +29,8 @@ Medlemsprofil
       <div class="profile-info-row">
         <div class="profile-info-name"> Email </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="email"> <%= empty_attribute_info( @member.user.try(:email) )%> </span>
+          <span class="editable editable-click" id="email"> <%= empty_attribute_info( @member.user.try(:email) )%> 
+            <%= "(" + (@member.email_confirmed ? "bekræftet" : "ikke bekræftet") + ")" %></span>
         </div>
       </div>
 
@@ -91,6 +92,13 @@ Medlemsprofil
       </div>
 
       <div class="profile-info-row">
+        <div class="profile-info-name"> SMS bekræftelseskode </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="origin"> <%= empty_attribute_info( @member.phone_confirmation_code ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
           <span class="editable editable-click" id="created_at"> <%= I18n.l( @member.created_at ) %> </span>
@@ -105,6 +113,29 @@ Medlemsprofil
       </div>
     </div><!-- /.profile-user-info -->
   </div><!-- /.span5 -->
+  <% if !@member.email_confirmed %>
+    <div class="span7">
+      <h4>Medlemmets email er ikke bekræftet</h4>
+        <p>Klik på knappen nedenfor for at sende email med bekræftelseslink</p>
+          <%= link_to resend_email_confirmation_admin_member_path(@member) do %>
+              <button class="btn btn-small btn-info">
+                  Send bekræftelses-email
+              </button>
+          <% end %>
+    </div>
+    <hr>
+  <% end %>
+  <% if !@member.phone_confirmed %>
+    <div class="span7">
+      <h4>Medlemmets mobilnummer er ikke bekræftet</h4>
+        <p>Send sms til medlemmet med bekræftelseskode</p>
+        <%= link_to send_mobile_confirmation_with_sms_admin_member_path(@member), style: "display:block" do %>
+              <button class="btn btn-small btn-info">
+                  Send kode nu
+              </button>
+        <% end %>
+    </div><!-- /.span7 --> 
+  <% end %>
 </div><!-- /.row-fluid -->
 <div class="row-fluid">
   <div class="span5" style="text-align:center;margin-top:10px">

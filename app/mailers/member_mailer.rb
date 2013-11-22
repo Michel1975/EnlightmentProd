@@ -11,9 +11,10 @@ class MemberMailer < ActionMailer::Base
   	mail(to: @member.user.email, subject: t(:welcome_mail_new_member, :scope => [:business_messages, :email]) )  	
   end
 
-  #This template is for new members created on web
+  #This template is used for re-sending confirmation emails
   def email_confirmation_link(member)
     @member = Member.find(member)
+    @url = @member.confirm_email_link
     #attachments["rails.png"] = File.read("#{Rails.root}/public/404.html")
     #Se også inline attachments
     mail(to: @member.user.email, subject: t(:email_confirmation, :scope => [:business_messages, :email]) )   

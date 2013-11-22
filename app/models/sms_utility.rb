@@ -244,8 +244,8 @@ end
                                                     merchant_store_id: merchant_store.id) 
     else
       Rails.logger.debug "Notification type: Admin"
-      merchant_store.message_notifications.create!( notification_type: 'admin', recipient: recipient,
-                                                    message_id: message_id, status_code_id: default_status_code.id) 
+      MessageNotification.create!( notification_type: 'admin', recipient: recipient,
+                                   message_id: message_id, status_code_id: default_status_code.id) 
     end
     return message_id
   end#End method

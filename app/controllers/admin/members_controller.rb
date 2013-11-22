@@ -19,12 +19,48 @@ class Admin::MembersController < Admin::BaseController
 	    render 'index'
   	end
 
+  	def send_mobile_confirmation_with_sms 
+	    logger.info "Loading MemberUser send_mobile_confirmation_with_sms action"
+	    @member = current_resource
+	    logger.debug "Member found - attributes hash: #{@member.attributes.inspect}"
+	    message = t(:sms_code_message, sms_code: @member.phone_confirmation_code, :scope => [:business_messages, :web_profile])
+	    logger.debug "SMS message to be sent: #{message.inspect}"
+	    if SMSUtility::SMSFactory.sendSingleAdminMessageInstant?(message, @member.phone, nil )
+	      logger.debug "SMS message sent successfully to #{@member.phone}"
+	      flash[:success] = t(:sms_confirmation_sent, phone_number: @member.phone, :scope => [:business_validations, :backend, :member])
+	      redirect_to admin_member_path(@member)
+	    else
+	      logger.debug "Error when sending sms to member phone"
+	      logger.fatal "Error when sending sms to member phone"
+	      flash[:alert] = t(:sms_confirmation_error, :scope => [:business_validations, :backend, :member])
+	      redirect_to admin_member_path(@member)
+	    end
+  end
+
+
+  	def resend_email_confirmation
+	    logger.info "Loading Members resend_email_confirmation action"
+	    @member = current_resource
+	    logger.debug "Member found - attributes hash: #{@member.attributes.inspect}"
+	    #Only send if email is not confirmed
+	    if !@member.email_confirmed
+	      logger.debug "Email is not confirmed - sending new activation link"
+	      MemberMailer.delay.email_confirmation_link(@member.id)
+	      flash[:success] = t(:email_confirmation_sent, :scope => [:business_validations, :backend, :member])
+	      redirect_to admin_member_path(@member)
+	    else
+	      logger.debug "Email already confirmed. Reloading view with notification"
+	      flash[:alert] = t(:email_confirmation_error, :scope => [:business_validations, :backend, :member])
+	      redirect_to admin_member_path(@member)
+	    end
+  	end
+
 	def show
 		logger.info "Loading Members show action"
 		@member = current_resource
 		logger.debug "Member - attributes hash: #{@member.attributes.inspect}"
 
-		@subscriber_stores = @member.subscribers.active.page( params[:page] ).per_page(15)
+		@subscriber_stores = @member.subscribers.page( params[:page] ).per_page(15)
 		logger.debug "Subscriber stores - attributes hash: #{@subscriber_stores.inspect}"
 	end
 
@@ -42,8 +78,8 @@ class Admin::MembersController < Admin::BaseController
     	
     	if @member_user.update_attributes(params[:member])
       		logger.debug "Member updated succesfully - attributes hash: #{@member_user.attributes.inspect}" 
-    		flash[:success] = t(:member_updated, :scope => [:business_validations, :frontend, :member_user])
-    		redirect_to member_user_path(@member_user)
+    		flash[:success] = t(:member_updated, :scope => [:business_validations, :backend, :member])
+    		redirect_to member_user_admin_path(@member_user)
     	else
       		logger.debug "Validation errors. Loading edit view with errors"
     		render 'edit'

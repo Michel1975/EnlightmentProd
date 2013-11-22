@@ -14,7 +14,7 @@ class MessageNotification < ActiveRecord::Base
   belongs_to :status_code 
   
   validates :recipient, presence: true, length: { maximum: 12 }
-  validates :status_code_id, :merchant_store_id, presence: true
+  validates :status_code_id, presence: true
   validates :message_id, presence: true
   validates :message_id, uniqueness: { case_sensitive: false }, :allow_nil => true
   validates :notification_type, :inclusion => { :in => %w( campaign single admin )}
