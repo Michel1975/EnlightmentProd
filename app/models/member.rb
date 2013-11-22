@@ -34,7 +34,12 @@ class Member < ActiveRecord::Base
   #This method is called in sms-utility before sending a message to subscriber
   def opt_out_link(merchant_store)
     client = Bitly.client
-    client.shorten("http://www.clubnovus.dk?token={}&member_id=#{self.id}&merchant_store_id=#{merchant_store.id}")
+    client.shorten("http://www.clubnovus.dk/stop_sms_confirm?token={self.access_key}&member_id=#{self.id}&merchant_store_id=#{merchant_store.id}")
+  end
+
+  #This method is called to provide email confirmation email for web-signups
+  def confirm_email_link
+    link = "http://www.clubnovus.dk/confirm_email?token=#{self.access_key}&email=#{self.user.email}"
   end
 
   def self.search(search_name)

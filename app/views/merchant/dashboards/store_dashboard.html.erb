@@ -14,8 +14,8 @@
           <i class="icon-user"></i>
         </div>
         <div class="infobox-data">
-          <span class="infobox-data-number"> <%= @active_subscribers_count %> </span>
-          <div class="infobox-content"> <%= t('misc.members_active', :count => @active_subscribers_count ) %> </div>
+          <span class="infobox-data-number"> <%= @total_subscribers_count %> </span>
+          <div class="infobox-content"> <%= t('misc.memberships', :count => @total_subscribers_count ) %> </div>
       </div>
     </div>
     <div class="infobox infobox-blue">
@@ -63,8 +63,8 @@
         <i class="icon-user"></i>
       </div>
       <div class="infobox-data">
-        <span class="infobox-data-number"> <%= @opt_outs_total %> </span>
-        <div class="infobox-content"> <%= t('misc.memberships_inactive', :count => @opt_outs_total ) %> </div>
+        <span class="infobox-data-number"> <%= @sign_outs_total %> </span>
+        <div class="infobox-content"> <%= t('misc.memberships_sign_outs', :count => @sign_outs_total ) %> </div>
       </div>
     </div>
  </div><!-- /.infobox container -->

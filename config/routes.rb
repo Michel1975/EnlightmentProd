@@ -18,7 +18,10 @@ EnlightmentProd::Application.routes.draw do
   get "terms_conditions" => "member_users#terms_conditions", :as => "terms_conditions"
 
   #Frontend resources
-  resources :member_users
+  resources :member_users do
+    get 'confirm_mobile_sms_view', :on => :member 
+    post 'confirm_mobile_with_sms', :on => :member 
+  end
 
   #Member signup
   get "new_member" => "member_users#new", :as => "new_member"
@@ -38,6 +41,9 @@ EnlightmentProd::Application.routes.draw do
   #Complete profile on web after signing up in store
   match '/edit_sms_profile',  to: 'member_users#complete_sms_profile', via: :get
   match '/update_sms_profile/:id', to: 'member_users#update_sms_profile', via: :put, :as => "update_sms_profile"
+
+  #Confirm email
+  match '/confirm_email', to: 'member_users#confirm_email', via: :get
   
   namespace :merchant do
     #Callback sms-handling

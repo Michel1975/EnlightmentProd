@@ -1,6 +1,6 @@
 class Admin::MessageNotificationsController < Admin::BaseController
 
 	def index    
-  		@message_notifications = MessageNotification.all.paginate(page: params[:page])
+  		@message_notifications = MessageNotification.scoped.page( params[:page] ).per_page(15)
 	end
 end

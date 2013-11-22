@@ -3,7 +3,7 @@ class Admin::MembersController < Admin::BaseController
 		logger.info "Loading Members index action"
 		@search = false
 		logger.debug "Search flag: #{@search.inspect}"
-    	@members = Member.where(status: true).page(params[:page]).per_page(15)
+    	@members = Member.scoped.page( params[:page] ).per_page(15)
     	logger.debug "Members - attributes hash: #{@members.inspect}"
 	end
 
@@ -58,12 +58,12 @@ class Admin::MembersController < Admin::BaseController
   		logger.debug "Member - attributes hash: #{member.attributes.inspect}"
 		if subscriber.destroy
 			logger.debug "Subscriber deleted successfully"
-			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :subscriber])
+			flash[:success] = t(:subscriber_removed, :scope => [:business_validations, :backend, :subscriber])
     		redirect_to [:admin, member]
 		else
 			logger.debug "Error when deleting subscriber"
 			logger.fatal "Error when deleting subscriber"
-			flash[:error] = t(:subscriber_remove_error, :scope => [:business_validations, :subscriber])
+			flash[:error] = t(:subscriber_remove_error, :scope => [:business_validations, :backend, :subscriber])
     		redirect_to [:admin, member]
 		end
 	end
@@ -74,12 +74,12 @@ class Admin::MembersController < Admin::BaseController
   		logger.debug "Member - attributes hash: #{member.attributes.inspect}"
 		if member.destroy
 			logger.debug "Member successfully deleted"
-			flash[:success] = t(:member_removed, :scope => [:business_validations, :subscriber])
+			flash[:success] = t(:member_removed, :scope => [:business_validations, :backend, :member])
     		redirect_to admin_members_path
 		else
 			logger.debug "Error deleting member. Redirecting to member list"
 			logger.fatal "Error deleting member. Redirecting to member list"
-			flash[:error] = t(:member_remove_error, :scope => [:business_validations, :subscriber])
+			flash[:error] = t(:member_remove_error, :scope => [:business_validations, :backend, :member])
     		redirect_to admin_members_path
 		end
 	end

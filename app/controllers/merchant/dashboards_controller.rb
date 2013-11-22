@@ -15,8 +15,8 @@ class Merchant::DashboardsController < Merchant::BaseController
         logger.debug "Monthly subscriber data: #{@months_subscriber_data.inspect}"
 
         #Diverse medlemsstatistikker
-    	@active_subscribers_count = @merchant_store.subscribers.count
-        logger.debug "Active subscribers count: #{@active_subscribers_count.inspect}"
+    	@total_subscribers_count = @merchant_store.subscribers.count
+        logger.debug "Total subscribers count: #{@total_subscribers_count.inspect}"
     	date_range = (Date.today - 14.day)..Date.today
     	@opt_outs_last_14_days = @merchant_store.subscriber_histories.sign_outs.where(:created_at => date_range).count
         logger.debug "Opt-outs 14 days: #{@opt_outs_last_14_days.inspect}"
@@ -46,8 +46,8 @@ class Merchant::DashboardsController < Merchant::BaseController
         #@total_sms_messages_test = @merchant_store.message_notifications.month_total_messages.test.length #.month_total_messages.size
 
         #Gns. daglig medlemstilgang
-        @opt_outs_total = @merchant_store.subscriber_histories.sign_outs.count
-        logger.debug "Opt-outs total: #{@opt_outs_total.inspect}"
+        @sign_outs_total = @merchant_store.subscriber_histories.sign_outs.count
+        logger.debug "Sign_outs total: #{@sign_outs_total.inspect}"
 
         #Activity feed with paginate functionality
         @activity_feeds = @merchant_store.event_histories.page(params[:page]).per_page(10)

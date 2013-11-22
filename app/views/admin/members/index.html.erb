@@ -15,7 +15,7 @@
             	Søg
             	<i class="icon-search icon-on-right bigger-110"></i>
           	<% end %>
-            <%= link_to active_admin_members_path do %>
+            <%= link_to admin_members_path do %>
                 <button class="btn btn-small btn-success">
                     <i class="icon-reset bigger-110"></i>
                     Nulstil
@@ -60,7 +60,7 @@
 								<%= link_to [:admin, member], method: :delete, data: { confirm: t(:warning_deletion_member, :scope => [:business_validations, :backend, :member])} do %>
 									<button class="btn btn-small btn-danger">
 										<i class="icon-trash bigger-110"></i>
-										Deaktiver medlem
+										Slet medlem
 									</button>
 								<% end %>
 							</td>

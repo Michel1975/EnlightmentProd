@@ -8,15 +8,15 @@ class Admin::DashboardsController < Admin::BaseController
         logger.debug "Active stores count: #{@active_stores_count.inspect}"
 
 		#Total number of members
-    	@total_members_count = Member.all.count
+    	@total_members_count = Member.scoped.count
         logger.debug "Total members count: #{@total_members_count.inspect}"
 
         #Number of total memberships (subscriptions)
-    	@total_memberships_count = Subscriber.all.count
+    	@total_memberships_count = Subscriber.scoped.count
         logger.debug "Total memberships count: #{@total_memberships_count.inspect}"
 
         #Number of send total sms-messages
-        @total_sms_messages_count = MessageNotification.all.count
+        @total_sms_messages_count = MessageNotification.scoped.count
         logger.debug "Total sent sms messages count: #{@total_sms_messages_count.inspect}"
 
         #Number of total sms-messages sent this month

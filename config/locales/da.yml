@@ -342,6 +342,8 @@ da:
         warning_deletion_campaign: Du er ved at slette en SMS kampagne. Er du sikker?
       subscriber:
         warning_deletion_subscriber: Du er ved at fjerne medlemsskabet til en butik. Er du sikker?
+        subscriber_removed: Medlem er nu fjernet fra kundeklubben!
+        subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
     user:
       invalid_password: Ugyldigt password. Password skal fylde mindst 8 tegn og have mindst et tal.
     session_merchant:
@@ -418,6 +420,7 @@ da:
       opt_out_error: Butikken kunne ikke afmeldes grundet en teknisk fejl. Kontakt venligst support!
     email:
       welcome_mail_new_member: Velkommen som nyt medlem i Club Novus
+      email_confirmation: Bekræft din emailadresse - Club Novus
       web_sign_up: Din tilmelding til %{store_name}
       web_opt_out: Bekræftelse på din afmelding til %{store_name}
       web_sign_up_present: Din velkomstgave fra %{store_name}
@@ -449,9 +452,9 @@ da:
       one: afmelding
       other: afmeldinger  
     memberships_sign_ups:
-      zero: tilmeldinger
-      one: tilmelding
-      other: tilmeldinger
+      zero: tilmeldinger ialt
+      one: tilmelding ialt
+      other: tilmeldinger ialt
     offers:
       zero: aktive tilbud
       one: aktivt tilbud

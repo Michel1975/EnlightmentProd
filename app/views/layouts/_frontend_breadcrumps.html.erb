@@ -1,7 +1,7 @@
 <!--=== Breadcrumbs ===-->
 <div class="breadcrumbs margin-bottom-40">
     <div class="container">
-        <h3 class="color-green pull-left"><%= yield(:title) %></h3>
+        <h3 class="color-green pull-left" style="white-space: nowrap;"><%= yield(:title) %></h3>
         <ul class="pull-right breadcrumb">
             <li><%= link_to "Hjem", root_path %><span class="divider">/</span></li>
             <%= yield :breadcrumps %>

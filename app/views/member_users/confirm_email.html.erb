@@ -1,0 +1,30 @@
+<% provide(:title, 'Bekræftelse af email') %>
+<% provide(:description, 'Bekræftelse af email') %>
+<% content_for :breadcrumps do %>
+    <li>Medlemmer<span class="divider">/</span></li>
+    <li class="active">Bekræftelse af email</li>
+<% end %>
+<div class="row-fluid">
+  	<div class="span12">
+  		<% if @confirmed_status %>
+  			<div class="alert alert-success" style="text-align:center">
+            	<h4>Tillykke! Din email er nu bekræftet.</h4>
+			</div>
+		<% else %>
+			<div class="alert alert-block" style="text-align:center">
+            	<h4>Der opstod et problem under bekræftelsen af din email. Kontakt support!</h4>
+			</div>
+		<% end %>
+	</div><!-- /.span10 -->
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+	<div class="span12" style="text-align:center;margin-bottom:30px;">
+        <h3>Login på din konto nu</h3>
+        <%= link_to shared_login_member_path do %>
+            <button class="btn-u btn-primary btn-u-blue">
+                Login
+            </button>
+        <% end %>
+    </div><!-- /. span12-->
+</div><!-- /. row-fluid -->
+

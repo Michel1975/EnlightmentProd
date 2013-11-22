@@ -1,11 +1,28 @@
 class MemberUsersController < ApplicationController
   #default layout application is used
-	skip_before_filter :require_login, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions]
-  skip_before_filter :authorize, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions]
-  before_filter :member_user,  :only => [:edit, :update, :show, :destroy]
+	skip_before_filter :require_login, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions, :confirm_email]
+  skip_before_filter :authorize, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions, :confirm_email]
+  before_filter :member_user,  :only => [:edit, :update, :show, :destroy, :favorites]
   
-  	#Vigtig! http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for
-  	#Create new member frontend
+  #Vigtig! http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for
+  
+  #Create new member frontend
+  def confirm_email
+    logger.info "Loading MemberUser confirm_email action" 
+    token = params[:token]
+    logger.debug "Token - param: #{token.inspect}"
+    email = params[:email]
+    logger.debug "Email - param: #{email.inspect}"
+    member = Member.find_by_access_key(token)
+    logger.debug "Member found from token - attributes hash: #{member.attributes.inspect}"
+    @confirmed_status = false
+    if member && member.user.email == email
+      member.email_confirmed = true
+      if member.save
+        @confirmed_status = true
+      end
+    end
+  end
 
 	def new
     logger.info "Loading MemberUser new action"
@@ -24,7 +41,7 @@ class MemberUsersController < ApplicationController
     @member_user.origin = 'web'
     if @member_user.valid_with_captcha?
       logger.debug "Member form values incl captcha valid...proceeding"
-      if @member_user.save_with_captcha
+      if @member_user.save
         logger.debug "New member saved successfully..."
         #Send welcome e-mail
         logger.debug "Sending delayed welcome email to new member"
