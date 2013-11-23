@@ -22,6 +22,8 @@ class Merchant::CampaignsController < Merchant::BaseController
     @campaign_members = @campaign.campaign_members.page(params[:page]).per_page(10)
     logger.debug "Campaign attributes hash: #{@campaign.attributes.inspect}"
     logger.debug "Campaign members attributes hash: #{@campaign_members.inspect}"
+    @message_with_stop_link = @campaign.message + "\nStop: STOP #{current_merchant_store.sms_keyword} til 1276 222"
+    logger.debug "Stop link: #{@stop_link.inspect}"
   end
   
   def new
@@ -58,7 +60,6 @@ class Merchant::CampaignsController < Merchant::BaseController
     
     #Step 1: Opret selve kampagnen først
     @campaign = current_merchant_store.campaigns.build(params[:campaign])
-    @campaign.status = 'new'
     logger.debug "Building new empty campaign - attributes hash: #{@campaign.attributes.inspect}"
     
     #Conduct mandatory check of 5 minute create window - only one new campaign every 5 minutes to avoid double submission
@@ -83,7 +84,7 @@ class Merchant::CampaignsController < Merchant::BaseController
         if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign, current_merchant_store)
           logger.debug "Campaign confirmed in SMS gateway"
           @campaign.status = 'scheduled'
-          @campaign.save!
+          @campaign.save
           logger.debug "Campaign saved sucessfully- attributes hash: #{@campaign.attributes.inspect}"
           flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
           redirect_to [:merchant, @campaign]
@@ -91,7 +92,7 @@ class Merchant::CampaignsController < Merchant::BaseController
           logger.debug "Error: Campaign not confirmed in SMS gateway"
           logger.fatal "Error: Campaign not confirmed in SMS gateway"
           @campaign.status = 'error'
-          @campaign.save!
+          @campaign.save
           logger.debug "Campaign saved sucessfully- attributes hash: #{@campaign.attributes.inspect}"
           flash[:error] = t(:campaign_create_error, :scope => [:business_validations, :campaign])
           redirect_to [:merchant, @campaign]
@@ -114,7 +115,7 @@ class Merchant::CampaignsController < Merchant::BaseController
 
     #Manual validation rule to prevent deleting already active or launched campaigns due to billing reasons
     if (Time.zone.now + 5.minutes) >= @campaign.activation_time 
-      flash[:success] = t(:campaign_delete_error, :scope => [:business_validations, :campaign])
+      flash[:success] = t(:campaign_active_delete_error, :scope => [:business_validations, :campaign])
       redirect_to active_merchant_campaigns_path 
       return
     end
@@ -128,7 +129,7 @@ class Merchant::CampaignsController < Merchant::BaseController
     else
       logger.debug "Error: Campaign NOT deleted in SMS gateway"
       logger.fatal "Error: Campaign NOT deleted in SMS gateway"
-      flash[:error] = t(:campaign_delete_error, :scope => [:business_validations, :campaign]) 
+      flash[:error] = t(:campaign_delete_technical_error, :scope => [:business_validations, :campaign]) 
     end
   end
 

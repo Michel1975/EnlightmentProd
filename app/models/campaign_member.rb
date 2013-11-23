@@ -6,4 +6,12 @@ class CampaignMember < ActiveRecord::Base
 
   validates :subscriber_id, :campaign_id, presence: true
   validates :status, :inclusion => { :in => %w(new not-received received)}
-end
+
+  before_save :set_default_status
+  
+  #Default status value is set to new
+  def set_default_status
+  	self.status ||= 'new'
+  end
+
+end#end class

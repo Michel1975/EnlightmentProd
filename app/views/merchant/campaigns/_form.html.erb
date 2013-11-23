@@ -14,7 +14,7 @@
         <%= f.label :start_date, "Dato", class: "control-label" %>
         <%= f.text_field :start_date, class: "datepicker", placeholder: "Dato"%> &nbsp;&nbsp;
         <span class="add-on"><i class="icon-calendar"></i></span>
-        <%= tooltip("Angiv dato/tidspunkt for afsendelse af sms'er (interval: mindst 2 timer fra nu og en uge frem)", "Dato") %>
+        <%= tooltip("Angiv dato/tidspunkt for afsendelse af sms'er (interval: mindst 1 time fra nu og en dag frem)", "Dato") %>
       </div>          
     </div>
     <div class="input-append bootstrap-timepicker-component">
@@ -23,7 +23,7 @@
       <span class="add-on">
         <i class="icon-time"></i>
       </span>
-      <%= tooltip("Angiv dato/tidspunkt for afsendelse af sms'er (interval: mindst 2 timer fra nu og en uge frem)", "Tidspunkt") %>
+      <%= tooltip("Angiv dato/tidspunkt for afsendelse af sms'er (interval: mindst 1 time fra nu og en dag frem)", "Tidspunkt") %>
     </div>
     <div class="control-group">
       <%= f.label :message, class: "control-label" %>

@@ -373,14 +373,14 @@ da:
       email_sent: Du vil snarest modtage en email med instruktioner til at nulstille dit password!
       password_reset_confirmation: Dit kodeord er nu nulstillet!
     campaign:
-      campaign_created: Kampagne er oprettet og udføres på det angivne tidspunkt!
+      campaign_created: Kampagne er oprettet og udføres på det angivne tidspunkt. Check at alle oplysninger er korrekte!
       campaign_deleted: Kampagne er nu slettet!
-      campaign_delete_error: Sletning ikke mulig. Kampagne skal slettes mindst 5 minutter før afsendelse!
+      campaign_active_delete_error: Sletning ikke mulig. Kampagne skal slettes mindst 5 minutter før afsendelse!
       campaign_late_update_error: Redigering ikke mulig. Kampagne må senest redigeres 5 minutter før afsendelse!
       campaign_updated: Kampagne er nu opdateret!
       campaign_create_error: Kampagne kan ikke oprettes i øjeblikket. Kontakt venligst support, hvis problemet fortsætter.
       campaign_update_error: Kampagne kan ikke opdateres i øjeblikket. Kontakt venligst support, hvis problemet fortsætter.
-      campaign_delete_error: Kampagne kan ikke slettes i øjeblikket. Kontakt venligst support, hvis problemet fortsætter.
+      campaign_delete_technical_error: Kampagne kan ikke slettes i øjeblikket. Kontakt venligst support, hvis problemet fortsætter.
       warning_deletion_campaign: Du er ved at slette en planlagt kampagne. Er du sikker?
       invalid_activation_time: skal være i perioden fra d. %{earliest} til %{latest}
       double_submission: Af sikkerhedshensyn må du må maksimalt oprette én ny sms-kampagne indenfor 5 minutter. Vent venligst nogle minutter og prøv igen.
@@ -495,8 +495,13 @@ da:
     campaign:
       new: Ny
       scheduled: Planlagt
+      status_retrived_once: Opdaterer status...
       error: Fejl
       completed: Gennemført
+    campaign_member: 
+      new: Ikke afsendt
+      not-received: Ikke afsendt
+      received: Afsendt
     member:
       web: Web
       store: Butik

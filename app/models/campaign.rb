@@ -13,7 +13,7 @@ class Campaign < ActiveRecord::Base
   #Customers must only pay for sent messages - thus we delete if message entries if campaign is deleted.
   before_destroy :delete_message_notifications 
   
-  before_save :save_activation_time
+  before_save :save_activation_time, :set_default_status
 
   validates :title, presence: true, length: { maximum: 30 }
   validates :message, presence: true, length: { maximum: 160 }
@@ -22,7 +22,7 @@ class Campaign < ActiveRecord::Base
   validate  :sms_compliance_validation
   validates :activation_time, presence: true
   validate :validate_activatation_time
-  validates :status, :inclusion => { :in => %w( new scheduled error completed)}, :allow_blank => true
+  validates :status, :inclusion => { :in => %w( new scheduled status_retrived_once completed error)}, :allow_blank => true
   validates :merchant_store_id, presence: true
 
   def start_date
@@ -52,15 +52,22 @@ class Campaign < ActiveRecord::Base
       self.activation_time = Time.zone.parse(@start_date + " " + @start_time )
     end
 
+    #Default start time is 2 hours from now
     def set_default_activation_time
-      self.activation_time ||= Time.zone.now + 3.hour
+      self.activation_time ||= Time.zone.now + 2.hour
     end
 
+    #Default status value is set to new
+    def set_default_status
+      self.status ||= 'new'
+    end
+
+
     def validate_activatation_time
-      #earliest = Time.zone.now + 2.hour
+      #earliest = Time.zone.now + 1.hour
       #latest = Time.zone.now + 7.days + 2.hour
       earliest = Time.zone.now + 1.hour
-      latest = Time.zone.now + 1.days
+      latest = earliest + 1.days #Time.zone.now + 1.days  
       if self.activation_time.present?
         if (self.activation_time < earliest) && (self.activation_time < latest) 
           errors.add(:activation_time, I18n.t(:invalid_activation_time, earliest: I18n.l(earliest), latest: I18n.l(latest), :scope => [:business_validations, :campaign]) )

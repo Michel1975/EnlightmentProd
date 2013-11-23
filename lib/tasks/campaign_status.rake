@@ -7,10 +7,9 @@ end
 
 namespace :campaign do
  
- desc "Retrieve campaign status from server"
+  desc "Retrieve campaign status from server"
   task :get_status => :environment do
-  	#To-Do: Indsæt kode som skal kalde cimmobils service
-  	campaigns = Campaign.all #Campaign.where(:activation_time => Time.now..(Time.now - 1.day))
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 1.day)..(Time.zone.now)).where(:status => 'scheduled')
     puts "Initializing campaign status batch job"
     
     puts "Loading status codes..."
@@ -60,8 +59,8 @@ namespace :campaign do
 
             #puts response.body.get('/messages/message') #, response.code, response.message, response.headers.inspect
             #puts response
-    	   #Loop through each notification for a particular campaign
-    	   #response.class.get("/messages/").each do |callback_message|
+    	    #Loop through each notification for a particular campaign
+    	    #response.class.get("/messages/").each do |callback_message|
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
             messages.each do |item|
@@ -69,7 +68,7 @@ namespace :campaign do
                 recipient = item[1]['sDeviceName'].strip
                 message_id = item[1]['sProviderMessageId'].strip
             
-                if status_code.present? && message_id.present? 
+                if status_code.present? && recipient.present? && message_id.present? 
                     #notification =  MessageNotification.find_by_message_id(message_id)
                     notification = notifications_lookup[recipient]
                     if notification != nil && notification.status_code != "1"
@@ -93,9 +92,78 @@ namespace :campaign do
                 end#if status-code present
             end#End looping through messages per campaign
         end#If messages
+        #campaign.status = 'status_retrived_once'
+        #campaign.save(validate: false)
+        campaign.update_column(:status, 'status_retrived_once')
     end#End campaign
     puts "Finished fetching campaign updates"
   end#end task
+
+  desc "Retrieve campaign status from server"
+  task :update_member_status => :environment do
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 1.day)..(Time.zone.now)).where(:status => 'status_retrived_once')
+    puts "#{campaigns.size} campaigns with status retrieved from gateway loaded...done"
+    puts "Preparing to update campaign member_status"
+    
+    campaigns.each do |campaign|
+        notifications = MessageNotification.where(campaign_group_id: campaign.message_group_id)
+
+        notifications.each do |notification|
+            member = Member.find_by_phone(notification.recipient)
+            if member #code 1
+                campaign_member = campaign.campaign_members.find_by_subscriber_id(member)
+                if campaign_member
+                    if notification.status_code.name == '1'
+                        campaign_member.status = 'received' 
+                    else
+                        campaign_member.status = 'not-received'
+                    end 
+                    campaign_member.save
+                end 
+            end
+        end#Finish campaign logic
+
+    #campaign.status = 'completed'
+    campaign.update_column(:status, 'completed')
+    end#Finish campaign logic
+    puts "Finished updating campaign member status for #{campaigns.size}"
+  end#End task
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end#End namespace
 
 

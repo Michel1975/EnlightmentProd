@@ -94,13 +94,13 @@ class Subscriber < ActiveRecord::Base
   def opt_out_link
   	client = Bitly.client
     #No new-line since link is inserted with stop macro
-  	return "\nStop:" + client.shorten("http://www.clubnovus.dk/stop_sms_confirm?token#{member.access_key}&#{member.id}&#{merchant_store.id}").short_url
+  	return "Stop:" + client.shorten("http://www.clubnovus.dk/stop_sms_confirm?token#{member.access_key}&#{member.id}&#{merchant_store.id}").short_url
   end
 
   def opt_out_link_sms 
     #client = Bitly.client
     #No new-line since link is inserted with stop macro
-    return "\nStop: send #{merchant_store.sms_keyword} til 1276 222" 
+    return "Stop: send #{merchant_store.sms_keyword} til 1276 222" 
   end
 
   #Updates eventhistory for subscriber - for reporting purposes
