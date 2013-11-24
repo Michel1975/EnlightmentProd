@@ -205,18 +205,23 @@ class SMSFactory
 end
   
   def self.sendMessage?(method, messageContent)
-    Rails.logger.info "Into sendMessage?"
-    #wsdl_file = "http://sdk.ecmr.biz/src/gateway.asmx?wsdl"  
-    wsdl_file = File.read(Rails.root.join("config/wsdl/CIMMobil_ssl.xml"))
-    #wsdl_file = "http://127.0.0.1:8088/mockGatewaySoap12?wsdl"
-    #wsdl_file =
+    @gateway_status = ENV['SMS_GATEWAY_ACTIVE']
+    if @gateway_status = true
+      Rails.logger.info "Into sendMessage?"
+      #wsdl_file = "http://sdk.ecmr.biz/src/gateway.asmx?wsdl"  
+      wsdl_file = File.read(Rails.root.join("config/wsdl/CIMMobil_ssl.xml"))
+      #wsdl_file = "http://127.0.0.1:8088/mockGatewaySoap12?wsdl"
+      #wsdl_file =
 
-    client = Savon.client(  env_namespace: :soap, wsdl: wsdl_file, raise_errors: true, ssl_verify_mode: :none, 
-                  pretty_print_xml: true, namespaces: { "xmlns:myb" => "http://myblipz.com" },
-                  soap_version:2, soap_header: %{<myb:AuthHeader><myb:Login>#{ENV["SMS_GATEWAY_USER_NAME"]}</myb:Login><myb:Password>#{ENV["SMS_GATEWAY_PASSWORD"]}</myb:Password></myb:AuthHeader>})
-    result = client.call(method.to_sym, message: messageContent )
-    Rails.logger.debug "Transmission result: #{result.inspect}" 
-    return result  
+      client = Savon.client(  env_namespace: :soap, wsdl: wsdl_file, raise_errors: true, ssl_verify_mode: :none, 
+                    pretty_print_xml: true, namespaces: { "xmlns:myb" => "http://myblipz.com" },
+                    soap_version:2, soap_header: %{<myb:AuthHeader><myb:Login>#{ENV["SMS_GATEWAY_USER_NAME"]}</myb:Login><myb:Password>#{ENV["SMS_GATEWAY_PASSWORD"]}</myb:Password></myb:AuthHeader>})
+      result = client.call(method.to_sym, message: messageContent )
+      Rails.logger.debug "Transmission result: #{result.inspect}" 
+      return result 
+    else
+      return false
+    end 
   end
   #END SAVON
 
