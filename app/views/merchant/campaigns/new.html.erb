@@ -8,7 +8,13 @@
   Ny SMS kampagne
 </h3>
 <div class="row-fluid">
-	<%= render 'form' %>
+  <% if @campaign_status == 'true' %>
+	 <%= render 'form' %>
+  <% else %>
+  <div class="span5">
+    <p>Det er ikke muligt at oprette nye sms-kampagner i øjeblikket</p>
+  </div>
+  <% end %>
 </div><!-- /.row-fluid -->
 <div class="row-fluid">
     <div class="span11">

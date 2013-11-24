@@ -7,10 +7,15 @@
   <i class="icon-bullhorn bigger-110"></i>
   Rediger SMS kampagne
 </h3>
-<%= render 'form' %>
-<%= tag("span", :data => {stop_link: @stop_link}, style: "display:none", id:"stop_link") %>
-<%= render :partial => 'tooltip_new_edit' %>
-
+<% if @campaign_status == 'true' %>
+   <%= render 'form' %>
+   <%= tag("span", :data => {stop_link: @stop_link}, style: "display:none", id:"stop_link") %>
+   <%= render :partial => 'tooltip_new_edit' %>
+  <% else %>
+  <div class="span5">
+    <p>Det er ikke muligt at redigere sms-kampagner i øjeblikket</p>
+  </div>
+  <% end %>
 <% content_for :scripts do %>
   <script type="text/javascript">
       $(document).ready(function() {

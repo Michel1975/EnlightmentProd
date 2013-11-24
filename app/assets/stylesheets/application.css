@@ -11,6 +11,7 @@
  *= require_self
  *= require "bootstrap"
  *= require "bootstrap-responsive"
+ *= require "bootstrap-select"
  *= require "jquery.ui.all"
  *= require "datepicker"
  *= require_directory ./utility

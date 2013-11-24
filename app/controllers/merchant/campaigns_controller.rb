@@ -5,12 +5,20 @@ class Merchant::CampaignsController < Merchant::BaseController
     logger.info "Loading campaign active action"
     @active_campaigns = current_merchant_store.campaigns.where("activation_time > :date_now", :date_now => Time.now).page(params[:page]).per_page(10)
     logger.debug "List with active campaigns: #{@active_campaigns.inspect}"
+
+    @campaign_status = ENV['SMS_GATEWAY_ACTIVE']
+    logger.debug "SMS Gateway flag: #{@campaign_status}"
+    flash.now[:alert] = t(:gateway_inactive, :scope => [:system])
   end
 
   def finished
     logger.info "Loading campaign finished action"
     @completed_campaigns = current_merchant_store.campaigns.where("activation_time < :date_now", :date_now => Time.now).page(params[:page]).per_page(10)
     logger.debug "List with finished campaigns: #{@completed_campaigns.inspect}"
+
+    @campaign_status = ENV['SMS_GATEWAY_ACTIVE']
+    logger.debug "SMS Gateway flag: #{@campaign_status}"
+    flash.now[:alert] = t(:gateway_inactive, :scope => [:system])
   end 
 
   def index
@@ -35,6 +43,9 @@ class Merchant::CampaignsController < Merchant::BaseController
     #SMS stop link - if we decide to go with this option
     @stop_link = "\nStop: STOP #{current_merchant_store.sms_keyword} til 1276 222"
     logger.debug "Stop link: #{@stop_link.inspect}"
+
+    @campaign_status = ENV['SMS_GATEWAY_ACTIVE']
+    logger.debug "SMS Gateway flag: #{@campaign_status}"
   end
 
   def edit
@@ -47,65 +58,78 @@ class Merchant::CampaignsController < Merchant::BaseController
     #SMS stop link - if we decide to go with this option
     @stop_link = "\nStop: STOP #{current_merchant_store.sms_keyword} til 1276 222"
     logger.debug "Stop link: #{@stop_link.inspect}"
+
+    @campaign_status = ENV['SMS_GATEWAY_ACTIVE']
+    logger.debug "SMS Gateway flag: #{@campaign_status}"
   end
 
   def create
     logger.info "Loading campaign create action"
-    #Used for max-length property in textarea
-    @message_limit = 160 - 30 #Safe guess on bitly length.
-    logger.debug "Message limit: #{@message_limit.inspect}"
-    #SMS stop link - if we decide to go with this option
-    @stop_link = "\nStop: STOP #{current_merchant_store.sms_keyword} til 1276 222"
-    logger.debug "Stop link: #{@stop_link.inspect}"
-    
-    #Step 1: Opret selve kampagnen først
-    @campaign = current_merchant_store.campaigns.build(params[:campaign])
-    logger.debug "Building new empty campaign - attributes hash: #{@campaign.attributes.inspect}"
-    
-    #Conduct mandatory check of 5 minute create window - only one new campaign every 5 minutes to avoid double submission
-    if(!current_merchant_store.campaigns.where(:created_at => (Time.zone.now - 5.minutes)..Time.zone.now).exists? )
-      logger.debug "5 minute window validation OK"
-      #Default add all members for a store
-      if @campaign.save
-        logger.debug "Campaign initial save OK"
-        #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
-        logger.info "Adding subscriber members"
-        current_merchant_store.subscribers.each do |subscriber| 
-          logger.debug "Subscriber member - attributes hash: #{subscriber.attributes.inspect}"
-          #Only active subscribers are included
-          if subscriber.active
-            logger.debug "Subscriber active OK - added"
-            @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 
-          end
-        end
-        logger.debug "Subscriber members total: #{@campaign.campaign_members.size.inspect}"
 
-        #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions
-        if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign, current_merchant_store)
-          logger.debug "Campaign confirmed in SMS gateway"
-          @campaign.status = 'scheduled'
-          @campaign.save
-          logger.debug "Campaign saved sucessfully- attributes hash: #{@campaign.attributes.inspect}"
-          flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
-          redirect_to [:merchant, @campaign]
+    @campaign_status = ENV['SMS_GATEWAY_ACTIVE']
+    logger.debug "SMS Gateway flag: #{@campaign_status}"
+    
+    if @campaign_status == "true"
+      #Used for max-length property in textarea
+      @message_limit = 160 - 30 #Safe guess on bitly length.
+      logger.debug "Message limit: #{@message_limit.inspect}"
+      #SMS stop link - if we decide to go with this option
+      @stop_link = "\nStop: STOP #{current_merchant_store.sms_keyword} til 1276 222"
+      logger.debug "Stop link: #{@stop_link.inspect}"
+      
+      #Step 1: Opret selve kampagnen først
+      @campaign = current_merchant_store.campaigns.build(params[:campaign])
+      logger.debug "Building new empty campaign - attributes hash: #{@campaign.attributes.inspect}"
+      
+      #Conduct mandatory check of 5 minute create window - only one new campaign every 5 minutes to avoid double submission
+      if(!current_merchant_store.campaigns.where(:created_at => (Time.zone.now - 5.minutes)..Time.zone.now).exists? )
+        logger.debug "5 minute window validation OK"
+        #Default add all members for a store
+        if @campaign.save
+          logger.debug "Campaign initial save OK"
+          #Step 2: Tilføj default alle medlemmer i kundeklubben til kampagnen. Dette skal ændres senere.
+          logger.info "Adding subscriber members"
+          current_merchant_store.subscribers.each do |subscriber| 
+            logger.debug "Subscriber member - attributes hash: #{subscriber.attributes.inspect}"
+            #Only active subscribers are included
+            if subscriber.active
+              logger.debug "Subscriber active OK - added"
+              @campaign.campaign_members.create!(subscriber_id: subscriber.id, status: 'new') 
+            end
+          end
+          logger.debug "Subscriber members total: #{@campaign.campaign_members.size.inspect}"
+
+          #Vigtigt! http://stackoverflow.com/questions/10061937/calling-classes-in-lib-from-controller-actions
+          if SMSUtility::SMSFactory.sendOfferReminderScheduled?(@campaign, current_merchant_store)
+            logger.debug "Campaign confirmed in SMS gateway"
+            @campaign.status = 'scheduled'
+            @campaign.save
+            logger.debug "Campaign saved sucessfully- attributes hash: #{@campaign.attributes.inspect}"
+            flash[:success] = t(:campaign_created, :scope => [:business_validations, :campaign])
+            redirect_to [:merchant, @campaign]
+          else
+            logger.debug "Error: Campaign not confirmed in SMS gateway"
+            logger.fatal "Error: Campaign not confirmed in SMS gateway"
+            @campaign.status = 'error'
+            @campaign.save
+            logger.debug "Campaign saved sucessfully- attributes hash: #{@campaign.attributes.inspect}"
+            flash[:error] = t(:campaign_create_error, :scope => [:business_validations, :campaign])
+            redirect_to [:merchant, @campaign]
+          end
         else
-          logger.debug "Error: Campaign not confirmed in SMS gateway"
-          logger.fatal "Error: Campaign not confirmed in SMS gateway"
-          @campaign.status = 'error'
-          @campaign.save
-          logger.debug "Campaign saved sucessfully- attributes hash: #{@campaign.attributes.inspect}"
-          flash[:error] = t(:campaign_create_error, :scope => [:business_validations, :campaign])
-          redirect_to [:merchant, @campaign]
+          logger.debug "Error: Could not save due to validation errors"
+          render 'new'
         end
       else
-        logger.debug "Error: Could not save due to validation errors"
+        logger.debug "5 minute window validation ERROR - another campaign already exists in that time frame"
+        flash.now[:error] = t(:double_submission, :scope => [:business_validations, :campaign])
         render 'new'
-      end
+      end#end campaign window validation
     else
-      logger.debug "5 minute window validation ERROR - another campaign already exists in that time frame"
-      flash.now[:error] = t(:double_submission, :scope => [:business_validations, :campaign])
-      render 'new'
-    end#end campaign window validation
+      logger.debug "SMS Gateway is set to inactive - thus new campaigns cannot be created"
+      flash[:error] = t(:gateway_inactive, :scope => [:system])
+      redirect_to active_merchant_campaigns_path
+    end#End if gateway active
   end
  
   def destroy
@@ -137,47 +161,57 @@ class Merchant::CampaignsController < Merchant::BaseController
     logger.info "Loading campaign update action"
     @campaign = current_resource
     logger.debug "Campaign attributes hash: #{@campaign.attributes.inspect}"
-    #We need to initialize form attributes again if validation errors are present
-    @message_limit = 160 - 30 #Safe guess on bitly length.
-    logger.debug "Message limit: #{@message_limit.inspect}"
-    #SMS stop link - if we decide to go with this option
-    @stop_link = "\nStop: send #{current_merchant_store.sms_keyword} til 1276 222"
-    logger.debug "Stop link: #{@stop_link.inspect}"
-
-    #Determine if activation_time has changed
-    new_activation_time = false
-    if @campaign.activation_time != params[:campaign][:activation_time]
-      new_activation_time = true
-    end
-
-    logger.debug "Activation time change: #{new_activation_time.inspect}"
     
-    #Manual validation rule to prevent updating already completed or launched campaigns due to billing reasons
-    if (Time.zone.now + 5.minutes) >= @campaign.activation_time 
-      flash[:success] = t(:campaign_late_update_error, :scope => [:business_validations, :campaign])
-      redirect_to active_merchant_campaigns_path 
-      return
-    end
+    @campaign_status = ENV['SMS_GATEWAY_ACTIVE']
+    logger.debug "SMS Gateway flag: #{@campaign_status}"
 
-    if @campaign.update_attributes(params[:campaign])
-      logger.debug "Campaign updated successfully - attributes hash: #{@campaign.attributes.inspect}"
-      status = true
-      if new_activation_time
-        status = SMSUtility::SMSFactory.reschduleOfferReminder?(@campaign)
+    if @campaign_status == "true"
+      #We need to initialize form attributes again if validation errors are present
+      @message_limit = 160 - 30 #Safe guess on bitly length.
+      logger.debug "Message limit: #{@message_limit.inspect}"
+      #SMS stop link - if we decide to go with this option
+      @stop_link = "\nStop: send #{current_merchant_store.sms_keyword} til 1276 222"
+      logger.debug "Stop link: #{@stop_link.inspect}"
+
+      #Determine if activation_time has changed
+      new_activation_time = false
+      if @campaign.activation_time != params[:campaign][:activation_time]
+        new_activation_time = true
       end
-      if status
-        logger.debug "Campaign updated in SMS Gateway OK"
-        flash[:success] = t(:campaign_updated, :scope => [:business_validations, :campaign])
-        redirect_to [:merchant, @campaign]
+
+      logger.debug "Activation time change: #{new_activation_time.inspect}"
+      
+      #Manual validation rule to prevent updating already completed or launched campaigns due to billing reasons
+      if (Time.zone.now + 5.minutes) >= @campaign.activation_time 
+        flash[:success] = t(:campaign_late_update_error, :scope => [:business_validations, :campaign])
+        redirect_to active_merchant_campaigns_path 
+        return
+      end
+
+      if @campaign.update_attributes(params[:campaign])
+        logger.debug "Campaign updated successfully - attributes hash: #{@campaign.attributes.inspect}"
+        status = true
+        if new_activation_time
+          status = SMSUtility::SMSFactory.reschduleOfferReminder?(@campaign)
+        end
+        if status
+          logger.debug "Campaign updated in SMS Gateway OK"
+          flash[:success] = t(:campaign_updated, :scope => [:business_validations, :campaign])
+          redirect_to [:merchant, @campaign]
+        else
+          logger.debug "Error: Campaign NOT updated in SMS gateway"
+          logger.fatal "Error: Campaign NOT updated in SMS gateway"
+          flash.now[:error] = t(:campaign_update_error, :scope => [:business_validations, :campaign])
+          render :edit
+        end
       else
-        logger.debug "Error: Campaign NOT updated in SMS gateway"
-        logger.fatal "Error: Campaign NOT updated in SMS gateway"
-        flash.now[:error] = t(:campaign_update_error, :scope => [:business_validations, :campaign])
+        logger.debug "Validation errors. Reloading view with errors"
         render :edit
       end
     else
-      logger.debug "Validation errors. Reloading view with errors"
-      render :edit
+      logger.debug "SMS Gateway is set to inactive - thus new campaigns cannot be created"
+      flash[:error] = t(:gateway_inactive, :scope => [:system])
+      redirect_to [:merchant, @campaign] 
     end
   end
 

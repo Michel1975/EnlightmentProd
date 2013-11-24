@@ -316,6 +316,8 @@ da:
       image:
         picture: Billede
         size: Størrelse
+  system:
+    gateway_inactive: Det er ikke muligt at administrere sms-kampagner i øjeblikket. Vi arbejder på at løse problemet så hurtigt som muligt!
   business_validations:
     generic:
       not_authenticated: Login er påkrævet!

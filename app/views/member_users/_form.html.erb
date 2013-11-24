@@ -37,7 +37,7 @@
           <div class="span6">
             <div class="field">
               <%= f.label :gender %>
-              <%= f.select(:gender,[ ['Mand', 'M'], ['Kvinde', 'W'] ],  { include_blank: true } ) %>
+              <%= f.select(:gender,[ ['Mand', 'M'], ['Kvinde', 'W'] ],  { include_blank: true }, class: "selectpicker") %>
             </div>
             <div class="field">
               <%= f.label :birthday %>

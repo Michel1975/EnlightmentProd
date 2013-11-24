@@ -13,6 +13,7 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require bootstrap
+//= require bootstrap-select
 //= require raphael
 //= require morris
 //= require "gmap"

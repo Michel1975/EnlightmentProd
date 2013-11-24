@@ -129,41 +129,6 @@ namespace :campaign do
     puts "Finished updating campaign member status for #{campaigns.size}"
   end#End task
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 end#End namespace
 
 
