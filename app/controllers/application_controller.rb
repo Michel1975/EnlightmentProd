@@ -48,11 +48,15 @@ class ApplicationController < ActionController::Base
     #current_merchant_store.nil? ? "application" : "merchant"
   #end
 
-  def update_eventhistory(event_type, description)
+  def log_event_history_merchant_portal(merchant_store, event_type, description)
     logger.info "Updating event-history"
-    if(event_type && description)
+    if event_type && description
       logger.debug "Event-history event_type: #{event_type.inspect}, description: #{description.inspect}"
-      current_merchant_store.event_histories.create(event_type: event_type, description: description)
+      merchant_store.event_histories.create(event_type: event_type, description: description)
+      logger.debug "Event history updated for specific store"
+    else
+      logger.fatal "Could not log events correctly. Missing attributes"
+      logger.debug "Could not log events correctly. Missing attributes"
     end
   end
 

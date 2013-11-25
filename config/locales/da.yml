@@ -318,6 +318,7 @@ da:
         size: Størrelse
   system:
     gateway_inactive: Det er ikke muligt at administrere sms-kampagner i øjeblikket. Vi arbejder på at løse problemet så hurtigt som muligt!
+    monthly_message_limit_broken: SMS-kampagne kan ikke oprettes, da grænsen på %{total_messages} er overskredet!
   business_validations:
     generic:
       not_authenticated: Login er påkrævet!
@@ -507,6 +508,15 @@ da:
     member:
       web: Web
       store: Butik
+    event_type:
+      login: Login
+      logout: Log ud
+      opt-in-subscriber: Tilmelding
+      opt-out-subscriber: Afmelding
+      campaign-created: Ny kampagne
+      campaign-edited: Kampagne opdateret
+      campaign-cancelled: Kampagne annulleret
+      campaign-finished: Kampagne afsluttet
   simple_captcha:
     placeholder: Indtast tal
     label: Indtast tal

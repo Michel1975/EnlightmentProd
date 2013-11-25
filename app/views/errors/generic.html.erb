@@ -1,0 +1,22 @@
+<% provide(:title, 'Teknisk fejl') %>
+<% provide(:description, 'Teknisk fejl er opstået') %>
+     
+<div class="row-fluid page" style="text-align:center;">
+    <h2 class="color-green">Der er opstået en teknisk fejl. Vi arbejder på at løse problemet!</h2>
+</div><!--/row-fluid--> 
+<% content_for :scripts do %>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+    });
+    
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+            fjs.parentNode.insertBefore(js, fjs);
+    }
+    (document, 'script', 'facebook-jssdk'));
+</script> 
+<% end %>

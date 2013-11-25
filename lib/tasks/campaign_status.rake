@@ -121,10 +121,15 @@ namespace :campaign do
                     campaign_member.save
                 end 
             end
-        end#Finish campaign logic
+        end#Finish notification logic for campaign
 
-    #campaign.status = 'completed'
-    campaign.update_column(:status, 'completed')
+        #campaign.status = 'completed'
+        campaign.update_column(:status, 'completed')
+        merchant_store = MerchantStore.find(campaign.merchant_store_id)
+        if merchant_store
+            merchant_store.event_histories.create(event_type: "campaign-finished", description: "Kampagnen #{campaign.title} er nu afsluttet")
+            logger.debug "Event history updated for campaign"
+        end
     end#Finish campaign logic
     puts "Finished updating campaign member status for #{campaigns.size}"
   end#End task

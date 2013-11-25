@@ -49,6 +49,10 @@ class MerchantStore < ActiveRecord::Base
 
   #Map positioning coordinates
   acts_as_gmappable :address => "address", :process_geocoding => false
+
+  def validate_montly_message_limit?(message_count)
+    return result = (self.message_notifications.month_total_messages.count + message_count) <= SMSUtility::STORE_TOTAL_MESSAGES_MONTH
+  end
   
   #Bit.ly link for sms
   def store_link

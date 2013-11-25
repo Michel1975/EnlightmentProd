@@ -62,5 +62,8 @@ module EnlightmentProd
 
     #MKHA: Used to avoid initialization errors when deploying to Heroku
     config.assets.initialize_on_precompile = false
+
+    #Custom dynamic error handling - railscasts episode - http://railscasts.com/episodes/53-handling-exceptions-revised
+    config.exceptions_app = self.routes
   end
 end

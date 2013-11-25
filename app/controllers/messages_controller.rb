@@ -22,12 +22,12 @@ class MessagesController < ApplicationController
 			logger.debug "Sending delayed confirmation message to clubnovus admin..."
 			ContactMailer.delay.welcome_mail_new_member(message, email, name)
 			logger.debug "Sending delayed confirmation message to prospect..."
-			redirect_to root_path, :success => t(:confirm_incoming_web, :scope => [:business_messages, :email])
+			flash[:success] = t(:confirm_incoming_web, :scope => [:business_messages, :email])
+			redirect_to root_path 
 		else
 			logger.debug "Validation errors. Loading send_message view with errors"
 			flash[:alert] = t(:invalid_contact_data, :scope => [:business_messages, :email])
 			render 'send_message'
 		end
 	end
-
 end

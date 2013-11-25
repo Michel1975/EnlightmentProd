@@ -1,5 +1,6 @@
 EnlightmentProd::Application.routes.draw do
-  get "message_errors/index"
+  #Custom error handling
+  match '(errors)/:status', to: 'errors#show', constraints: {status: /\d{3}/}
 
   #Common frontend paths
   root :to => "root#home"

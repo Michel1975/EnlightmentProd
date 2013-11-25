@@ -12,7 +12,8 @@ module SMSUtility
   #This reflects the standard characters for sms messages
   VALID_SMS_MESSAGE = %r{\A[\w\s@?£!1$"#è?¤é%ù&\\()*:Ø+;øÆ,<æ\-=Å.>å\/§\']+\z}
 
-  TOTAL_MESSAGES_MONTH = 500
+  TOTAL_MESSAGES_MONTH = 5000
+  STORE_TOTAL_MESSAGES_MONTH = 500
 
 class SMSFactory
 
@@ -59,9 +60,12 @@ class SMSFactory
     return result
   end
 
-  def self.validate_message_limits?(merchant_store, message_count)
+  def self.validate_message_limits?(message_count)
     Rails.logger.info "Into validate_message_limits?"
-    result = (merchant_store.message_notifications.month_total_messages.count + message_count) <= SMSUtility::TOTAL_MESSAGES_MONTH
+    Rails.logger.debug "Number of messages in this order: #{message_count.inspect}"
+    no_total_messages = SMSUtility::TOTAL_MESSAGES_MONTH
+    Rails.logger.debug "Total number of messages sent this month before new message: #{no_total_messages.inspect}"
+    result = (MessageNotification.month_total_messages.count + message_count) <= no_total_messages
     Rails.logger.debug "Result: #{result.inspect}"
     return result
   end
@@ -70,8 +74,8 @@ class SMSFactory
 	#Afsendelse af sms til en enkelt person (typisk admin eller direkte kommunikation til et medlem)
   def self.sendSingleMessageInstant?(message, recipient, merchant_store)
     Rails.logger.info "Into sendSingleMessageInstant?"
-    if validate_message_limits?(merchant_store, 1)
-      Rails.logger.debug "Message limit not broken. Everything is OK, message can be sent"
+    if validate_message_limits?(1)
+      Rails.logger.debug "Total Message limit not broken. Everything is OK, message can be sent"
       Rails.logger.debug "Message parameter: #{message.inspect}"
       Rails.logger.debug "Recipient parameter: #{recipient.inspect}"
       Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store
@@ -81,29 +85,37 @@ class SMSFactory
       #Rails.logger.debug "Message transmission result: #{result.inspect}" 
       return true 
     else
-      #To-do: Throw error
+      Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
+      Rails.logger.fatal "Total Message limit broken. Message CANNOT be sent"
+      return false
     end
   end
 
   #Afsendelse af sms'er i forbindelse med tilmelding og afmelding m.v. Her er Club Novus provider
   def self.sendSingleAdminMessageInstant?(message, recipient, merchant_store)
     Rails.logger.info "Into sendSingleAdminMessageInstant?"
-
-    Rails.logger.debug "Message parameter: #{message.inspect}"
-    Rails.logger.debug "Recipient parameter: #{recipient.inspect}"
-    Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store
-    messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, merchant_store) 
-    Rails.logger.debug "Message payload prepared for gateway: #{messageContent.inspect}"   
-    #result = sendMessage?('push', messageContent)  
-    #Rails.logger.debug "Message transmission result: #{result.inspect}" 
-    return true 
+    if validate_message_limits?(1)
+      Rails.logger.debug "Total Message limit not broken. Everything is OK, message can be sent"
+      Rails.logger.debug "Message parameter: #{message.inspect}"
+      Rails.logger.debug "Recipient parameter: #{recipient.inspect}"
+      Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store
+      messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, merchant_store) 
+      Rails.logger.debug "Message payload prepared for gateway: #{messageContent.inspect}"   
+      #result = sendMessage?('push', messageContent)  
+      #Rails.logger.debug "Message transmission result: #{result.inspect}" 
+      return true 
+    else
+      Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
+      Rails.logger.fatal "Total Message limit broken. Message CANNOT be sent"
+      return false
+    end
   end
 
   #Kampagne metoder
   def self.sendOfferReminderScheduled?(campaign, merchant_store)
     Rails.logger.info "Into sendOfferReminderScheduled?"
-    if validate_message_limits?(merchant_store, campaign.campaign_members.count)
-      Rails.logger.debug "Message limit not broken. Everything is OK, campaign can be scheduled"
+    if validate_message_limits?(campaign.campaign_members.count)
+      Rails.logger.debug "Total Message limit not broken. Everything is OK, campaign can be scheduled"
       Rails.logger.debug "Campaign parameter: #{campaign.attributes.inspect}"
       Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store
       messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
@@ -111,6 +123,9 @@ class SMSFactory
       #result = sendMessage?('push_scheduled', messageContent) 
       #Rails.logger.debug "Message transmission result: #{result.inspect}"
       return true
+    else
+      Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
+      Rails.logger.fatal "Total Message limit broken. Message CANNOT be sent"
     end
   end
 
@@ -122,7 +137,6 @@ class SMSFactory
     #result = sendMessage?('reschedule_group', messageContent) 
     #Rails.logger.debug "Message transmission result: #{result.inspect}"
     return true
-      
   end
 
   def self.cancelScheduledOfferReminder?(campaign)

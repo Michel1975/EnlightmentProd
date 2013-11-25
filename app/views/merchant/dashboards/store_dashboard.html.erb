@@ -111,8 +111,8 @@
             <tbody>
               <% @activity_feeds.order("created_at DESC").each do |event| %>
                 <tr>
-                  <td><%= event.event_type %></td>
-                  <td><%= I18n.l( event.created_at )  %></td>
+                  <td><%= I18n.t(event.event_type.to_sym, :scope => [:enums, :event_type] ) if event.event_type %></td>
+                  <td><%= I18n.l( event.created_at ) %></td>
                   <td><%= event.description %></td>
                 </tr>
               <% end %>

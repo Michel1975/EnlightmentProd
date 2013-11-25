@@ -10,9 +10,8 @@ class Shared::MerchantSessionsController < Shared::BaseController
         	store_session_variables(user)
           logger.debug "User session variables initialized. Loading root_url view for frontend"
         	if user.sub_type == 'MerchantUser'
-          		name = MerchantUser.find(user.sub_id)
-          		update_eventhistory("login", "Test")
-              logger.debug "Eventhistory updated with login action. Loading dashboard for merchant backend"
+              m_user = MerchantUser.find(current_user.sub_id)
+              log_event_history_merchant_portal(current_merchant_store, "login", "#{m_user.name} loggede ind.")
           		redirect_back_or_to merchant_dashboard_url, :success => t(:logged_in, :scope => [:business_validations, :session_merchant])
           else
             #to-do: skal smide en teknisk fejl eller tilpasset unautoirzed  - meget vigtigt hvis medlemmer forsøger at logge ind på butik eller admin
@@ -27,6 +26,8 @@ class Shared::MerchantSessionsController < Shared::BaseController
 
 	def destroy
     logger.info "Loading MerchantSession destroy action"
+    m_user = MerchantUser.find(current_user.sub_id)
+    log_event_history_merchant_portal(current_merchant_store, "logout", "#{m_user.name} loggede ud.")
   	logout
     delete_session_variables
     logger.debug "Merchant session deleted. Redirecting to root_url"

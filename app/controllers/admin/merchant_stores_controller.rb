@@ -50,7 +50,13 @@ class Admin::MerchantStoresController < Admin::BaseController
 		logger.debug "MerchantStore initialized - attributes hash: #{@merchant_store.attributes.inspect}"
 		respond_to do |format|
 		  if @merchant_store.save
-		    logger.debug "MerchantStore saved successfully: #{@merchant_store.attributes.inspect}"
+		  	logger.debug "MerchantStore created successfully: #{@merchant_store.attributes.inspect}"
+		  	logger.debug "Proceeding with default subscription..."
+		  	#Create default subscription to store. Currently we only choose basic subscription as default choice
+		  	subscription_type = SubscriptionType.find_by_name("Basis medlemsskab")
+		  	logger.debug "Basic subscription type lookup: #{subscription_type.attributes.inspect}"
+		  	@merchant_store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_type.id)
+		  	logger.debug "Successfully created default basic subscription for store"
 		    format.html { redirect_to [:admin, @merchant_store], :success => t(:store_created, :scope => [:business_validations, :backend, :store]) }
 		  else
 		    logger.debug "Validation errors. Loading new view with errors"

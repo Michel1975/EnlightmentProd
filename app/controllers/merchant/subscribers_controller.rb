@@ -45,29 +45,50 @@ class Merchant::SubscribersController < Merchant::BaseController
 		logger.info "Loading subscriber send_single_message action"
 		@subscriber = current_resource
 		logger.debug "Subscriber - attributes hash: #{@subscriber.attributes.inspect}"
-		message = params[:message]
-		logger.debug "Message without opt-out link: #{message.inspect}"
-		message = message + @subscriber.opt_out_link_sms
-		logger.debug "Message with opt_out link: #{message.inspect}"
-		no_characters = message.length
-		logger.debug "Message character length: #{no_characters.inspect}"
+		
+		@gateway_status = ENV['SMS_GATEWAY_ACTIVE']
+    	logger.debug "SMS Gateway flag: #{@gateway_status}"
+    	
+    	if @gateway_status == "true"
+    		logger.debug "Gateway status is active...proceeding"
+			
+			message = params[:message]
+			logger.debug "Message without opt-out link: #{message.inspect}"
+			message = message + @subscriber.opt_out_link_sms
+			logger.debug "Message with opt_out link: #{message.inspect}"
+			no_characters = message.length
+			logger.debug "Message character length: #{no_characters.inspect}"
 
-		if SMSUtility::SMSFactory.validate_sms?(message) && no_characters < 160
-			logger.debug "Message validation OK"
-			if SMSUtility::SMSFactory.sendSingleMessageInstant?(message, @subscriber.member.phone, current_merchant_store)
-				logger.debug "Message confirmed OK in SMS gateway"
-				flash[:success] = t(:success, :scope => [:business_validations, :instant_subscriber_message])
-				redirect_to merchant_subscribers_path#[:merchant, @subscriber]
+			logger.debug "Validating monthly message limits..."
+	      	#Validate monthly message limits
+      		if current_merchant_store.validate_montly_message_limit?(1)
+      			logger.debug "Monthly message limit not broken for store...proceeding"
+				if SMSUtility::SMSFactory.validate_sms?(message) && no_characters < 160
+					logger.debug "Message validation OK"
+					if SMSUtility::SMSFactory.sendSingleMessageInstant?(message, @subscriber.member.phone, current_merchant_store)
+						logger.debug "Message confirmed OK in SMS gateway"
+						flash[:success] = t(:success, :scope => [:business_validations, :instant_subscriber_message])
+						redirect_to merchant_subscribers_path#[:merchant, @subscriber]
+					else
+						logger.debug "Error: Message NOT confirmed in SMS gateway"
+						logger.fatal "Error: Message NOT confirmed in SMS gateway"
+						flash.now[:error] = t(:error, :scope => [:business_validations, :instant_subscriber_message])
+						render :prepare_single_message	
+					end
+				else
+					logger.debug "Message validation ERROR - invalid characters or message too long"
+					flash.now[:error] = t(:invalid_message, :scope => [:business_validations, :instant_subscriber_message])
+					render :prepare_single_message	
+				end
 			else
-				logger.debug "Error: Message NOT confirmed in SMS gateway"
-				logger.fatal "Error: Message NOT confirmed in SMS gateway"
-				flash.now[:error] = t(:error, :scope => [:business_validations, :instant_subscriber_message])
-				render :prepare_single_message	
+				logger.debug "Monthly message limit is broken. Cannot create campaign"
+        		flash[:error] = t(:monthly_message_limit_broken, total_messages: SMSUtility::STORE_TOTAL_MESSAGES_MONTH, :scope => [:system])
+        		redirect_to merchant_subscribers_path
 			end
 		else
-			logger.debug "Message validation ERROR - invalid characters or message too long"
-			flash.now[:error] = t(:invalid_message, :scope => [:business_validations, :instant_subscriber_message])
-			render :prepare_single_message	
+			logger.debug "SMS Gateway is set to inactive - thus new campaigns cannot be created"
+      		flash[:error] = t(:gateway_inactive, :scope => [:system])
+      		redirect_to merchant_subscribers_path
 		end
 	end
 
