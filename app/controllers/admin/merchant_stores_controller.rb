@@ -97,6 +97,12 @@ class Admin::MerchantStoresController < Admin::BaseController
 		logger.info "Loading MerchantStore show action"
 		@merchant_store = current_resource
 		logger.debug "MerchantStore attributes hash: #{@merchant_store.attributes.inspect}"
+
+		#Each store only has one user - for now.
+		@merchant_user = @merchant_store.merchant_users.first 
+		if @merchant_user.present?
+			logger.debug "Loading default merchant user for store - attributes: #{@merchant_user.attributes.inspect}"
+		end
 	end
 
 	def login_as

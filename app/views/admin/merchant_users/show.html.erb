@@ -1,0 +1,76 @@
+<% provide(:title, 'Brugerprofil') %>
+<% provide(:description, 'Brugeroplysninger') %>
+<% content_for :breadcrumps do %>
+  <li>
+    Indstillinger
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li>Butik
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li class="active">Brugerprofil</li>
+<% end %>
+<div class="row-fluid">
+  <div class="span5">
+     <h4 class="header blue lighter smaller" style="margin-top:5px">
+      Brugerinfo 
+    </h4> 
+    <div class="profile-user-info profile-user-info-striped">
+      
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Navn </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="store_name"> <%= @merchant_user.name %> </span>
+        </div>
+      </div>
+     
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Rolle </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="created_at"> <%= @merchant_user.role %> </span>
+        </div>
+      </div>
+
+       <div class="profile-info-row">
+        <div class="profile-info-name"> Telefon </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="created_at"> <%= @merchant_user.phone %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Email </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="created_at"> <%= @merchant_user.user.try(:email) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Oprettet </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="created_at"> <%= I18n.l( @merchant_user.created_at ) %> </span>
+        </div>
+      </div>
+    </div><!-- /.profile-user-info -->
+    <%= link_to edit_admin_merchant_store_merchant_user_path(@merchant_store, @merchant_user), 
+      class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
+      <i class="icon-edit bigger-110"></i>
+      Rediger
+    <% end %>
+    <%= link_to [:admin, @merchant_store, @merchant_user], 
+        method: :delete, data: { confirm: t(:profile_delete_warning, :scope => [:business_validations, :backend, :merchant_user]) } do %>
+        <button class="btn btn-small btn-danger" style="margin-top:10px">
+          <i class="icon-trash bigger-110"></i>
+          Slet bruger
+        </button>
+    <% end %>
+    <%= link_to admin_merchant_store_path(@merchant_user.merchant_store), class: "btn btn-primary btn-small", target: "_new", style: "margin-top:10px" do %>
+      <i class="icon-eye-open bigger-110"></i>
+      Tilbage
+    <% end %>
+  </div><!-- /.span5 -->
+</div><!-- /.row-fluid -->

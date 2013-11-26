@@ -1,0 +1,43 @@
+<% provide(:title, 'Rediger bruger til butik') %>
+<% provide(:description, 'Redigering af brugeroplysninger for butiksbruger') %>
+<% content_for :breadcrumps do %>
+  <li>
+    Indstillinger
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li>Butik
+    <span class="divider">
+      <i class="icon-angle-right arrow-icon"></i>
+    </span>
+  </li>
+  <li class="active">Rediger bruger til butik</li>
+<% end %>
+<h4 class="header blue lighter smaller" style="margin-top:5px">
+  Ret brugeroplysninger
+</h4> 
+<div class="row-fluid">
+  <%= render 'form' %>
+</div><!-- /.row-fluid -->
+<div class="row-fluid">
+    <div class="span11">
+      <%= link_to :back, class: "btn btn-primary btn-small" do %>
+        <i class="icon-arrow-left bigger-110"></i>
+        Tilbage
+      <% end %>
+    </div><!-- /.span11 -->
+</div><!-- /.row-fluid -->
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+      jQuery(function($) {
+          $('[data-rel=tooltip]').tooltip({container:'body'});
+          $('[data-rel=popover]').popover({container:'body'});
+
+          $("form").on("submit", function () {
+            $(this).find(".submission").prop("disabled", true);
+          });
+      });
+  </script>
+<% end %>

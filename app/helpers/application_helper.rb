@@ -30,27 +30,30 @@ module ApplicationHelper
 		@current_merchant_store = merchant_store
 	end
 
+	#Note: We use find_by_id to avoid exeception being raised in case of empty search result
 	def current_merchant_store
 		@current_merchant_store ||= session[:current_merchant_store_id] &&
-      		MerchantStore.find(session[:current_merchant_store_id])
+      		MerchantStore.find_by_id(session[:current_merchant_store_id])
 	end
 
 	def current_merchant_user=(merchant_user)
 		@current_merchant_user = merchant_user
 	end
 
+	#Note: We use find_by_id to avoid exeception being raised in case of empty search result
 	def current_merchant_user
 		@current_merchant_user ||= session[:current_user_id] &&
-      		MerchantUser.find(session[:current_user_id])
+      		MerchantUser.find_by_id(session[:current_user_id])
 	end
 
 	def current_member_user=(member_user)
 		@current_member_user = member_user
 	end
 
+	#Note: We use find_by_id to avoid exeception being raised in case of empty search result
 	def current_member_user
 		@current_member_user ||= session[:current_user_id] &&
-      		Member.find(session[:current_user_id])
+      		Member.find_by_id(session[:current_user_id])
 	end
 
 	def current_admin_user=(admin_user)

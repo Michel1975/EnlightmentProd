@@ -1,0 +1,57 @@
+  <div class="span5">
+    <%= render :partial => "/merchant/shared/error_messages", :locals => { :obj => @merchant_user} %>
+    <%= form_for [:admin, @merchant_store, @merchant_user], html: { class: "horizontal"} do |f| %>
+      <div class="control-group">
+        <%= f.label :name, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :name, placeholder: "Fulde navn" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast fulde navn inkl. mellemnavne (max. 40 tegn). Mellemnavn kan forkortes eks. Ole K. Jensen", "Fulde navn") %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :role, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :role, placeholder: "Rolle" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast brugerrolle eks. salgsansvarlig, marketing koordinator eller andet", "Rolle") %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :phone, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :phone, placeholder: "Telefon" %>&nbsp;&nbsp;
+          <%= tooltip("Indtast kun danske telefonnumre uden landekode eks. 24600819", "Telefon") %>
+        </div>
+      </div>
+      <%= f.fields_for :user do |merchant_user| %>
+        <div class="control-group">
+          <%= merchant_user.label :email, class: "control-label" %>
+          <div class="controls">
+            <%= merchant_user.text_field :email, placeholder: "Email" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast gyldig email", "Email") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= merchant_user.label :password, class: "control-label" %>
+          <div class="controls">
+            <%= merchant_user.password_field :password, placeholder: "Nyt password" %>&nbsp;&nbsp;
+            <%= tooltip("Indtast nyt password. Husk slå caps lock fra", "Nyt password") %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= merchant_user.label :password_confirmation, class: "control-label" %>
+          <div class="controls">
+            <%= merchant_user.password_field :password_confirmation, placeholder: "Bekræft password" %>&nbsp;&nbsp;
+            <%= tooltip("Gentag nyt password.  Husk slå caps lock fra", "Bekræft password") %>
+          </div>
+        </div>
+      <% end %>
+      <div class="control-group">
+        <div class="controls">
+          <%= button_tag class: "submission btn btn-primary" do %>
+            <i class="icon-edit bigger-110"></i>
+            Gem
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div><!-- /.span5 -->

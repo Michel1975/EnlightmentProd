@@ -50,7 +50,8 @@ class RootController < ApplicationController
     logger.info "Loading Root show_merchant_store action"
     @merchant_store = MerchantStore.find(params[:id])
     logger.debug "Merchant-store - attributes hash: #{@merchant_store.attributes.inspect}"
-    @subscriber = current_member_user && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
+    @subscriber = member_user? && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
+    logger.debug "Subscriber: #{@subscriber.inspect}"
     @subscribed = @subscriber.present? ? true : false
     logger.debug "Subscribed?: #{@subscribed.inspect}"
 	end

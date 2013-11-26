@@ -1,13 +1,13 @@
 class MerchantUser < ActiveRecord::Base
   attr_accessible :name, :role, :phone, :user_attributes
 
-  has_one :user, :as => :sub
+  has_one :user, :as => :sub, dependent: :destroy
   accepts_nested_attributes_for :user
 
   belongs_to :merchant_store
   before_save :convert_phone_standard
 
-  validates :name, :role, :merchant_store_id, presence: true
+  validates :name, :role, presence: true
   validates :phone, presence: true, length: { maximum: 12 }
   validates :admin, :inclusion => { :in => [true, false] }
 

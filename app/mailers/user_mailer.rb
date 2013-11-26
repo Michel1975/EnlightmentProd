@@ -25,6 +25,14 @@ class UserMailer < ActionMailer::Base
           :subject => t(:password_reset, :scope => [:business_messages, :email]) )
       end
   end
-  #handle_asynchronously :reset_password_email
+  
+  #Only for merchant users
+  def welcome_merchant_user(merchant_user)
+    @merchant_user = MerchantUser.find(merchant_user)
+    if @merchant_user.present? 
+        mail(:to => @merchant_user.user.email,
+          :subject => t(:welcome_merchant_user, :scope => [:business_messages, :merchant_user]) )
+    end
+  end
 
 end#end mailer namespace

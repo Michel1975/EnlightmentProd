@@ -117,6 +117,7 @@ EnlightmentProd::Application.routes.draw do
     resources :backend_admins
 
     resources :merchant_stores do
+      resources :merchant_users
       get 'active', :on => :collection
       get 'inactive', :on => :collection 
       get 'search_stores', :on => :collection
@@ -140,7 +141,6 @@ EnlightmentProd::Application.routes.draw do
     get "dashboard" => "dashboards#overview", :as => "dashboard"
     get "message_status" => "message_notifications#index", :as => "message_status"
     get "message_error" => "message_errors#index", :as => "message_error"
-
   end
   
   

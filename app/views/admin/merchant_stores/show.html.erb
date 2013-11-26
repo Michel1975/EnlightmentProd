@@ -127,14 +127,6 @@
           </div>
         </div>
       </div>
-      <%= link_to edit_admin_merchant_store_path(@merchant_store), class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
-        <i class="icon-edit bigger-110"></i>
-        Rediger
-      <% end %>
-      <%= link_to display_store_path(@merchant_store), class: "btn btn-primary btn-small", target: "_new", style: "margin-top:10px" do %>
-        <i class="icon-eye-open bigger-110"></i>
-        Preview
-      <% end %>
     </div><!-- /.span5 -->
     <div class="span7">
       <h4 class="header blue lighter smaller" style="margin-top:5px">
@@ -169,3 +161,55 @@
       <% end %>
     </div><!-- /.span7 -->
   </div><!-- /.row-fluid -->
+
+  <div class="row-fluid">
+    <div class="span5">
+      <%= link_to edit_admin_merchant_store_path(@merchant_store), class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
+        <i class="icon-edit bigger-110"></i>
+        Rediger butik
+      <% end %>
+      <%= link_to display_store_path(@merchant_store), class: "btn btn-primary btn-small", target: "_new", style: "margin-top:10px" do %>
+        <i class="icon-eye-open bigger-110"></i>
+        Preview
+      <% end %>
+    </div><!-- /.span5 -->
+  </div><!-- /.row-fluid -->
+  <% if @merchant_user.present? && !@merchant_user.new_record? %>
+    <div class="row-fluid">
+      <div class="span5">
+         <h4 class="header blue lighter smaller" style="margin-top:5px">
+          Brugerinfo 
+        </h4>
+        <p>Standardbruger er oprettet:</p>
+        <div class="profile-user-info profile-user-info-striped">
+          <div class="profile-info-row">
+            <div class="profile-info-name"> Navn </div>
+            <div class="profile-info-value">
+              <span class="editable editable-click" id="store_name"> <%= @merchant_user.name %> </span>
+            </div>
+          </div>
+        </div><!-- /.profile-user-info -->
+        <div style="text-align:center;">
+          <%= link_to admin_merchant_store_merchant_user_path(@merchant_store, @merchant_user), class: "btn btn-primary btn-small", target: "_new", style: "margin-top:10px" do %>
+            <i class="icon-eye-open bigger-110"></i>
+            Se detaljer
+          <% end %>
+        </div>
+      </div><!-- /.span5 -->
+    </div><!-- /.row-fluid -->
+  <% else %>
+    <h3 class="header blue lighter smaller">
+      <i class="icon-user bigger-110"></i>
+      Brugeroplysninger
+    </h3>
+    <div class="row-fluid">
+      <div class="span5">
+        <p>Opret den første bruger til butikken nu. Brugeren modtager efterfølgende en email med loginoplysninger.</p>
+        <%= link_to new_admin_merchant_store_merchant_user_path(@merchant_store), class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
+          <i class="icon-edit bigger-110"></i>
+          Opret bruger
+        <% end %>
+      </div>
+    </div><!-- /.row-fluid -->
+  <% end %>
+      
