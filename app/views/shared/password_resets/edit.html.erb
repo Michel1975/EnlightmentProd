@@ -8,21 +8,21 @@
   <%= form_for @user, :url => shared_password_reset_path(@user), :html => {:method => :put, class: "reg-page", style: "max-width: 25%"}  do |f| %>
     <div class="controls">
       <div class="field">
-        <%= f.label :email %><br />
+        <%= f.label :email %>
         <div class="input-prepend">
           <span class="add-on"><i class="icon-lock"></i></span>
-         <%= f.text_field :email, placeholder: "Email", class: "span12"  %>   
+            <%= f.text_field :email, placeholder: "Email", class: "span12", readonly: "readonly"  %>   
         </div>
       </div>
       <div class="field">
-        <%= f.label :password%><br />
+        <%= f.label :password%>
         <div class="input-prepend">
           <span class="add-on"><i class="icon-lock"></i></span>
          <%= f.password_field :password, placeholder: "Nyt password", class: "span12" %>   
         </div>
       </div>
       <div class="field">
-        <%= f.label :password_confirmation %><br />
+        <%= f.label :password_confirmation %>
         <div class="input-prepend">
           <span class="add-on"><i class="icon-lock"></i></span>
          <%= f.password_field :password_confirmation, placeholder: "Gentag password", class: "span12" %> 
@@ -38,8 +38,10 @@
       <% end %>
       </div>
     </div><!-- /.controls form-inline -->
-    <hr>
-    <p>Nulstil dit password i felterne foroven. Når du har bekræftet kan du ikke længere anvende dit gamle password.</p>
+    <% if @merchant_user == false %>
+      <hr>
+      <p>Nulstil dit password i felterne foroven. Når du har bekræftet kan du ikke længere anvende dit gamle password.</p>
+    <% end %>
   <% end %>
 </div><!-- /.row-fluid -->
 

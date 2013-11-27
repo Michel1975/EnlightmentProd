@@ -57,6 +57,10 @@ class Admin::MerchantStoresController < Admin::BaseController
 		  	logger.debug "Basic subscription type lookup: #{subscription_type.attributes.inspect}"
 		  	@merchant_store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_type.id)
 		  	logger.debug "Successfully created default basic subscription for store"
+
+		  	#Create default welcome offer
+      		@merchant_store.create_welcome_offer!(description: 'Super', active: true)
+      		logger.debug "Successfully created default welcome offer for store"
 		    format.html { redirect_to [:admin, @merchant_store], :success => t(:store_created, :scope => [:business_validations, :backend, :store]) }
 		  else
 		    logger.debug "Validation errors. Loading new view with errors"
@@ -103,6 +107,20 @@ class Admin::MerchantStoresController < Admin::BaseController
 		if @merchant_user.present?
 			logger.debug "Loading default merchant user for store - attributes: #{@merchant_user.attributes.inspect}"
 		end
+	end
+
+	def destroy
+		logger.info "Loading MerchantStore destroy action"
+		@merchant_store = current_resource
+    	logger.debug "MerchantStore - attributes hash: #{@merchant_store.attributes.inspect}"
+  		@merchant_store.destroy
+  		logger.debug "MerchantStore deleted"
+  		respond_to do |format|
+			format.html { 
+				flash[:success] = t(:store_deleted, :scope => [:business_validations, :backend, :store])
+				redirect_to active_admin_merchant_stores_path
+			}
+  		end	
 	end
 
 	def login_as

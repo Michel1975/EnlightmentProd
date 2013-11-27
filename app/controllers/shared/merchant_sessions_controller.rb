@@ -31,6 +31,7 @@ class Shared::MerchantSessionsController < Shared::BaseController
   	logout
     delete_session_variables
     logger.debug "Merchant session deleted. Redirecting to root_url"
-  	redirect_to root_url, :success => t(:logged_out, :scope => [:business_validations, :session_merchant])
+    flash[:success] = t(:logged_out, :scope => [:business_validations, :session_merchant])
+  	redirect_to root_url
 	end
 end

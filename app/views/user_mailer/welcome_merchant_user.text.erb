@@ -2,14 +2,14 @@ Kære <%= @merchant_user.name %>,
 ===============================================
 Velkommen som ny partnerbutik i Club Novus.
 
-Nedenfor fremgår dine loginoplysninger:
+Klik på linket nedenfor for at logge ind første gang og vælge dit password.
+Første login: <%= link_to @url, @url %>
 
 Email (brugernavn): <%= @merchant_user.user.try(:email) %>
-Password: <%= @merchant_user.user.try(:password) %>
 
-Gå ind på clubnovus.dk og klik på linket "For butikker" i toppen af siden. Klik herefter på knappen "Login på butikskonto".
+Når du valgt password, kan du logge ind på din kundeklub på clubnovus.dk. Klik på linket "For butikker" i toppen af siden og klik på knappen "Login på butikskonto".
 
-Hvis du har spørgsmål kan du kontakte vores supportafdeling.
+Hvis du har spørgsmål skal du være velkommen til at kontakte vores supportafdeling.
 
 Vi ser frem til et spændende samarbejde om at skabe loyale kunder for din butik.
 

@@ -104,10 +104,10 @@ EnlightmentProd::Application.routes.draw do
     get 'logout_merchant',  to: "merchant_sessions#destroy", :as => "logout_merchant"
 
     #BackendAdmin session paths
-    get "login_admin" => "backend_admin_sessions#new", :as => "login_admin"
-    get 'logout_admin',  to: "backend_admin_sessions#destroy", :as => "logout_admin"
+    get "login_novus_admin" => "backend_admin_sessions#new", :as => "login_admin"
+    get 'logout_novus_admin',  to: "backend_admin_sessions#destroy", :as => "logout_admin"
 
-    #old:Password resets routes
+    #Old: Sorcery routes for resetting passwords
     #get "password_resets/create"
     #get "password_resets/edit"
     #get "password_resets/update"

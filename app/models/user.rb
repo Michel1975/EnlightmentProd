@@ -2,6 +2,10 @@ class User < ActiveRecord::Base
 	authenticates_with_sorcery!
 	attr_accessible :email, :password, :password_confirmation, :last_login_at, :last_logout_at, :last_activity_at
 	belongs_to :sub, :polymorphic => true
+
+  #Generate password reet token for new merchant users who need to initialize password
+  before_create :generate_reset_token_merchant_user
+
   #This regXP is used for validating passwords (using look ahead assertions). At least 8 characters with at least one number.
   #http://stackoverflow.com/questions/11992544/validating-password-using-regex
   PASSWORD_REQ = %r{\A(?=.*[a-zA-Z])(?=.*[0-9]).{8,30}\z}
@@ -35,4 +39,13 @@ class User < ActiveRecord::Base
         		errors.add(:password, I18n.t(:invalid_password, :scope => [:business_validations, :user]) )
       		end
     	end
+
+      #Bypass sorcery logic and generate token for merchant users
+      def generate_reset_token_merchant_user
+        begin
+          self.reset_password_token ||= SecureRandom.urlsafe_base64
+        end while User.exists?(reset_password_token: self.reset_password_token)
+        self.remember_me_token_expires_at = Time.zone.now + 30.days
+        self.reset_password_email_sent_at = Time.zone.now
+      end
 end

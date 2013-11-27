@@ -23,7 +23,7 @@ class Admin::MerchantUsersController < Admin::BaseController
         @merchant_store.merchant_users << @merchant_user
     		logger.debug "Merchant user saved successfully: #{@merchant_user.attributes.inspect}"
     		logger.debug "Sending welcome email to store user with login information..."
-    		UserMailer.delay.welcome_merchant_user(@merchant_user.id)
+    		UserMailer.welcome_merchant_user(@merchant_user.id).deliver
     		format.html { 
     			flash[:success] = t(:profile_created, :scope => [:business_validations, :backend, :merchant_user])
     			redirect_to [:admin,  @merchant_store, @merchant_user]

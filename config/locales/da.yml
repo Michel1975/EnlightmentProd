@@ -349,6 +349,7 @@ da:
         warning_deletion_store: Du er ved at deaktivere en butik. Er du sikker?
         store_created: Butik er nu oprettet!
         store_updated: Stamdata på butik er opdateret!
+        store_deleted: Butik og relateret data er nu slettet!
         login_as_success: Du kan nu logge ind på %{store_name} med admin-brugeren admin@clubnovus.dk!
         login_as_error: Der opstod en fejl i opdateringen af standardbrugeren admin@clubnovus.dk til den valgte butik!
         notification_login_as: Du er ved at oprette et login-link for standardbrugeren admin@clubnovus.dk til den valgte butik. Er du sikker?
@@ -380,6 +381,7 @@ da:
     password_reset:
       email_sent: Du vil snarest modtage en email med instruktioner til at nulstille dit password!
       password_reset_confirmation: Dit kodeord er nu nulstillet!
+      password_invalid_request: Linket er ikke længere gyldigt. Nulstil dit password og få tilsendt nyt link!
     campaign:
       campaign_created: Kampagne er oprettet og udføres på det angivne tidspunkt. Check at alle oplysninger er korrekte!
       campaign_deleted: Kampagne er nu slettet!
@@ -399,6 +401,7 @@ da:
       information_updated: Oplysninger er nu opdateret!
     merchant_user:
       profile_updated: Din brugerprofil er nu opdateret!
+      new_password_created: Dit password er nu gemt. Log ind på din profil allerede nu under "For Butikker" i menuen!
     backend_admin:
       profile_updated: Din brugerprofil er nu opdateret!
     offer:

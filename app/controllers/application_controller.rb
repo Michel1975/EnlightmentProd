@@ -140,10 +140,21 @@ class ApplicationController < ActionController::Base
     nil
   end
 
+  #Ensures admin login can only happen from authorized ips
+  def admin_constraint
+    if Rails.env.production?
+      @ips = [ ENV["ADMIN_IP1"], ENV["ADMIN_IP2"] ] 
+      if not @ips.include? request.remote_ip
+        flash[:alert] = t(:not_authorized, :scope => [:business_messages, :security])
+        redirect_to root_url
+      end
+    end
+  end
+
   def authorize
     logger.debug "Into authorize method..."
     #Log authorize
-    logger.debug("Michel-log: Controller:" + params[:controller] + ", Action: " + params[:action])
+    logger.debug("Controller param:" + params[:controller] + ", Action param: " + params[:action])
     if !current_permission.allow?(self.controller_name, params[:action], current_resource)
       if current_user.nil? || current_user.sub_type == "Member"
         redirect_to root_url, alert: t(:not_authorized, :scope => [:business_messages, :security])
@@ -155,10 +166,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
-  protected
-    def current_users_list
-      current_users.map {|u| u.username}.join(", ")
-    end
+  #protected
+    #def current_users_list
+      #current_users.map {|u| u.username}.join(", ")
+    #end
 	
 end#end class
