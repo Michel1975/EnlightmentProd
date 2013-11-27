@@ -29,6 +29,7 @@ test:
 
 production:
   adapter: postgresql
-  host: localhost
-  username: user
-  database: app-dev
+  host: ec2-50-19-244-243.compute-1.amazonaws.com
+  username: d9rbeufoefn28m
+  database: u1qjr6mu4rt1n2
+  port: 5532
