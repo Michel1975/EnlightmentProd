@@ -83,12 +83,10 @@ class Subscriber < ActiveRecord::Base
   end
 
   def eligble_welcome_present?
-  	if self.cancel_date.blank? 
-  		return true
-  	else
-  		#To avoid abuse, there is a 90 days sleep period in which no welcome present is sent.
-  		return (self.start_date.to_date - self.cancel_date.to_date).to_i > 90
-  	end
+    result = self.merchant_store.subscriber_histories.where("created_at >=? AND member_phone=?", (Time.zone.now - 90.days), self.member.try(:phone) )
+    Rails.logger.debug("Resultat fra Eligble_welcome_present: #{result.inspect}")
+    #when this methid is called in signup logic, the subscriber is already created, so at least one history entry exist. This entry is ignored of-course.
+    return result.size <= 1 ? true : false
   end
 
   def opt_out_link

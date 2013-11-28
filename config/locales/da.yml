@@ -316,6 +316,10 @@ da:
       image:
         picture: Billede
         size: Størrelse
+      message_error:
+        error_type: Fejltype
+        recipient: Telefonnr.
+        text: Modtaget tekst
   system:
     gateway_inactive: Det er ikke muligt at administrere sms-kampagner i øjeblikket. Vi arbejder på at løse problemet så hurtigt som muligt!
     monthly_message_limit_broken: SMS-kampagne kan ikke oprettes, da grænsen på %{total_messages} er overskredet!
@@ -533,6 +537,10 @@ da:
     message:
       default: Koden du indtastede matcher ikke billed-koden
       user: Den indtastede kode stemte ikke overens med billed-koden
+  message_error:
+    invalid_keyword: Ugyldig sms-kode
+    invalid_phone_number: Ugyldigt telefonnr.
+    missing_attributes: Manglende data
 
 
     

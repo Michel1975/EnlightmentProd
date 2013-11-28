@@ -2,6 +2,10 @@ class SubscriberHistory < ActiveRecord::Base
 	scope :sign_ups, where(:event_type => 'sign_up')
 	scope :sign_outs, where(:event_type => 'sign_out')
 	attr_accessible :event_type, :member_id
+
+  #Store actual phone to prevent fraud when redeeming welcome present. See also eligble_welcome_present? in Subscriber
+  before_save :save_phone
+
 	validates :event_type, :inclusion => { :in => %w( sign_up sign_out ) }
 	
   	#To-Do: Group by month, når vi installerer postgress på lokal maskine.
@@ -74,4 +78,11 @@ class SubscriberHistory < ActiveRecord::Base
       		end
     	end
   	end
+
+    private
+      #Save the phone number in clear text to ensure correct match based on actual phone number. Member_id is not safe since it might change.
+      def save_phone
+        member = Member.find_by_id(self.member_id)
+        self.member_phone ||= member && member.phone
+      end
 end

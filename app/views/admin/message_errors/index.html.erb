@@ -1,23 +1,53 @@
-<h1>Besked fejl</h1>
-<div class="span11">
-<%= will_paginate @message_errors, class:"paging_bootstrap pagination"%>
-	<table id="sample-table-1" class="table table-striped table-bordered table-hover">
-		<thead>
-			<tr>
-				<th>Afsender</th>
-				<th>SMS-kode</th>
-				<th>Oprettet</th>
-			</tr>
-		</thead>
-		<tbody>
-			<% @message_errors.each do |error| %>
-			<tr>
-				<td> <%= error.recipient %></td>	
-				<td> <%= error.text %></td>
-				<td> <%= error.created_at %></td>
-				<td> <%= error.updated_at %></td>				
-			</tr>
-			<% end %>
-		</tbody>
-	</table>
-</div>
+<% provide(:title, 'Beskedfejl') %>
+<% provide(:description, 'Liste over fejl fra modtagne beskeder fra gateway') %>
+<% content_for :breadcrumps do %>
+  <li class="active">Beskedfejl</li>
+<% end %>
+<h3 class="header blue lighter smaller">
+	<i class="icon-bell bigger-110"></i>
+	Beskedfejl
+</h3>
+<div class="row-fluid">
+	<div class="span12">
+		<%= will_paginate @message_errors, class:"paging_bootstrap pagination"%>
+			<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Afsender</th>
+						<th>SMS-kode</th>
+						<th>Fejltype</th>
+						<th>Oprettet</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @message_errors.each do |error| %>
+					<tr>
+						<td> <%= empty_attribute_info( error.recipient ) %></td>	
+						<td> <%= empty_attribute_info( error.text ) %></td>
+						<td> <%= I18n.t( error.error_type.to_sym, :scope => [:enums, :message_error] ) if error.error_type %></td>
+						<td> <%= I18n.l( error.created_at ) %></td>
+					</tr>
+					<% end %>
+				</tbody>
+			</table>
+	</div><!-- /.span12 -->
+</div><!-- /.row-fluid -->
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

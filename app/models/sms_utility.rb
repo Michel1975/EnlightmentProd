@@ -12,27 +12,30 @@ module SMSUtility
   #This reflects the standard characters for sms messages
   VALID_SMS_MESSAGE = %r{\A[\w\s@?£!1$"#è?¤é%ù&\\()*:Ø+;øÆ,<æ\-=Å.>å\/§\']+\z}
 
-  TOTAL_MESSAGES_MONTH = 5000
-  STORE_TOTAL_MESSAGES_MONTH = 500
+  TOTAL_MESSAGES_MONTH = 100
+  STORE_TOTAL_MESSAGES_MONTH = 50
 
 class SMSFactory
 
   #Primarily used by search functionality
   def self.convert_phone_number(phone_number)
     Rails.logger.info "Into convert_phone_number"
-    Rails.logger.debug "Phone number: #{phone_number.inspect}"
+    Rails.logger.debug "Phone number parameter: #{phone_number.inspect}"
     if validate_phone_number_converted?(phone_number)
       Rails.logger.debug "Phone number already valid. Returning..."
       return phone_number
-    else
-      Rails.logger.debug "Phone not valid. Need to convert"
+    elsif validate_phone_number_incoming?(phone_number)
+      Rails.logger.debug "Valid incoming phone number, but does not yet comply with standard. Need to convert to standard..."
       if phone_number.to_s.size > 8
-        Rails.logger.debug "Phone length larger than 8 characters" 
+        Rails.logger.debug "Phone length larger than 8 characters"
         return phone_number = "+45" + phone_number.sub(/\A(0045|45)/, "").to_s.strip
       else
         Rails.logger.debug "Phone length is up to 8 characters"
         return phone_number = "+45" + phone_number.to_s.strip
       end
+    else
+      Rails.logger.debug "Error: Phone does not match incoming match pattern. Convert aborted!" 
+      Rails.logger.fatal "Error: Phone does not match incoming match pattern. Convert aborted!"
     end
   end
 
@@ -64,8 +67,10 @@ class SMSFactory
     Rails.logger.info "Into validate_message_limits?"
     Rails.logger.debug "Number of messages in this order: #{message_count.inspect}"
     no_total_messages = SMSUtility::TOTAL_MESSAGES_MONTH
-    Rails.logger.debug "Total number of messages sent this month before new message: #{no_total_messages.inspect}"
-    result = (MessageNotification.month_total_messages.count + message_count) <= no_total_messages
+    Rails.logger.debug "Current total monthly message limit for all stores: #{no_total_messages}"
+    no_already_sent_messages = MessageNotification.month_total_messages.count
+    Rails.logger.debug "Total number of messages sent this month before new message: #{no_already_sent_messages.inspect}"
+    result = ( no_already_sent_messages + message_count) <= no_total_messages
     Rails.logger.debug "Result: #{result.inspect}"
     return result
   end
@@ -81,8 +86,8 @@ class SMSFactory
       Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store
       messageContent = prepareMessage('InstantSingleMessage', nil, recipient, message, merchant_store) 
       Rails.logger.debug "Message payload prepared for gateway: #{messageContent.inspect}"
-      #result = sendMessage?('push', messageContent) 
-      #Rails.logger.debug "Message transmission result: #{result.inspect}" 
+      result = sendMessage?('push', messageContent) 
+      Rails.logger.debug "Message transmission result: #{result.inspect}" 
       return true 
     else
       Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
@@ -101,8 +106,8 @@ class SMSFactory
       Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store
       messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, merchant_store) 
       Rails.logger.debug "Message payload prepared for gateway: #{messageContent.inspect}"   
-      #result = sendMessage?('push', messageContent)  
-      #Rails.logger.debug "Message transmission result: #{result.inspect}" 
+      result = sendMessage?('push', messageContent)  
+      Rails.logger.debug "Message transmission result: #{result.inspect}" 
       return true 
     else
       Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
@@ -120,8 +125,8 @@ class SMSFactory
       Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store
       messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
       Rails.logger.debug "Campaign payload prepared for gateway: #{messageContent.inspect}"
-      #result = sendMessage?('push_scheduled', messageContent) 
-      #Rails.logger.debug "Message transmission result: #{result.inspect}"
+      result = sendMessage?('push_scheduled', messageContent) 
+      Rails.logger.debug "Message transmission result: #{result.inspect}"
       return true
     else
       Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
@@ -134,8 +139,8 @@ class SMSFactory
     Rails.logger.debug "Campaign parameter: #{campaign.attributes.inspect}"
     messageContent = prepareMessage('RescheduleCampaign', campaign, nil, nil, nil)
     Rails.logger.debug "Campaign reschedule payload prepared for gateway: #{messageContent.inspect}"
-    #result = sendMessage?('reschedule_group', messageContent) 
-    #Rails.logger.debug "Message transmission result: #{result.inspect}"
+    result = sendMessage?('reschedule_group', messageContent) 
+    Rails.logger.debug "Message transmission result: #{result.inspect}"
     return true
   end
 
@@ -144,8 +149,8 @@ class SMSFactory
     Rails.logger.debug "Campaign parameter: #{campaign.attributes.inspect}"
     messageContent = prepareMessage('CancelCampaign', campaign, nil, nil, nil)
     Rails.logger.debug "Campaign cancel payload prepared for gateway: #{messageContent.inspect}"
-    #result = sendMessage?('cancel_group', messageContent)
-    #Rails.logger.debug "Message transmission result: #{result.inspect}"
+    result = sendMessage?('cancel_group', messageContent)
+    Rails.logger.debug "Message transmission result: #{result.inspect}"
     return true
   end  
 
@@ -221,6 +226,7 @@ end
   def self.sendMessage?(method, messageContent)
     @gateway_status = ENV['SMS_GATEWAY_ACTIVE']
     if @gateway_status == true
+      Rails.logger.info "Gateway active. Proceeding with sending message..."
       Rails.logger.info "Into sendMessage?"
       #wsdl_file = "http://sdk.ecmr.biz/src/gateway.asmx?wsdl"  
       wsdl_file = File.read(Rails.root.join("config/wsdl/CIMMobil_ssl.xml"))
@@ -234,6 +240,7 @@ end
       Rails.logger.debug "Transmission result: #{result.inspect}" 
       return result 
     else
+      Rails.logger.debug "Gateway NOT active. Message NOT sent"
       return false
     end 
   end
@@ -242,11 +249,12 @@ end
   #This method is invoked once for each recipient in campaign or for single message.
   def self.register_message_notification(campaign, recipient, merchant_store, default_status_code, source)
     Rails.logger.info "Into register_message_notification"
+    Rails.logger.debug "Generate message id"
     #Generate safe message-id
     begin
         message_id = SecureRandom.urlsafe_base64
     end while MessageNotification.exists?(message_id: message_id)
-    Rails.logger.debug "Message-id: #{message_id.inspect}"
+    Rails.logger.debug "Message-id generated: #{message_id.inspect}"
     
     if campaign && source == 'campaign'
       Rails.logger.debug "Notification type: Campaign"

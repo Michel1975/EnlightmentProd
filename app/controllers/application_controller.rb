@@ -70,7 +70,7 @@ class ApplicationController < ActionController::Base
     
     sign_up_status = false
     #Check if subscriber record already exists for specific merchant_store
-    subscriber = merchant_store.subscribers.find_by_member_id(@member.id)
+    subscriber = merchant_store.subscribers.find_by_member_id(member.id)
     if subscriber.nil?
       #Create new subscriber record
       if subscriber = merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
@@ -128,7 +128,6 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
 
   #Permission methods
   def current_permission

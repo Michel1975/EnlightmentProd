@@ -1,6 +1,7 @@
 #encoding: utf-8
 class Merchant::SmsHandlerController < Merchant::BaseController
 	skip_before_filter :require_login
+	skip_before_filter :authorize
 	skip_before_filter :merchant_user
 
 	#Receiving callback messages from gateway for outbound messages
@@ -15,16 +16,20 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 				logger.debug "Received raw status-code: #{status_code_text.inspect}"
 				status_code = StatusCode.find_by_name(status_code_text)
 				if status_code
-					logger.debug "Match with existing status-code: #{status_code.attributes.inspect}"
+					logger.debug "Match OK with existing status-code: #{status_code.attributes.inspect}"
 					notification.status_code = status_code
 				else
 					logger.debug "Status code unknown. Inserting default status code = 999"
-					#Default fejl-kode indtil videre. Vi skal nok inddrage hele listen på et tidspunkt, så vi har alle data.
+					#Default status code is used. Custom code 999 is used for messages which not could be sent
 					notification.status_code = StatusCode.find_by_name("999")
 					logger.debug "Default status code attributes hash: #{notification.status_code.inspect}"
 				end
-				notification.save!
-				logger.debug "Notification saved successfully: #{notification.attributes.inspect}"
+				if notification.save
+					logger.info "Notification saved successfully: #{notification.attributes.inspect}"
+				else
+					logger.fatal "Error: Notification NOT saved due to unknown errors"
+					logger.debug "Error: Notification NOT saved due to unknown errors"
+				end
 			end
 		end
 		#Default response with OK status
@@ -43,18 +48,34 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  		#Regel: Vi tillader forskelige formater når de kommer direkte fra gatewayen. Senere laves de om
  		#i klasse-metoden for member så alle telefonnummer er med +45. Det er vigtigt at alle telefonnumre
  		#er fuldstændig ens i databasen.
- 		if text.present? && sender.present? && SMSUtility::SMSFactory.validate_phone_number_incoming?(sender) #/\A(45|\+45|0045)?[1-9][0-9]{7}\z/.match(sender)
- 			logger.debug "Sender number and text present. Phone number is valid"
- 			logger.debug "Trying to determine type of message: opt-in or opt-out"
- 			if text.downcase.include? "stop"
- 				logger.debug "Opt-out request received. Calling stopStoreSubscription method"
- 				stopStoreSubscription(sender, text)
- 			else
- 				logger.debug "Opt-in request received. Calling signupMember method"
- 				signupMember(sender, text)	
- 			end
+ 		if text.present? && sender.present? 
+ 			logger.debug "Sender number and text present. Proceeding...."
+ 			text = text.downcase
+ 			logger.debug "Text message downcased: #{text.inspect}"
+ 			sender = sender.strip
+ 			logger.debug "Sender stripped for whitespaces: #{sender.inspect}"
+
+ 			logger.debug "Checking if incoming phone number is valid"
+ 			if SMSUtility::SMSFactory.validate_phone_number_incoming?(sender) #/\A(45|\+45|0045)?[1-9][0-9]{7}\z/.match(sender)
+	 			logger.debug "Incoming phone number valid"
+
+	 			logger.debug "Trying to determine type of message: opt-in or opt-out"
+	 			if text.downcase.include? "stop"
+	 				logger.debug "Opt-out request received. Calling stopStoreSubscription method"
+	 				stopStoreSubscription(sender, text)
+	 			else
+	 				logger.debug "Opt-in request received. Calling signupMember method"
+	 				signupMember(sender, text)	
+	 			end
+	 		else
+	 			logger.fatal "Error: Incoming phone number not valid"
+	 			logger.debug "Error: Incoming phone number not valid"
+	 			MessageError.create!(recipient: sender, text: text, error_type: "invalid_phone_number")
+	 		end
  		else
- 			#To-Do: Log invalid phone number
+ 			logger.fatal "Error: Missing phone number or text"
+	 		logger.debug "Error: Missing phone number or text"
+ 			MessageError.create!(recipient: sender, text: text, error_type: "missing_attributes")
  			#Default response with OK status
     		render :nothing => true, :status => :ok 
  		end	
@@ -63,7 +84,9 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  	def signupMember(sender, text)
  		logger.info "Loading sms_handler signupMember"
  		keyword = text.gsub(/\s+/, "")
- 		logger.debug "Keyword received: #{keyword.inspect}"
+ 		logger.debug "Keyword parameter received...removed whitespaces: #{keyword.inspect}"
+ 		logger.debug "Sender parameter received: #{sender.inspect}"
+ 		
  		#Determine if member already exists in database. First, incoming phone is standardized with +45 notation.
  		converted_phone_number = SMSUtility::SMSFactory.convert_phone_number(sender)
  		logger.debug "Converted phone number: #{converted_phone_number.inspect}"
@@ -81,21 +104,21 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			end
  		end
 
- 		if member
- 			merchant_store = MerchantStore.find_by_sms_keyword(keyword)
+ 		if member.present?
+ 			merchant_store = MerchantStore.active.find_by_sms_keyword(keyword)
  			if merchant_store.present?
- 				logger.debug "Merchant-store look-up: #{merchant_store.attributes.inspect}"
+ 				logger.debug "Merchant-store found: #{merchant_store.attributes.inspect}"
  				logger.debug "Calling processSignup method..."
  				#Make call to base_controller method for detailed signup
  				processSignup(member, merchant_store, "store")
  			else
- 				logger.debug "Merchant-store not found from received keyword"
- 				logger.fatal "Merchant-store not found from received keyword"
+ 				logger.debug "Error: Merchant-store NOT found from received keyword"
+ 				logger.fatal "Error: Merchant-store NOT found from received keyword"
+ 				
  				#Log all keywords that doesn't match stores
- 				message_error = MessageError.create!(recipient: sender, name: keyword)
+ 				message_error = MessageError.create!(recipient: sender, name: keyword, error_type: "invalid_keyword")
  				logger.debug "Message error entry created: #{message_error.inspect}"
- 				#Her skal vi overveje om vi udsender sms'er. Vi kan evt. tælle fejl pr. telefonnummer og blokere ved for mange fejl
- 				#SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:store_not_found_error, keyword: keyword, :scope => [:business_messages, :store_signup]), member.phone )
+ 				#We don't respond to sms gateway with errors - for now - save money :-)
  			end
  		end
  		render :nothing => true, :status => :ok
@@ -106,18 +129,20 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  		logger.info "Loading sms_handler stopStoreSubscription"
  		logger.debug "Trying to find existing member in database from phone number"
  		member = Member.find_by_phone(sender)
- 		if member 	
+ 		if member.present?
  			logger.debug "Member found in database: #{member.attributes.inspect}"		
  			keyword = text.gsub('stop', '').gsub(/\s+/, "").downcase
- 			logger.debug "Keyword: #{keyword.inspect}"
+ 			logger.debug "Keyword after downcase and remove whitespace: #{keyword.inspect}"
+ 			
  			logger.debug "Trying to find merchantstore in database from keyword"
  			merchantStore = MerchantStore.find_by_sms_keyword(keyword)
- 			if merchantStore
+ 			if merchantStore.present?
  				logger.debug "Merchant-store found in database: #{merchantStore.attributes.inspect}"
  				logger.debug "Trying to find subscriber record in database from keyword"
  				subscriber = merchantStore.subscribers.find_by_member_id(member.id)
- 				logger.debug "Subscriber record found"
  				if subscriber && subscriber.destroy 
+ 					logger.debug "Subscriber record found. Proceeding with deletion of membership..."
+
  					logger.debug "Subscriber record deleted. Sending message notification to user"
  					if SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone, merchantStore)
  						logger.debug "Confirmation message sent to member about opt-out"
@@ -133,8 +158,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  				logger.debug "Merchant-store not found from received keyword"
  				logger.fatal "Merchant-store not found from received keyword"
  				#Log all keywords that doesn't match stores
- 				message_error = MessageError.create!(recipient: sender, name: keyword)
- 				logger.debug "Message error entry created: #{message_error.inspect}"	
+ 				MessageError.create(recipient: sender, text: keyword, error_type: "invalid_keyword")
  			end
  		end
  		#Default response with OK status

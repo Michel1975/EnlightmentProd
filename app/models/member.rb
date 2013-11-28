@@ -71,7 +71,9 @@ class Member < ActiveRecord::Base
 
   private
     def name_convert
-      self.name = self.first_name + " " + self.last_name
+      if self.first_name && self.last_name
+        self.name = self.first_name + " " + self.last_name
+      end
     end
 
     #Updates status to true when member completes his profile on web
