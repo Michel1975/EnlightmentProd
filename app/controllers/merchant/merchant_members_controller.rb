@@ -32,8 +32,8 @@ class Merchant::MerchantMembersController < Merchant::BaseController
 		else
 			logger.debug "Member is not a subscriber. New subscriber record must be created"
 			logger.debug "Calling process-signup method"
-			#Make call to base_controller class
-			processSignup(@member, current_merchant_store, "store")
+			#Make call to signup logic
+			SMSUtility::BackgroundWorker.new.processSignup(@member, current_merchant_store, "store")
 			flash[:success] = t(:member_added, :scope => [:business_validations, :merchant_member])
 			redirect_to merchant_subscribers_path
 		end

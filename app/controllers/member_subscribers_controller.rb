@@ -11,8 +11,8 @@ class MemberSubscribersController < ApplicationController
     if @member && @merchant_store
       @subscriber = @merchant_store.subscribers.find_by_member_id(@member.id)
       if @subscriber.nil? 
-        logger.debug "Calling processSignup method"
-        processSignup(@member, @merchant_store, "web")
+        logger.debug "Calling processSignup method in synched mode"
+        SMSUtility::BackgroundWorker.new.processSignup(@member, @merchant_store, "web")
       end
     end
 

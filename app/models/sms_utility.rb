@@ -300,5 +300,173 @@ end
 
 end#End class
 
+#Invoked using delayed jobs. Can also be called in synched mode.
+class BackgroundWorker
+  def processSignup(member, merchant_store, origin)
+    Rails.logger.info "Loading processSignup method"
+    Rails.logger.debug "Member parameter: #{member.attributes.inspect}" if member.present?
+    Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store.present?
+    Rails.logger.debug "Origin parameter: #{origin.inspect}" 
+    
+    sign_up_status = false
+    #Check if subscriber record already exists for specific merchant_store
+    subscriber = merchant_store.subscribers.find_by_member_id(member.id)
+    if subscriber.nil?
+      #Create new subscriber record
+      if subscriber = merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
+        Rails.logger.debug "Subscriber does not exist. New subscriber created: #{subscriber.attributes.inspect}"
+        sign_up_status = true 
+      end
+    elsif subscriber && origin == "store"
+       #We only send sms for incorrect signups in stores - not on web since validation message is shown directly in interface
+      result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+      Rails.logger.debug "Notification message sent successfully in SMS Gateway" if result 
+    end
+
+    if sign_up_status
+      Rails.logger.debug "Proceeding to next step: Send welcome message (email, sms) to member if eligble"
+      if subscriber.eligble_welcome_present? 
+        Rails.logger.debug "Subscriber is eligble for welcome present"
+        if origin == "store"
+          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+          Rails.logger.debug "Sending SMS welcome message with notice about present to member"
+          #Send welcome message with notice about welcome present 
+          result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+          Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result
+        else
+          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+          Rails.logger.debug "Sending one e-mail with welcome message and present to member"
+          #Send welcome e-mail with welcomepresent
+          MemberMailer.delay.web_sign_up_present(member.id, merchant_store.id)
+        end
+
+        #Send welcome present if active for particular merchant - default is active.
+        welcome_offer = merchant_store.welcome_offer
+        if welcome_offer.active
+          Rails.logger.debug "Welcome offer is active for merchant-store"
+          if origin == "store"
+            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+            Rails.logger.debug "Sending SMS message with welcome present"
+            result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.message, member.phone, merchant_store )
+            Rails.logger.debug "Welcome present sent successfully in SMS Gateway" if result
+          end
+        end
+      else
+        Rails.logger.debug "Subscriber NOT eligble for welcome present"
+        if origin == "store"
+          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+          Rails.logger.debug "Sending SMS message with welcome message without present"
+          #Send normal welcome message without notes about welcome present
+          result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+          Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result 
+        else
+          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+          Rails.logger.debug "Sending email with welcome message but no present"
+          #Send welcome e-mail without welcomepresent
+          MemberMailer.delay.web_sign_up(member.id, merchant_store.id)
+        end
+      end
+    end
+  end
+
+  #Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
+  def stopStoreSubscription(sender, text)
+    Rails.logger.info "Loading sms_handler stopStoreSubscription"
+
+    #Determine if member already exists in database. First, incoming phone is standardized with +45 notation.
+    converted_phone_number = SMSUtility::SMSFactory.convert_phone_number(sender)
+    Rails.logger.debug "Converted phone number: #{converted_phone_number.inspect}"
+    Rails.logger.debug "Trying to find existing member in database from phone number"
+    member = Member.find_by_phone(converted_phone_number)
+    if member.present?
+      Rails.logger.debug "Member found in database: #{member.attributes.inspect}"   
+      keyword = text.gsub('stop', '').gsub(/\s+/, "").downcase
+      Rails.logger.debug "Keyword after downcase and remove whitespace: #{keyword.inspect}"
+      
+      Rails.logger.debug "Trying to find merchantstore in database from keyword"
+      merchantStore = MerchantStore.find_by_sms_keyword(keyword)
+      if merchantStore.present?
+        Rails.logger.debug "Merchant-store found in database: #{merchantStore.attributes.inspect}"
+        Rails.logger.debug "Trying to find subscriber record in database from keyword"
+        subscriber = merchantStore.subscribers.find_by_member_id(member.id)
+        if subscriber && subscriber.destroy 
+          Rails.logger.debug "Subscriber record found. Proceeding with deletion of membership..."
+
+          Rails.logger.debug "Subscriber record deleted. Sending message notification to user"
+          if SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone, merchantStore)
+            Rails.logger.debug "Confirmation message sent to member about opt-out"
+            Rails.logger.debug "Analyzing if member should be deleted too..in case of no subscribers and pure store-profile"
+            if member.subscribers.empty? && !member.complete
+              Rails.logger.debug "Member has no subscribers and is a pure store-only profile..,go ahead and delete"
+              if member.destroy
+                Rails.logger.debug "Member deleted successfully"
+              end
+            end
+          else
+            Rails.logger.debug "Error when sending confirmation message sent to member about opt-out"
+            Rails.logger.fatal "Error when sending confirmation message sent to member about opt-out"
+          end
+        else
+          Rails.logger.debug "Subscriber not found. Could not destroy record."  
+          Rails.logger.fatal "Subscriber not found. Could not destroy record."
+        end
+      else
+        Rails.logger.debug "Merchant-store not found from received keyword"
+        Rails.logger.fatal "Merchant-store not found from received keyword"
+        #Log all keywords that doesn't match stores
+        MessageError.create(recipient: sender, text: keyword, error_type: "invalid_keyword")
+      end
+    else
+      Rails.logger.debug "Member NOT found from phone number"
+      Rails.logger.fatal "Member NOT found from phone number" 
+    end
+    #Default response with OK status
+      #render :nothing => true, :status => :ok    
+  end#end stopsubscription
+
+  def signupMember(sender, text)
+    Rails.logger.info "Loading sms_handler signupMember"
+    keyword = text.gsub(/\s+/, "")
+    Rails.logger.debug "Keyword parameter received...removed whitespaces: #{keyword.inspect}"
+    Rails.logger.debug "Sender parameter received: #{sender.inspect}"
+    
+    #Determine if member already exists in database. First, incoming phone is standardized with +45 notation.
+    converted_phone_number = SMSUtility::SMSFactory.convert_phone_number(sender)
+    Rails.logger.debug "Converted phone number: #{converted_phone_number.inspect}"
+    Rails.logger.debug "Trying to find existing member in database from phone number"
+    member = Member.find_by_phone(converted_phone_number)     
+    if member.nil?
+      Rails.logger.debug "Member does NOT exist in database. New member is created"
+      member = Member.new(phone: converted_phone_number, origin: 'store')
+      member.validation_mode = 'store'
+      if member.save
+        Rails.logger.debug "New member saved successfully: #{member.attributes.inspect}"
+      else
+        Rails.logger.debug "Error when saving new member created in-store"
+        Rails.logger.fatal "Error when saving new member created in-store"  
+      end
+    end
+
+    if member.present?
+      merchant_store = MerchantStore.active.find_by_sms_keyword(keyword)
+      if merchant_store.present?
+        Rails.logger.debug "Merchant-store found: #{merchant_store.attributes.inspect}"
+        Rails.logger.debug "Calling processSignup method..."
+        #Make call to base_controller method for detailed signup
+        processSignup(member, merchant_store, "store")
+      else
+        Rails.logger.debug "Error: Merchant-store NOT found from received keyword"
+        Rails.logger.fatal "Error: Merchant-store NOT found from received keyword"
+        
+        #Log all keywords that doesn't match stores
+        message_error = MessageError.create!(recipient: sender, name: keyword, error_type: "invalid_keyword")
+        Rails.logger.debug "Message error entry created: #{message_error.inspect}"
+        #We don't respond to sms gateway with errors - for now - save money :-)
+      end
+    end
+    #invalid: render :nothing => true, :status => :ok
+  end
+end#end background worker class
+
 end#end module
 

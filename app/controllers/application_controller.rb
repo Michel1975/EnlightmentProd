@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
       logger.debug "Could not log events correctly. Missing attributes"
     end
   end
-
+=begin moved to smsutility for better usage in worker threads
   #Detailed logic for sign-up - used by several controllers
   #To-Do: For completed profiles or web profiles, we send e-mails instead of sms if signed up on web
   #If signed up in store, we always send sms to member - more logic and analysis is needed for this.
@@ -128,6 +128,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+=end
 
   #Permission methods
   def current_permission

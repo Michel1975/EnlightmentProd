@@ -62,10 +62,12 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 	 			logger.debug "Trying to determine type of message: opt-in or opt-out"
 	 			if text.downcase.include? "stop"
 	 				logger.debug "Opt-out request received. Calling stopStoreSubscription method"
-	 				stopStoreSubscription(sender, text)
+	 				#stopStoreSubscription(sender, text)
+	 				SMSUtility::BackgroundWorker.new.delay.stopStoreSubscription(sender, text)
 	 			else
 	 				logger.debug "Opt-in request received. Calling signupMember method"
-	 				signupMember(sender, text)	
+	 				SMSUtility::BackgroundWorker.new.delay.signupMember(sender, text)	
+	 				#signupMember(sender, text)	
 	 			end
 	 		else
 	 			logger.fatal "Error: Incoming phone number not valid"
@@ -77,10 +79,12 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 	 		logger.debug "Error: Missing phone number or text"
  			MessageError.create!(recipient: sender, text: text, error_type: "missing_attributes")
  			#Default response with OK status
-    		render :nothing => true, :status => :ok 
- 		end	
+ 		end
+ 		#Return this no matter what
+ 		render :nothing => true, :status => :ok 	
  	end
 
+=begin moved to smsutility for better usage in worker threads
  	protected
 
  	def signupMember(sender, text)
@@ -123,7 +127,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  				#We don't respond to sms gateway with errors - for now - save money :-)
  			end
  		end
- 		#render :nothing => true, :status => :ok
+ 		#invalid: render :nothing => true, :status => :ok
  	end
 
  	#Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
@@ -178,6 +182,8 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  			logger.fatal "Member NOT found from phone number"	
  		end
  		#Default response with OK status
-    	#render :nothing => true, :status => :ok		
- 	end
-end
+    	#invalid: render :nothing => true, :status => :ok		
+ 	end#end stopsubscription
+=end
+
+end#end controller class
