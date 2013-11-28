@@ -216,6 +216,7 @@ class MemberUsersController < ApplicationController
     @member = current_resource
     logger.debug "Member attributes hash: #{@member.attributes.inspect}" 
     if @member.update_attributes(params[:member])
+        #Complete status is set in member class automatically
         logger.debug "Member saved and updated successfully - attributes hash: #{@member.attributes.inspect}" 
         flash[:success] = t(:success, :scope => [:business_messages, :web_profile])
         #Overvej at linke direkte til butikken efter profilen er færdig oprettet.

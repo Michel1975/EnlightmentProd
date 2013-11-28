@@ -22,6 +22,7 @@ class WelcomeOffer < ActiveRecord::Base
     if self.description.present?
       if self.description.length > text_limit
         result = false
+      end
     end
     return result
   end
