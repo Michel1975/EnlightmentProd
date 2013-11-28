@@ -246,7 +246,7 @@ end
   
   def self.sendMessage?(method, messageContent)
     @gateway_status = ENV['SMS_GATEWAY_ACTIVE']
-    if @gateway_status == true
+    if @gateway_status == 'true'
       Rails.logger.info "Gateway active. Proceeding with sending message..."
       Rails.logger.info "Into sendMessage?"
       #wsdl_file = "http://sdk.ecmr.biz/src/gateway.asmx?wsdl"  
