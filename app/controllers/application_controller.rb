@@ -1,9 +1,8 @@
 #encoding: utf-8
 class ApplicationController < ActionController::Base
   include SimpleCaptcha::ControllerHelpers
-  
-	before_filter :require_login
-  before_filter :authorize
+	before_filter :require_login, :except => [:processSignup]
+  before_filter :authorize, :except => [:processSignup]
 
   #Security measures
   delegate :allow?, to: :current_permission

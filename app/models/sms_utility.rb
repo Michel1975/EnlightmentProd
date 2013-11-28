@@ -220,7 +220,7 @@ end
   
   def self.sendMessage?(method, messageContent)
     @gateway_status = ENV['SMS_GATEWAY_ACTIVE']
-    if @gateway_status = true
+    if @gateway_status == true
       Rails.logger.info "Into sendMessage?"
       #wsdl_file = "http://sdk.ecmr.biz/src/gateway.asmx?wsdl"  
       wsdl_file = File.read(Rails.root.join("config/wsdl/CIMMobil_ssl.xml"))

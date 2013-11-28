@@ -67,7 +67,7 @@ class MerchantStore < ActiveRecord::Base
   def self.search(city, store_name)
     if city !="" && store_name !=""
       where("city ILIKE ? AND store_name ILIKE ? AND active = true", "%#{city.downcase}%", "%#{store_name.downcase}%")
-    elsif city !="" && store_name = ""
+    elsif city !="" && store_name == ""
       where('city ILIKE ? AND active = true', "%#{city.downcase}%")
     end
   end
