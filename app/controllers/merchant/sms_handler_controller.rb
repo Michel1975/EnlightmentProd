@@ -81,6 +81,8 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  		end	
  	end
 
+ 	protected
+
  	def signupMember(sender, text)
  		logger.info "Loading sms_handler signupMember"
  		keyword = text.gsub(/\s+/, "")
@@ -121,7 +123,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  				#We don't respond to sms gateway with errors - for now - save money :-)
  			end
  		end
- 		render :nothing => true, :status => :ok
+ 		#render :nothing => true, :status => :ok
  	end
 
  	#Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
@@ -167,8 +169,11 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  				#Log all keywords that doesn't match stores
  				MessageError.create(recipient: sender, text: keyword, error_type: "invalid_keyword")
  			end
+ 		else
+ 			logger.debug "Member NOT found from phone number"
+ 			logger.fatal "Member NOT found from phone number"	
  		end
  		#Default response with OK status
-    	render :nothing => true, :status => :ok		
+    	#render :nothing => true, :status => :ok		
  	end
 end
