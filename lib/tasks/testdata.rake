@@ -168,7 +168,7 @@ namespace :db do
       end 
 
       #Create welcome offer
-      store.create_welcome_offer!(description: Faker::Lorem.words(10), active: true)
+      store.create_welcome_offer!(description: 'Kære medlem, \nDu har vundet en kasse Kinder-Æg.', active: true)
        
 
     end#end loop
