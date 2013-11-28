@@ -153,7 +153,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  					if SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( t(:success, store_name: merchantStore.store_name, :scope => [:business_messages, :opt_out] ), member.phone, merchantStore)
  						logger.debug "Confirmation message sent to member about opt-out"
  						logger.debug "Analyzing if member should be deleted too..in case of no subscribers and pure store-profile"
- 						if member.subscribers.empty? && !member.subscribers.complete
+ 						if member.subscribers.empty? && !member.complete
  							logger.debug "Member has no subscribers and is a pure store-only profile..,go ahead and delete"
  							if member.destroy
  								logger.debug "Member deleted successfully"
