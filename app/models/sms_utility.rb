@@ -107,8 +107,13 @@ class SMSFactory
       messageContent = prepareMessage('InstantSingleAdminMessage', nil, recipient, message, merchant_store) 
       Rails.logger.debug "Message payload prepared for gateway: #{messageContent.inspect}"   
       result = sendMessage?('push', messageContent)  
-      Rails.logger.debug "Message transmission result: #{result.inspect}" 
-      return true 
+      if result
+        Rails.logger.debug "Message sent - transmission result: #{result.inspect}"
+        return true 
+      else
+        Rails.logger.fatal "Error: Message not sent due to unknown reasons"
+        return false
+      end
     else
       Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
       Rails.logger.fatal "Total Message limit broken. Message CANNOT be sent"
@@ -126,11 +131,17 @@ class SMSFactory
       messageContent = prepareMessage('CreateCampaignScheduled', campaign, nil, nil, merchant_store)
       Rails.logger.debug "Campaign payload prepared for gateway: #{messageContent.inspect}"
       result = sendMessage?('push_scheduled', messageContent) 
-      Rails.logger.debug "Message transmission result: #{result.inspect}"
-      return true
+      if result
+        Rails.logger.debug "Message sent - transmission result: #{result.inspect}"
+        return true 
+      else
+        Rails.logger.fatal "Error: Message not sent due to unknown reasons"
+        return false
+      end
     else
       Rails.logger.debug "Total Message limit broken. Message CANNOT be sent"
       Rails.logger.fatal "Total Message limit broken. Message CANNOT be sent"
+      return false
     end
   end
 
@@ -140,8 +151,13 @@ class SMSFactory
     messageContent = prepareMessage('RescheduleCampaign', campaign, nil, nil, nil)
     Rails.logger.debug "Campaign reschedule payload prepared for gateway: #{messageContent.inspect}"
     result = sendMessage?('reschedule_group', messageContent) 
-    Rails.logger.debug "Message transmission result: #{result.inspect}"
-    return true
+    if result
+        Rails.logger.debug "Message sent - transmission result: #{result.inspect}"
+        return true 
+    else
+      Rails.logger.fatal "Error: Message not sent due to unknown reasons"
+      return false
+    end
   end
 
   def self.cancelScheduledOfferReminder?(campaign)
@@ -150,8 +166,13 @@ class SMSFactory
     messageContent = prepareMessage('CancelCampaign', campaign, nil, nil, nil)
     Rails.logger.debug "Campaign cancel payload prepared for gateway: #{messageContent.inspect}"
     result = sendMessage?('cancel_group', messageContent)
-    Rails.logger.debug "Message transmission result: #{result.inspect}"
-    return true
+    if result
+        Rails.logger.debug "Message sent - transmission result: #{result.inspect}"
+        return true 
+    else
+      Rails.logger.fatal "Error: Message not sent due to unknown reasons"
+      return false
+    end
   end  
 
   private
