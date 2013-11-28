@@ -129,8 +129,12 @@ class Merchant::SmsHandlerController < Merchant::BaseController
  	#Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
  	def stopStoreSubscription(sender, text)
  		logger.info "Loading sms_handler stopStoreSubscription"
+
+ 		#Determine if member already exists in database. First, incoming phone is standardized with +45 notation.
+ 		converted_phone_number = SMSUtility::SMSFactory.convert_phone_number(sender)
+ 		logger.debug "Converted phone number: #{converted_phone_number.inspect}"
  		logger.debug "Trying to find existing member in database from phone number"
- 		member = Member.find_by_phone(sender)
+ 		member = Member.find_by_phone(converted_phone_number)
  		if member.present?
  			logger.debug "Member found in database: #{member.attributes.inspect}"		
  			keyword = text.gsub('stop', '').gsub(/\s+/, "").downcase
