@@ -423,7 +423,7 @@ class BackgroundWorker
     #Default response with OK status
       #render :nothing => true, :status => :ok    
   end#end stopsubscription
-
+ 
   def signupMember(sender, text)
     Rails.logger.info "Loading sms_handler signupMember"
     keyword = text.gsub(/\s+/, "")
@@ -459,7 +459,7 @@ class BackgroundWorker
         Rails.logger.fatal "Error: Merchant-store NOT found from received keyword"
         
         #Log all keywords that doesn't match stores
-        message_error = MessageError.create!(recipient: sender, name: keyword, error_type: "invalid_keyword")
+        message_error = MessageError.create!(recipient: sender, text: keyword, error_type: "invalid_keyword")
         Rails.logger.debug "Message error entry created: #{message_error.inspect}"
         #We don't respond to sms gateway with errors - for now - save money :-)
       end
