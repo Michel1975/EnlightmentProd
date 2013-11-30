@@ -531,16 +531,17 @@ da:
       campaign-edited: Kampagne opdateret
       campaign-cancelled: Kampagne annulleret
       campaign-finished: Kampagne afsluttet
+    message_error:
+      invalid_keyword: Ugyldig sms-kode
+      invalid_phone_number: Ugyldigt telefonnr.
+      missing_attributes: Manglende data
   simple_captcha:
-    placeholder: Indtast tal
+    placeholder: Indtast tal 
     label: Indtast tal
     message:
       default: Koden du indtastede matcher ikke billed-koden
       user: Den indtastede kode stemte ikke overens med billed-koden
-  message_error:
-    invalid_keyword: Ugyldig sms-kode
-    invalid_phone_number: Ugyldigt telefonnr.
-    missing_attributes: Manglende data
+  
 
 
     
