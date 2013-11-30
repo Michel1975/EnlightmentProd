@@ -302,7 +302,7 @@ end#End class
 
 #Invoked using delayed jobs. Can also be called in synched mode.
 class BackgroundWorker
-  def processSignup(member, merchant_store, origin)
+  def processSignup(member, merchant_store, origin) 
     Rails.logger.info "Loading processSignup method"
     Rails.logger.debug "Member parameter: #{member.attributes.inspect}" if member.present?
     Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store.present?

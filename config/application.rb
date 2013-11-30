@@ -1,5 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
+#Gem to handle rss parsing of blog entries from wordpress - http://railscasts.com/episodes/168-feed-parsing
+#require 'feedzirra'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
