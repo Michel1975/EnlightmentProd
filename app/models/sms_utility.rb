@@ -257,9 +257,10 @@ end
       client = Savon.client(  env_namespace: :soap, wsdl: wsdl_file, raise_errors: true, ssl_verify_mode: :none, 
                     pretty_print_xml: true, namespaces: { "xmlns:myb" => "http://myblipz.com" },
                     soap_version:2, soap_header: %{<myb:AuthHeader><myb:Login>#{ENV["SMS_GATEWAY_USER_NAME"]}</myb:Login><myb:Password>#{ENV["SMS_GATEWAY_PASSWORD"]}</myb:Password></myb:AuthHeader>})
-      result = client.call(method.to_sym, message: messageContent )
-      Rails.logger.debug "Transmission result: #{result.inspect}" 
-      return result 
+      #result = client.call(method.to_sym, message: messageContent )
+      #Rails.logger.debug "Transmission result: #{result.inspect}" 
+      #return result 
+      return true
     else
       Rails.logger.debug "Gateway NOT active. Message NOT sent"
       return false
@@ -301,75 +302,84 @@ end
 end#End class
 
 #Invoked using delayed jobs. Can also be called in synched mode.
+#Test:
 class BackgroundWorker
   def processSignup(member, merchant_store, origin) 
     Rails.logger.info "Loading processSignup method"
-    Rails.logger.debug "Member parameter: #{member.attributes.inspect}" if member.present?
-    Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}" if merchant_store.present?
-    Rails.logger.debug "Origin parameter: #{origin.inspect}" 
-    
-    sign_up_status = false
-    #Check if subscriber record already exists for specific merchant_store
-    subscriber = merchant_store.subscribers.find_by_member_id(member.id)
-    if subscriber.nil?
-      #Create new subscriber record
-      if subscriber = merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
-        Rails.logger.debug "Subscriber does not exist. New subscriber created: #{subscriber.attributes.inspect}"
-        sign_up_status = true 
-      end
-    elsif subscriber && origin == "store"
-       #We only send sms for incorrect signups in stores - not on web since validation message is shown directly in interface
-      result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
-      Rails.logger.debug "Notification message sent successfully in SMS Gateway" if result 
-    end
 
-    if sign_up_status
-      Rails.logger.debug "Proceeding to next step: Send welcome message (email, sms) to member if eligble"
-      if subscriber.eligble_welcome_present? 
-        Rails.logger.debug "Subscriber is eligble for welcome present"
-        if origin == "store"
-          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-          Rails.logger.debug "Sending SMS welcome message with notice about present to member"
-          #Send welcome message with notice about welcome present 
-          result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
-          Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result
-        else
-          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-          Rails.logger.debug "Sending one e-mail with welcome message and present to member"
-          #Send welcome e-mail with welcomepresent
-          MemberMailer.delay.web_sign_up_present(member.id, merchant_store.id)
+    #Check if core attributes are present
+    if member.present? && merchant_store.present? && !origin.blank?
+      Rails.logger.debug "Member parameter: #{member.attributes.inspect}"
+      Rails.logger.debug "Merchant-store parameter: #{merchant_store.attributes.inspect}"
+      Rails.logger.debug "Origin parameter: #{origin.inspect}" 
+      
+      sign_up_status = false
+      #Check if subscriber record already exists for specific merchant_store
+      subscriber = merchant_store.subscribers.find_by_member_id(member.id)
+      if subscriber.nil?
+        #Create new subscriber record
+        if subscriber = merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
+          Rails.logger.debug "Subscriber does not exist. New subscriber created: #{subscriber.attributes.inspect}"
+          sign_up_status = true 
         end
+      elsif subscriber && origin == "store"
+         #We only send sms for incorrect signups in stores - not on web since validation message is shown directly in interface
+        result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+        Rails.logger.debug "Notification message sent successfully in SMS Gateway" if result 
+      end
 
-        #Send welcome present if active for particular merchant - default is active.
-        welcome_offer = merchant_store.welcome_offer
-        if welcome_offer.active
-          Rails.logger.debug "Welcome offer is active for merchant-store"
+      if sign_up_status
+        Rails.logger.debug "Proceeding to next step: Send welcome message (email, sms) to member if eligble"
+        if subscriber.eligble_welcome_present? 
+          Rails.logger.debug "Subscriber is eligble for welcome present"
           if origin == "store"
             Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-            Rails.logger.debug "Sending SMS message with welcome present"
-            result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.message, member.phone, merchant_store )
-            Rails.logger.debug "Welcome present sent successfully in SMS Gateway" if result
+            Rails.logger.debug "Sending SMS welcome message with notice about present to member"
+            #Send welcome message with notice about welcome present 
+            result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+            Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result
+          else
+            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+            Rails.logger.debug "Sending one e-mail with welcome message and present to member"
+            #Send welcome e-mail with welcomepresent
+            MemberMailer.delay.web_sign_up_present(member.id, merchant_store.id)
+          end
+
+          #Send welcome present if active for particular merchant - default is active.
+          welcome_offer = merchant_store.welcome_offer
+          if welcome_offer.active
+            Rails.logger.debug "Welcome offer is active for merchant-store"
+            if origin == "store"
+              Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+              Rails.logger.debug "Sending SMS message with welcome present"
+              result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.message, member.phone, merchant_store )
+              Rails.logger.debug "Welcome present sent successfully in SMS Gateway" if result
+            end
+          end
+        else
+          Rails.logger.debug "Subscriber NOT eligble for welcome present"
+          if origin == "store"
+            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+            Rails.logger.debug "Sending SMS message with welcome message without present"
+            #Send normal welcome message without notes about welcome present
+            result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
+            Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result 
+          else
+            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+            Rails.logger.debug "Sending email with welcome message but no present"
+            #Send welcome e-mail without welcomepresent
+            MemberMailer.delay.web_sign_up(member.id, merchant_store.id)
           end
         end
-      else
-        Rails.logger.debug "Subscriber NOT eligble for welcome present"
-        if origin == "store"
-          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-          Rails.logger.debug "Sending SMS message with welcome message without present"
-          #Send normal welcome message without notes about welcome present
-          result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
-          Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result 
-        else
-          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-          Rails.logger.debug "Sending email with welcome message but no present"
-          #Send welcome e-mail without welcomepresent
-          MemberMailer.delay.web_sign_up(member.id, merchant_store.id)
-        end
       end
+    else
+       Rails.logger.debug "Error: Missing attributes in process_signup. Check if attributes are valid." 
+       Rails.logger.fatal "Error: Missing attributes in process_signup. Check if attributes are valid." 
     end
-  end
+  end#End process-signup
 
   #Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
+  #Test:
   def stopStoreSubscription(sender, text)
     Rails.logger.info "Loading sms_handler stopStoreSubscription"
 

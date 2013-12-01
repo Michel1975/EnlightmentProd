@@ -535,6 +535,10 @@ da:
       invalid_keyword: Ugyldig sms-kode
       invalid_phone_number: Ugyldigt telefonnr.
       missing_attributes: Manglende data
+    message_notification:
+      single: Direkte
+      campaign: Kampagne
+      admin: Admin
   simple_captcha:
     placeholder: Indtast tal 
     label: Indtast tal

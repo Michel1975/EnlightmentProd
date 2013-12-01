@@ -5,6 +5,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 	skip_before_filter :merchant_user
 
 	#Receiving callback messages from gateway for outbound messages
+	#Test:OK
 	def callbackMessage
 		logger.info "Loading sms_handler callbackMessage"
 		logger.info "Trying to find existing notification record in database"
@@ -15,7 +16,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 			if !status_code_text.blank?
 				logger.debug "Received raw status-code: #{status_code_text.inspect}"
 				status_code = StatusCode.find_by_name(status_code_text)
-				if status_code
+				if status_code.present?
 					logger.debug "Match OK with existing status-code: #{status_code.attributes.inspect}"
 					notification.status_code = status_code
 				else
@@ -30,23 +31,29 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 					logger.fatal "Error: Notification NOT saved due to unknown errors"
 					logger.debug "Error: Notification NOT saved due to unknown errors"
 				end
+			else
+				logger.debug "Missing attribute param: rqStatus"	
 			end
+		else
+			logger.debug "Notification NOT found. Cause: Unknown message status received"	
 		end
+
 		#Default response with OK status
     	render :nothing => true, :status => :ok
  	end
 
  	#Receiving inbound messages - signups and opt-outs
+ 	#Test:OK
  	def processMessage
  		logger.info "Loading sms_handler processMessage"
- 		text = params[:text].downcase
+ 		text = params[:text]
  		logger.debug "Received text message: #{text.inspect}"
- 		sender = params[:sender].strip
+ 		sender = params[:sender]
  		logger.debug "Received sender number: #{sender.inspect}"
  		#First determine if phone-number is valid  - https://www.debuggex.com - test regex her
  		#Husk at i Rails skal ^ og $ erstattes af henholdsvis \A og \z. Ellers virker det ikke
  		#Regel: Vi tillader forskelige formater når de kommer direkte fra gatewayen. Senere laves de om
- 		#i klasse-metoden for member så alle telefonnummer er med +45. Det er vigtigt at alle telefonnumre
+ 		#i klasse-metoden for member så alle telefonnumre er med +45. Det er vigtigt at alle telefonnumre
  		#er fuldstændig ens i databasen.
  		if text.present? && sender.present? 
  			logger.debug "Sender number and text present. Proceeding...."
@@ -61,13 +68,11 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 
 	 			logger.debug "Trying to determine type of message: opt-in or opt-out"
 	 			if text.downcase.include? "stop"
-	 				logger.debug "Opt-out request received. Calling stopStoreSubscription method"
-	 				#stopStoreSubscription(sender, text)
+	 				logger.debug "Opt-out request received. Calling stopStoreSubscription method..background process"
 	 				SMSUtility::BackgroundWorker.new.delay.stopStoreSubscription(sender, text)
 	 			else
-	 				logger.debug "Opt-in request received. Calling signupMember method"
-	 				SMSUtility::BackgroundWorker.new.delay.signupMember(sender, text)	
-	 				#signupMember(sender, text)	
+	 				logger.debug "Opt-in request received. Calling signupMember method...background process"
+	 				SMSUtility::BackgroundWorker.new.delay.signupMember(sender, text)
 	 			end
 	 		else
 	 			logger.fatal "Error: Incoming phone number not valid"

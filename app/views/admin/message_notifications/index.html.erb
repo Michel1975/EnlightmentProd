@@ -29,14 +29,14 @@
 				<% @message_notifications.each do |notification| %>
 				<tr>
 					<td> <%= empty_attribute_info( notification.merchant_store.try(:store_name) ) %> </td>
-					<td> <%= notification.notification_type %> </td>
+					<td> <%= I18n.t( notification.notification_type.to_sym, :scope => [:enums, :message_notification] ) if notification.notification_type %> </td>
 					<td> <%= notification.recipient %> </td>	
 					<td> <%= notification.message_id %> </td>
 					<td> <%= notification.campaign_group_id %> </td>
 					<td> <%= notification.status_code.name %> </td>
 					<td> <%= notification.status_code.description %> </td>
-					<td> <%= notification.created_at %> </td>
-					<td> <%= notification.updated_at %> </td>				
+					<td> <%= I18n.l( notification.created_at ) %> </td>
+					<td> <%= I18n.l( notification.updated_at ) %> </td>				
 				</tr>
 				<% end %>
 			</tbody>
