@@ -41,7 +41,6 @@
         </button>
     <% end %>
   <% end %>
-
   </div><!-- /.span2 -->
 </div><!-- /.row-fluid -->
 
@@ -97,7 +96,11 @@
 <% @merchant_store.offers.active.order("valid_to DESC").each do |offer| %>
     <div class="row-fluid" style="margin-bottom:50px">
         <div class="span3">
-          <%= cl_image_tag(offer.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
+          <% if !offer.image.blank? %>
+            <%= cl_image_tag(offer.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
+          <% else %>
+            <%= image_tag("standard_offer_picture.png") %>
+           <% end %>
         </div><!-- /.span4 -->
 
         <div class="span6">
