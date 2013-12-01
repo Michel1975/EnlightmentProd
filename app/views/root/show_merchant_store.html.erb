@@ -8,14 +8,14 @@
     <% if !@merchant_store.image.picture.blank? %>
       <%= cl_image_tag(@merchant_store.image.try(:picture), :width => 400, :height => 400, :crop => :fit, class: "img-rounded") %>
     <% else %>
-      To-Do: Indsæt "Billede på vej"
+      "Fotografen er på vej"
     <% end %>
   </div><!-- /.span4 -->
 
   <div class="span6">
     <div class="headline">
-      <h4><%= h(@merchant_store.store_name) %> </h4>
-      <div class="fb-like" data-href="#{display_store_url(@merchant_store)}" data-layout="standard" data-action="like" data-show-faces="false" data-share="true"></div>
+      <h4 class="pull-left" style="white-space: nowrap;"><%= h(@merchant_store.store_name) %></h4>
+      <div class="fb-like" data-href="<%= display_store_url(@merchant_store)%>" data-layout="standard" data-action="like" data-show-faces="false" data-share="true"></div>
     </div>
     <p><%= simple_format( h(@merchant_store.description) )%></p>
   </div><!-- /.span6 -->
@@ -117,6 +117,7 @@
     </div><!-- /.row-fluid -->
 <% end %>
 
+<div id="fb-root"></div>
 <% content_for :scripts do %>
 <script type="text/javascript">
     jQuery(document).ready(function() {
