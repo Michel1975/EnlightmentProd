@@ -69,6 +69,11 @@ class MerchantStore < ActiveRecord::Base
       where("city ILIKE ? AND store_name ILIKE ? AND active = true", "%#{city.downcase}%", "%#{store_name.downcase}%")
     elsif city !="" && store_name == ""
       where('city ILIKE ? AND active = true', "%#{city.downcase}%")
+    elsif city =="" && store_name !=""
+      where('store_name ILIKE ? AND active = true', "%#{store_name.downcase}%")
+    else
+      #To avoid null pointer exceptions
+      return Array.new
     end
   end
 

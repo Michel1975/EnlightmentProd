@@ -1,6 +1,8 @@
 <div class="span6 booking-blocks" style="border:2px solid black;">
    <div class="pull-left booking-img">
-      <%= cl_image_tag(merchant.image.try(:picture), :width => 100, :height => 100, :crop => :fit, class: "img-rounded") %>
+      <% if !merchant.image.try(:picture).blank? %>
+        <%= cl_image_tag(merchant.image.try(:picture), :width => 100, :height => 100, :crop => :fit, class: "img-rounded") %>
+      <% end %>
       <ul class="unstyled">
         <li><i class="icon-map-marker"></i><%= h merchant.map_address %></li>
         <li><i class="icon-phone"></i><%= h merchant.phone %></li>
@@ -9,7 +11,7 @@
    </div>
    <div style="overflow:hidden;">
     <div>
-        <h4 style="float:left;"><%= h merchant.store_name %></h4>
+        <h4 style="float:left;white-space: nowrap;"><%= h merchant.store_name %></h4>
         <%= link_to display_store_path(merchant.id), class: "pull-right" do %>
             <button class="btn btn-mini btn btn-success">Se detaljer</button>
         <% end %>

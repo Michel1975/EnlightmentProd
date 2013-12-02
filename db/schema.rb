@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131130165904) do
+ActiveRecord::Schema.define(:version => 20131202123020) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -273,9 +273,8 @@ ActiveRecord::Schema.define(:version => 20131130165904) do
     t.integer  "member_id"
     t.integer  "merchant_store_id"
     t.date     "start_date"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.boolean  "active",            :default => true
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "subscribers", ["member_id"], :name => "index_subscribers_on_member_id"

@@ -6,7 +6,8 @@
 
 <div class="row-fluid">
   <div class="span6 offset3">
-      <div class="headline"><h3>Tak for din tilmelding i en af vores partnerbutikker</h3></div>
+      <div class="headline"><h3>Opret din profil og få endnu flere fordele</h3></div>
+      <p>Tak for din tilmelding i en af vores partnerbutikker.</p>
       <p>Med club novus kan dine favoritbutikker tilbyde dig medlemsfordele og attraktive tilbud, når du vælger at handle lige nede om hjørnet. Som medlem af club novus støtter du samtidig et blomstrende butiksmiljø i dit eget nærområde. </p>
       <p>Som medlem opnår du følgende fordele:</p>
       <ul class="unstyled">
@@ -15,7 +16,6 @@
           <li><i class="icon-ok color-green"></i> Få velkomstgave fra butikken </li>
           <li><i class="icon-ok color-green"></i> Bliv en del af fællesskabet om at styrke den lokale handel </li>
       </ul>
-      <p> Udfyld din medlemsprofil forneden og gå opdagelse i vores katalog af butikker i dit lokalområde </p>
   </div>
 </div>
 
@@ -31,12 +31,24 @@
       $('.date-picker').datepicker().next().on("click", function(){
         $(this).prev().focus();
       });
+      //http://silviomoreto.github.io/bootstrap-select/
+      $('.selectpicker').selectpicker({
+        size: 4,
+        noneSelectedText: 'Vælg køn'
+      });
           
       $('.datepicker').datepicker({
         format: 'dd/mm/yyyy',
         language: 'da',
         autoclose: true
       });
+
+      $("form").on("submit", function () {
+          if($(this).valid()) {
+            $(this).find(".submission").prop("disabled", true);
+          }
+      });
+
     });//Close Javascript function
 
     (function(d, s, id) {

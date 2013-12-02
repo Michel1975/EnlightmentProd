@@ -23,7 +23,7 @@
                     <td><%= h(favorite_store.merchant_store.store_name) %></td>
                     <td><%= h(favorite_store.merchant_store.map_address) %></td>
                     <td><%= favorite_store.merchant_store.phone %></td>
-                    <td><%= favorite_store.start_date %></td>
+                    <td><%= I18n.l( favorite_store.start_date ) %></td>
                     <td>
                         <%= link_to display_store_path( favorite_store.merchant_store_id ), :target => "_blank" do %>
                             <button class="btn btn-small btn-info btn-u-blue">

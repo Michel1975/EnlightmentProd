@@ -83,8 +83,9 @@ class Subscriber < ActiveRecord::Base
   end
 
   def eligble_welcome_present?
+    #Three month sleep period with no welcome present
     result = self.merchant_store.subscriber_histories.where("created_at >=? AND member_phone=?", (Time.zone.now - 90.days), self.member.try(:phone) )
-    Rails.logger.debug("Resultat fra Eligble_welcome_present: #{result.inspect}")
+    Rails.logger.debug("Result from Eligble_welcome_present: #{result.inspect}")
     #when this methid is called in signup logic, the subscriber is already created, so at least one history entry exist. This entry is ignored of-course.
     return result.size <= 1 ? true : false
   end

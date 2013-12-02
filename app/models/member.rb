@@ -1,7 +1,6 @@
 class Member < ActiveRecord::Base
   #include ActiveModel::Dirty
   apply_simple_captcha :message => "Koden du indtastede matcher ikke billed-koden", :add_to_base => true
-
   
   attr_accessible :first_name, :last_name, :name, :postal_code, :city, :gender, :birthday, :phone, :terms_of_service, :origin, :user_attributes, :captcha, :captcha_key
 
@@ -13,6 +12,7 @@ class Member < ActiveRecord::Base
   #Used for completing profiles on web if they signed up in-store
   before_create :create_access_key, :create_phone_confirmation_code
   #Used to determine current validation_mode
+  
   attr_accessor :validation_mode
   #http://rubular.com
   #Vi antager at telefonnumre indtastet via forms fylder max. 8 tegn og automatisk opdateres med +45 før oprettelse. 
@@ -20,9 +20,11 @@ class Member < ActiveRecord::Base
   validates :terms_of_service, :acceptance  => {:accept => true}, :unless => "validation_mode == 'store'", :on => :create #Skal kun accepteres ved oprettelse
   validates :first_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
   validates :last_name, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
-  validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :unless => "validation_mode == 'store'"
+  validates :postal_code, presence: true, :unless => "validation_mode == 'store'"
+  validates :postal_code, numericality: { only_integer: true }, length: { maximum: 4 }, :allow_blank => true, :unless => "validation_mode == 'store'"
   validates :city, presence: true, length: { maximum: 20 }, :unless => "validation_mode == 'store'"
-  validates :gender, :inclusion => { :in => %w( W M ) }, :unless => "validation_mode == 'store'"
+  validates :gender, presence: true, :unless => "validation_mode == 'store'"
+  validates :gender, :inclusion => { :in => %w( W M ) }, :allow_blank => true, :unless => "validation_mode == 'store'"
   validates :birthday, presence: true, :unless => "validation_mode == 'store'"
   validates :phone, presence: true, length: { maximum: 12}, uniqueness: { case_sensitive: false }
   validate  :validate_phone_standard
@@ -78,12 +80,22 @@ class Member < ActiveRecord::Base
 
     #Updates status to true when member completes his profile on web
     def check_status
+      tmp_mode = self.validation_mode
+      #Check if web profile is  
       if !self.complete
         self.validation_mode = "web"
-        if self.valid? && user !=nil
+        if self.valid? && user != nil
           self.complete = true
         end 
       end
+
+      #Store profiles has automatically provided their permission on phone
+      if origin == 'store' && !self.phone_confirmed 
+        self.phone_confirmed = true
+      end
+
+      #Change back to original validation mode
+      self.validation_mode = tmp_mode
     end
 
     def convert_phone_standard
@@ -100,6 +112,7 @@ class Member < ActiveRecord::Base
       self.access_key ||= [id.to_s, SecureRandom.hex(5)].join
     end
 
+    #Used when confirming member phone for web profiles
     def create_phone_confirmation_code
       self.phone_confirmation_code ||= Random.rand(1000..9999)
     end

@@ -331,6 +331,7 @@ da:
         member_created: Du er nu registreret som medlem!
         member_updated: Din profil er nu opdateret!
         member_deleted: Din profil er nu slettet. Håber vi ses igen!
+        member_delete_error: Din profil kunne ikke slettes grundet et teknisk profil. Kontakt venligst support!
         warning_deletion_member: Du er ved at slette din medlemsprofil og dine tilmeldte favoritbutikker. Er du sikker?
         member_create_error: Vi kunne ikke oprette medlemmet grundet en teknisk fejl. Kontakt venligst support!
         email_confirmation_sent: Du modtager en email med bekræftelseslink om få minutter!
@@ -442,7 +443,7 @@ da:
       security_error: Ugyldig forespørgsel
       already_finished: Medlemsprofil er allerede færdigoprettet
       success: Tillykke! din medlemsprofil er nu færdigoprettet.
-      opt_out: Du er nu afmeldt og vil ikke længere modtage sms-notifikationer fra %{store_name}
+      opt_out: Du er nu afmeldt og vil ikke længere modtage tilbud og nyheder fra %{store_name}
       opt_out_error: Butikken kunne ikke afmeldes grundet en teknisk fejl. Kontakt venligst support!
       sms_code_message: Kære medlem,\nIndtast sms-koden på vores hjemmeside for at bekræfte dit mobilnummer.\nKode:%{sms_code}.\n\nMvh\nClub Novus"
     email:

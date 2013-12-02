@@ -10,7 +10,8 @@ class Shared::BackendAdminSessionsController < Shared::BaseController
         logger.debug "Backend user logged in successfully: #{user.attributes.inspect}"
       	store_session_variables(user)
         logger.debug "User session variables initialized. Loading dashboard view for backend"
-        redirect_back_or_to admin_dashboard_url, :notice => t(:logged_in, :scope => [:business_validations, :session_admin])
+        flash[:success] = t(:logged_in, :scope => [:business_validations, :session_admin])
+        redirect_back_or_to admin_dashboard_url
 		else
       logger.debug "Invalid login. Loading new view with errors"
   		flash.now.alert = t(:invalid_login, :scope => [:business_validations, :session_admin])

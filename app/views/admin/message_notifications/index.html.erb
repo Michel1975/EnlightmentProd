@@ -28,7 +28,7 @@
 			<tbody>
 				<% @message_notifications.each do |notification| %>
 				<tr>
-					<td> <%= empty_attribute_info( notification.merchant_store.try(:store_name) ) %> </td>
+					<td> <%= notification.merchant_store.try(:store_name) == nil ? "Club Novus" : notification.merchant_store.try(:store_name) %> </td>
 					<td> <%= I18n.t( notification.notification_type.to_sym, :scope => [:enums, :message_notification] ) if notification.notification_type %> </td>
 					<td> <%= notification.recipient %> </td>	
 					<td> <%= notification.message_id %> </td>

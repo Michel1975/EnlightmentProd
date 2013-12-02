@@ -20,6 +20,13 @@ Medlemsprofil
       </div>
 
       <div class="profile-info-row">
+        <div class="profile-info-name"> Medlemsnummer </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="name"> <%= empty_attribute_info( h(@member.id) ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
         <div class="profile-info-name"> Telefon </div>
         <div class="profile-info-value">
           <span class="editable editable-click" id="phone"> <%= empty_attribute_info( @member.phone ) %> </span>

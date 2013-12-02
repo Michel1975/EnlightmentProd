@@ -12,8 +12,8 @@ module SMSUtility
   #This reflects the standard characters for sms messages
   VALID_SMS_MESSAGE = %r{\A[\w\s@?£!1$"#è?¤é%ù&\\()*:Ø+;øÆ,<æ\-=Å.>å\/§\']+\z}
 
-  TOTAL_MESSAGES_MONTH = 100
-  STORE_TOTAL_MESSAGES_MONTH = 50
+  TOTAL_MESSAGES_MONTH = ENV["SMS_LIMIT_TOTAL"]
+  STORE_TOTAL_MESSAGES_MONTH = ENV["SMS_LIMIT_STORE"]
 
 class SMSFactory
 
@@ -66,8 +66,8 @@ class SMSFactory
   def self.validate_message_limits?(message_count)
     Rails.logger.info "Into validate_message_limits?"
     Rails.logger.debug "Number of messages in this order: #{message_count.inspect}"
-    no_total_messages = SMSUtility::TOTAL_MESSAGES_MONTH
-    Rails.logger.debug "Current total monthly message limit for all stores: #{no_total_messages}"
+    no_total_messages = SMSUtility::TOTAL_MESSAGES_MONTH.to_i
+    Rails.logger.debug "Current total monthly message limit for all stores: #{no_total_messages.inspect}"
     no_already_sent_messages = MessageNotification.month_total_messages.count
     Rails.logger.debug "Total number of messages sent this month before new message: #{no_already_sent_messages.inspect}"
     result = ( no_already_sent_messages + message_count) <= no_total_messages
@@ -302,7 +302,7 @@ end
 end#End class
 
 #Invoked using delayed jobs. Can also be called in synched mode.
-#Test:
+#Test:OK
 class BackgroundWorker
   def processSignup(member, merchant_store, origin) 
     Rails.logger.info "Loading processSignup method"
@@ -316,56 +316,65 @@ class BackgroundWorker
       sign_up_status = false
       #Check if subscriber record already exists for specific merchant_store
       subscriber = merchant_store.subscribers.find_by_member_id(member.id)
+      Rails.logger.debug "Checking is member is already subscribed..." 
       if subscriber.nil?
+        Rails.logger.debug "Member is not subscribed. Proceeding with subscribe process..."
         #Create new subscriber record
         if subscriber = merchant_store.subscribers.create(member_id: member.id, start_date: Time.zone.now) 
-          Rails.logger.debug "Subscriber does not exist. New subscriber created: #{subscriber.attributes.inspect}"
+          Rails.logger.debug "New subscriber record created successfully: #{subscriber.attributes.inspect}"
           sign_up_status = true 
         end
       elsif subscriber && origin == "store"
+        Rails.logger.debug "Member is already subscriber. Sending notification sms about invalid signup..."
          #We only send sms for incorrect signups in stores - not on web since validation message is shown directly in interface
         result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:already_signed_up, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
         Rails.logger.debug "Notification message sent successfully in SMS Gateway" if result 
       end
 
       if sign_up_status
-        Rails.logger.debug "Proceeding to next step: Send welcome message (email, sms) to member if eligble"
-        if subscriber.eligble_welcome_present? 
-          Rails.logger.debug "Subscriber is eligble for welcome present"
+        Rails.logger.debug "Proceeding to next step: Send welcome message (email, sms) to member, and present if eligble"
+        #Check status for welcome offer for particular store
+        welcome_offer = merchant_store.welcome_offer
+        if subscriber.eligble_welcome_present? && welcome_offer.present? && welcome_offer.active
+          Rails.logger.debug "Status 1: Subscriber is eligble for welcome present"
+          Rails.logger.debug "Status 2: Welcome offer is active for merchant-store"
+          Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+          Rails.logger.debug "Preparing to send either sms or email depending on origin: #{origin.inspect}"
           if origin == "store"
-            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-            Rails.logger.debug "Sending SMS welcome message with notice about present to member"
-            #Send welcome message with notice about welcome present 
+            Rails.logger.debug "Origin is store. Proceeding with sms notifications..."
+            Rails.logger.debug "Sending SMS 1: Welcome message with comments about present to member"
+            #Send welcome message with comments about welcome present 
             result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_with_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
-            Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result
+            if result
+              Rails.logger.debug "SMS 1 sent successfully in SMS Gateway" 
+            else
+              Rails.logger.debug "Error: SMS 1 NOT sent due to unknown errors" 
+            end
+            result = nil
+            Rails.logger.debug "Sending SMS 2: Message with welcome present"
+            result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.message, member.phone, merchant_store )
+            if result
+              Rails.logger.debug "SMS 2 sent successfully in SMS Gateway"
+            else
+              Rails.logger.debug "Error: SMS 2 NOT sent due to unknown errors" 
+            end
           else
-            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-            Rails.logger.debug "Sending one e-mail with welcome message and present to member"
+            Rails.logger.debug "Origin is web. Proceeding with email notifications..."
+            Rails.logger.debug "Sending ONE e-mail with welcome message and present to member"
             #Send welcome e-mail with welcomepresent
             MemberMailer.delay.web_sign_up_present(member.id, merchant_store.id)
           end
-
-          #Send welcome present if active for particular merchant - default is active.
-          welcome_offer = merchant_store.welcome_offer
-          if welcome_offer.active
-            Rails.logger.debug "Welcome offer is active for merchant-store"
-            if origin == "store"
-              Rails.logger.debug "Subscriber origin: #{origin.inspect}"
-              Rails.logger.debug "Sending SMS message with welcome present"
-              result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( welcome_offer.message, member.phone, merchant_store )
-              Rails.logger.debug "Welcome present sent successfully in SMS Gateway" if result
-            end
-          end
+        #Welcome notification (email, sms) without present
         else
-          Rails.logger.debug "Subscriber NOT eligble for welcome present"
+          Rails.logger.debug "Subscriber NOT eligble for welcome present OR welcome offer not active for store"
           if origin == "store"
-            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+            Rails.logger.debug "Origin is store: #{origin.inspect}"
             Rails.logger.debug "Sending SMS message with welcome message without present"
             #Send normal welcome message without notes about welcome present
             result = SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success_without_present, store_name: merchant_store.store_name, city: merchant_store.city, :scope => [:business_messages, :store_signup]), member.phone, merchant_store )
             Rails.logger.debug "Welcome message sent successfully in SMS Gateway" if result 
           else
-            Rails.logger.debug "Subscriber origin: #{origin.inspect}"
+            Rails.logger.debug "Origin is web: #{origin.inspect}"
             Rails.logger.debug "Sending email with welcome message but no present"
             #Send welcome e-mail without welcomepresent
             MemberMailer.delay.web_sign_up(member.id, merchant_store.id)
@@ -379,7 +388,7 @@ class BackgroundWorker
   end#End process-signup
 
   #Vi skal overveje at lave et weblink til dette istedet i alle sms'er som sendes til medlemmet. Der skal måske oprettes en særskilt controller til dette.
-  #Test:
+  #Test:OK
   def stopStoreSubscription(sender, text)
     Rails.logger.info "Loading sms_handler stopStoreSubscription"
 
@@ -407,7 +416,7 @@ class BackgroundWorker
             Rails.logger.debug "Confirmation message sent to member about opt-out"
             Rails.logger.debug "Analyzing if member should be deleted too..in case of no subscribers and pure store-profile"
             if member.subscribers.empty? && !member.complete
-              Rails.logger.debug "Member has no subscribers and is a pure store-only profile..,go ahead and delete"
+              Rails.logger.debug "Member has no subscribers and is a pure store-only profile...go ahead and delete"
               if member.destroy
                 Rails.logger.debug "Member deleted successfully"
               end
@@ -429,11 +438,10 @@ class BackgroundWorker
     else
       Rails.logger.debug "Member NOT found from phone number"
       Rails.logger.fatal "Member NOT found from phone number" 
-    end
-    #Default response with OK status
-      #render :nothing => true, :status => :ok    
+    end  
   end#end stopsubscription
- 
+  
+  #Test:OK
   def signupMember(sender, text)
     Rails.logger.info "Loading sms_handler signupMember"
     keyword = text.gsub(/\s+/, "")
@@ -453,7 +461,8 @@ class BackgroundWorker
         Rails.logger.debug "New member saved successfully: #{member.attributes.inspect}"
       else
         Rails.logger.debug "Error when saving new member created in-store"
-        Rails.logger.fatal "Error when saving new member created in-store"  
+        Rails.logger.fatal "Error when saving new member created in-store" 
+        return 
       end
     end
 
@@ -474,7 +483,6 @@ class BackgroundWorker
         #We don't respond to sms gateway with errors - for now - save money :-)
       end
     end
-    #invalid: render :nothing => true, :status => :ok
   end
 end#end background worker class
 

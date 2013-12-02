@@ -1,5 +1,5 @@
 class MemberUsersController < ApplicationController
-  #default layout application is used
+  #Default layout application is used
 	skip_before_filter :require_login, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions, :confirm_email]
   skip_before_filter :authorize, :only => [:new, :create, :complete_sms_profile, :update_sms_profile, :terms_conditions, :confirm_email]
   before_filter :member_user,  :only => [:edit, :update, :show, :destroy, :favorites]
@@ -101,6 +101,7 @@ class MemberUsersController < ApplicationController
     @member_user = Member.new(params[:member])
     logger.debug "New member form values - attributes hash: #{@member_user.attributes.inspect}"
     @member_user.origin = 'web'
+    @member_user.validation_mode = "web"
     if @member_user.valid_with_captcha?
       logger.debug "Member form values incl captcha valid...proceeding"
       if @member_user.save
@@ -122,6 +123,7 @@ class MemberUsersController < ApplicationController
     end
   end
 
+  #Test:OK
   def edit
     logger.info "Loading MemberUser edit action"
   	#logger.info("Michel:" + current_member_user.id + "current_user-id:" + current_user.id)
@@ -129,20 +131,25 @@ class MemberUsersController < ApplicationController
     logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"
   end
 
+  #Test:OK
   def terms_conditions
     logger.info "Loading MemberUser terms_conditions action"
   end
 
+  #Test:OK
   def show
     logger.info "Loading MemberUser show action"
   	@member_user = current_resource #Old:current_member_user
     logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"	
   end
 
+  #Test:OK
   def update
     logger.info "Loading MemberUser update action"
   	@member_user = current_resource
-    logger.debug "Member attributes hash: #{@member_user.attributes.inspect}" 
+    logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"
+    @member_user.validation_mode = "web"
+    logger.debug "Web validation mode set - #{@member_user.validation_mode.inspect}"
     if @member_user.update_attributes(params[:member])
       logger.debug "Member updated succesfully - attributes hash: #{@member_user.attributes.inspect}" 
     	flash[:success] = t(:member_updated, :scope => [:business_validations, :frontend, :member_user])
@@ -153,6 +160,7 @@ class MemberUsersController < ApplicationController
     end
   end
 
+  #Test:OK
   def destroy
     logger.info "Loading MemberUser destroy action"
     @member_user = current_resource
@@ -166,10 +174,12 @@ class MemberUsersController < ApplicationController
     else
       logger.debug "Error when deleting member"
       logger.fatal "Error when deleting member"
-      render 'show'
+      flash[:success] = t(:member_delete_error, :scope => [:business_validations, :frontend, :member_user])
+      redirect_to root_path
     end
   end
 
+  #Test:OK
   def favorites
     logger.info "Loading MemberUser favorites action"
     @member_user = current_resource
@@ -178,14 +188,14 @@ class MemberUsersController < ApplicationController
     logger.debug "Favorite stores for member: #{@favorite_stores.inspect}" 
   end
 
-  #Show form for completing profile on web
-  #Eksempel: http://localhost:3000/edit_sms_profile/0f4882b68a
+  #Show form for completing web profile on top of store profile
+  #Test:OK
   def complete_sms_profile
     logger.info "Loading MemberUser complete_sms_profile action"
     token = params[:token]
-    logger.debug "Token: #{@token.inspect}" if token.present?
     if token.present?
-      logger.debug "Token is present..continue trying to lookup member record"
+      logger.debug "Token is present - #{token.inspect}"
+      logger.debug "Continue trying to lookup member record..."
       @member = Member.find_by_access_key(params[:token])
       if @member.nil?
         logger.debug "Error: Member does not exist with that token"
@@ -211,15 +221,17 @@ class MemberUsersController < ApplicationController
   end
 
   #Save full profile with all attributes
+  #Test:OK
   def update_sms_profile 
     logger.info "Loading MemberUser update_sms_profile action"
     @member = current_resource
     logger.debug "Member attributes hash: #{@member.attributes.inspect}" 
     if @member.update_attributes(params[:member])
-        #Complete status is set in member class automatically
-        logger.debug "Member saved and updated successfully - attributes hash: #{@member.attributes.inspect}" 
+        logger.debug "Member saved and updated successfully - attributes hash: #{@member.attributes.inspect}"
+        logger.debug "Sending delayed welcome email to new member..."
+        MemberMailer.delay.welcome_mail_new_member(@member.id)
+        logger.debug "Member email has been sent successfully"
         flash[:success] = t(:success, :scope => [:business_messages, :web_profile])
-        #Overvej at linke direkte til butikken efter profilen er færdig oprettet.
         redirect_to root_path
     else
       logger.debug "Validation errors. Loading complete_sms_profile with errors"

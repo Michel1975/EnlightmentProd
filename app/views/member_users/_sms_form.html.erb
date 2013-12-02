@@ -22,7 +22,7 @@
             </div>
              <div class="field">
               <%= f.label :city %>
-              <%= f.text_field :city, readonly: true %>
+              <%= f.text_field :city %>
             </div>
             <div class="field">
               <%= f.label :terms_of_service, class: "checkbox" do %>
@@ -33,9 +33,9 @@
             </div>   
           </div><!-- /.span6 -->
           <div class="span6">
-            <div class="field">
+            <div class="field" style="margin-bottom:10px">
               <%= f.label :gender %>
-              <%= f.select(:gender,[ ['Mand', 'M'], ['Kvinde', 'W'] ],  { include_blank: true } ) %>
+              <%= f.select(:gender,[ ['Mand', 'M'], ['Kvinde', 'W'] ],  { include_blank: true }, class: "selectpicker" ) %>
             </div>
             <div class="field">
               <%= f.label :birthday %>
