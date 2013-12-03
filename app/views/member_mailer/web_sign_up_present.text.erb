@@ -1,10 +1,16 @@
 Kære <%= @member.name %>,
 ===============================================
-Du er nu tilmeldt "<%= @merchant_store.store_name %>" i <%= @merchant_store.city %>
+Du er nu tilmeldt "<%= @merchant_store.store_name %>" i <%= @merchant_store.city %>.
 
 Se din velkomstgave nedenfor.
 
+******************************************************************************************************
+
 <%= @merchant_store.welcome_offer.description %>
+
+******************************************************************************************************
+
+Fremvis denne email i butikken for at få udleveret dine velkomstgave.
 
 Hav en fantastisk dag!
 

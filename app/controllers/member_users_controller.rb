@@ -7,6 +7,7 @@ class MemberUsersController < ApplicationController
   #Vigtig! http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for
   
   #Create new member frontend - invoked from email link
+  #Test:OK
   def confirm_email
     logger.info "Loading MemberUser confirm_email action" 
     token = params[:token]
@@ -16,14 +17,19 @@ class MemberUsersController < ApplicationController
     member = Member.find_by_access_key(token)
     logger.debug "Member found from token - attributes hash: #{member.attributes.inspect}"
     @confirmed_status = false
-    if member && member.user.email == email
+    if member && member.user.try(:email) == email
       member.email_confirmed = true
       if member.save
         @confirmed_status = true
       end
+    else
+      logger.debug "Error: Invalid request attributes when confirming email"
+      flash[:alert] = t(:security_error, :scope => [:business_messages, :web_profile])
+      redirect_to root_path
     end
   end
 
+  #Test:OK
   def resend_email_confirmation
     logger.info "Loading MemberUser resend_email_confirmation action"
     @member_user = current_resource
@@ -41,6 +47,7 @@ class MemberUsersController < ApplicationController
     end
   end
 
+  #Test:OK
   def send_mobile_confirmation_with_sms 
     logger.info "Loading MemberUser send_mobile_confirmation_with_sms action"
     @member_user = current_resource
@@ -59,6 +66,7 @@ class MemberUsersController < ApplicationController
     end
   end
 
+  #Test:OK
   def confirm_mobile_sms_code 
     logger.info "Loading MemberUser confirm_mobile_sms_code action"
     @member_user = current_resource
@@ -86,6 +94,7 @@ class MemberUsersController < ApplicationController
     end
   end
 
+  #Test:OK
 	def new
     logger.info "Loading MemberUser new action"
 		#Fik en fejl på date_select efter vi skiftede til dansk locale
@@ -96,17 +105,20 @@ class MemberUsersController < ApplicationController
 	end
 
   #Create new member frontend
+  #Test:OK
   def create 
     logger.info "Loading MemberUser create action"  
     @member_user = Member.new(params[:member])
     logger.debug "New member form values - attributes hash: #{@member_user.attributes.inspect}"
     @member_user.origin = 'web'
+    logger.debug "Origin set to -> #{@member_user.origin.inspect}"
     @member_user.validation_mode = "web"
+    logger.debug "Web validation mode set - #{@member_user.validation_mode.inspect}"
     if @member_user.valid_with_captcha?
       logger.debug "Member form values incl captcha valid...proceeding"
       if @member_user.save
         logger.debug "New member saved successfully..."
-        #Send welcome e-mail
+        #Send welcome e-mail for web profiles
         logger.debug "Sending delayed welcome email to new member"
         MemberMailer.delay.welcome_mail_new_member(@member_user.id)
         flash[:success] = t(:member_created, :scope => [:business_validations, :frontend, :member_user])
@@ -129,6 +141,8 @@ class MemberUsersController < ApplicationController
   	#logger.info("Michel:" + current_member_user.id + "current_user-id:" + current_user.id)
   	@member_user = current_resource #Old:current_member_user
     logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"
+    @member_user.validation_mode = "web"
+    logger.debug "Web validation mode set to -> #{@member_user.validation_mode.inspect}"
   end
 
   #Test:OK
@@ -149,9 +163,30 @@ class MemberUsersController < ApplicationController
   	@member_user = current_resource
     logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"
     @member_user.validation_mode = "web"
-    logger.debug "Web validation mode set - #{@member_user.validation_mode.inspect}"
+    logger.debug "Web validation mode set to -> #{@member_user.validation_mode.inspect}"
+    email_old = @member_user.user.try(:email)
+    phone_old = @member_user.phone
+
     if @member_user.update_attributes(params[:member])
       logger.debug "Member updated succesfully - attributes hash: #{@member_user.attributes.inspect}" 
+      logger.debug "Proceeding to check if email or phone has changed...if so, confirmation status must be properly updated"
+      #Check if email or phone has changed
+      changed = false
+      if @member_user.email_confirmed && email_old != @member_user.user.email
+        logger.debug "Email has changed: Old -> #{email_old.inspect}: New -> #{@member_user.user.email.inspect}"
+        changed = true
+        @member_user.email_confirmed = false
+      end
+
+      if @member_user.phone_confirmed && phone_old != @member_user.phone
+        logger.debug "Phone has changed: Old -> #{phone_old.inspect}: New -> #{@member_user.phone.inspect}"
+        changed = true
+        @member_user.phone_confirmed = false
+      end
+
+      if changed && @member_user.save 
+        logger.debug "Member object updated successfully with email or phone confirmation changes"     
+      end
     	flash[:success] = t(:member_updated, :scope => [:business_validations, :frontend, :member_user])
     	redirect_to member_user_path(@member_user)
     else

@@ -340,9 +340,10 @@ da:
         sms_confirmation_error: Vi kunne ikke sende en sms til din telefon grundet en teknisk fejl. Kontakt venligst support!
         phone_confirmed_success: Dit telefonnummer er nu bekræftet!
         phone_confirmed_error: Dit telefonnummer kunne ikke bekræftes. Prøv venligst igen eller kontakt support!
+        invalid_phone: er ugyldigt
     backend:
       member:
-        warning_deletion_member: Du er ved at deaktivere et medlem. Er du sikker?
+        warning_deletion_member: Du er ved at slette et medlem. Er du sikker?
         member_updated: Din profil er nu opdateret!
         member_removed: Medlem er nu slettet!
         member_remove_error: Medlem kunne ikke slettes pga. en teknisk fejl!
@@ -419,7 +420,7 @@ da:
       subscriber_remove_error: Der er opstået en teknisk fejl ved sletningen af kampagnen. Vi arbejder hurtigst muligt på at løse problemet!
       subscriber_message_sent: Besked er afsendt til medlemmet!
       warning_deletion_merchant: Du er ved at fjerne et medlem fra din kundeklub. Er du sikker?
-      warning_deletion_member: Du er ved at afmelde dit medlemsskab af butikken "%{store_name}" i %{city}. Du vil ikke længere modtage sms-notifikationer. Er du sikker?
+      warning_deletion_member: Du er ved at afmelde dit medlemsskab af butikken "%{store_name}" i %{city}. Du vil ikke længere modtage tilbud og nyheder. Er du sikker?
     welcome_offer:
       offer_updated: Velkomstgave er opdateret!
     instant_subscriber_message:
@@ -437,7 +438,7 @@ da:
       store_not_found_error: "Kære medlem,\nder findes ikke en Club Novus partnerbutik med teksten %{keyword}.\nTjek venligst om teksten er korrekt og prøv igen.\n\nMvh\nClub Novus"
       already_signed_up: "Kære medlem,\n\ndu er allerede tilmeldt %{store_name} i %{city} via Club Novus.\n\nMvh\nClub Novus"
     opt_out:
-      success: "Kære medlem,\ndu vil nu ikke længere modtage sms-notifikationer fra %{store_name}.\n\nMvh\nClub Novus"
+      success: "Kære medlem,\ndu vil nu ikke længere modtage tilbud og nyheder fra %{store_name}.\n\nMvh\nClub Novus"
     web_profile:
       member_not_exist: Det pågældende medlem findes ikke. 
       security_error: Ugyldig forespørgsel
@@ -460,7 +461,7 @@ da:
     security:
       not_authorized: Du har ikke adgang til disse data!
     subscriber:
-      unsubscribe_confirmation: Du er nu afmeldt fra %{store_name} og vil ikke længere modtage sms-notifikationer fra butikken.
+      unsubscribe_confirmation: Du er nu afmeldt fra %{store_name} og vil ikke længere modtage tilbud og nyheder fra butikken.
       unsubscribe_error: Butikken kunne ikke afmeldes pga. en teknisk fejl. Kontakt venligst support!
     merchant_user: 
       welcome_merchant_user: Velkommen som ny partnerbutik i Club Novus!

@@ -1,15 +1,17 @@
 <p>Kære <%= @member.name %>, <br />
-Du er nu tilmeldt "<%= @merchant_store.store_name %>" i <%= @merchant_store.city %>
+Du er nu tilmeldt "<%= @merchant_store.store_name %>" i <%= @merchant_store.city %>. <br /> <br />
 
 Se din velkomstgave nedenfor. <br />
 </p>
-
+******************************************************************************************************
 <p>
 <%= @merchant_store.welcome_offer.description %>
 </p>
+******************************************************************************************************
+<p>Fremvis denne email i butikken for at få udleveret dine velkomstgave</p>
 
 <p>
-Hav en fantastisk dag!<br />
+Hav en fantastisk dag!<br /><br />
 
 Med venlig hilsen<br />
 Club Novus<br />

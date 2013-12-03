@@ -27,10 +27,12 @@ class Member < ActiveRecord::Base
   validates :gender, :inclusion => { :in => %w( W M ) }, :allow_blank => true, :unless => "validation_mode == 'store'"
   validates :birthday, presence: true, :unless => "validation_mode == 'store'"
   validates :phone, presence: true, length: { maximum: 12}, uniqueness: { case_sensitive: false }
-  validate  :validate_phone_standard
   validates :terms_of_service, :inclusion => { :in => [true, false] }, :unless => "validation_mode == 'store'"
   validates :complete, :inclusion => { :in => [true, false] }
   validates :origin, :inclusion => { :in => %w( web store ) }
+
+  #Only necessary to validate in web scenarios since phone validation for in-store signups is handled in controller logic
+  validate :validate_phone_format, :unless => "validation_mode == 'store'"
 
 
   #This method is called in sms-utility before sending a message to subscriber
@@ -102,9 +104,11 @@ class Member < ActiveRecord::Base
       self.phone = SMSUtility::SMSFactory.convert_phone_number(self.phone)
     end
 
-    #Not currently used - we implement later with client-side code
-    def validate_phone_standard
-      return SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
+    #Used in member edit mode in web-portal
+    def validate_phone_format
+      if !SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone) && (self.phone.length <= 12)
+        errors.add(:phone, I18n.t(:invalid_phone, :scope => [:business_validations, :frontend, :member_user]) )
+      end
     end
 
     #Token used as verification in shortened links with Bitly

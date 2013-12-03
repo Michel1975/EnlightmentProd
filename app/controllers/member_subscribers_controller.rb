@@ -2,6 +2,7 @@ class MemberSubscribersController < ApplicationController
 	before_filter :member_user
 	
   #Via Google Maps
+  #Test:OK
   def subscribe
     logger.info "Loading MemberSubscriber subscribe action - remote"
     @member = Member.find( params[:subscriber][:member_id] )
@@ -23,6 +24,7 @@ class MemberSubscribersController < ApplicationController
   end
 
   #Via Google Maps
+  #Test:OK
   def unsubscribe
     logger.info "Loading MemberSubscriber unsubscribe action - remote"
     @subscriber = @current_resource
@@ -48,6 +50,7 @@ class MemberSubscribersController < ApplicationController
   end
 
   #Via frontend favorite list
+  #Test:OK
   def unsubscribe_member_table
     logger.info "Loading MemberSubscriber unsubscribe_member_table action"
     @subscriber = @current_resource
