@@ -1,5 +1,5 @@
 class ContactMailer < ActionMailer::Base
-  default sender: "michel@clubnovus.dk"
+  default from: "michel@clubnovus.dk"
   
   def forward_incoming_mail(message, email, name)
   	@name = name

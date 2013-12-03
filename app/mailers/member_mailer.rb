@@ -1,5 +1,5 @@
 class MemberMailer < ActionMailer::Base
-  default sender: "michel@clubnovus.dk"
+  default from: "michel@clubnovus.dk"
   
   #This template is for new members created on web. This email includes email confirmation link
   def welcome_mail_new_member(member)
