@@ -1,11 +1,11 @@
-<% provide(:title, 'Planlagte SMS kampagner') %>
-<% provide(:description, 'Liste over planlagte SMS kampagner') %>
+<% provide(:title, 'Aktive SMS kampagner') %>
+<% provide(:description, 'Liste over aktive SMS kampagner') %>
 <% content_for :breadcrumps do %>
   <li class="active">Planlagte SMS-kampagner</li>
 <% end %>
 <h3 class="header blue lighter smaller">
   <i class="icon-bullhorn bigger-110"></i>
-  Planlagte SMS-kampagner
+  Aktive SMS-kampagner
 </h3>
 <%= will_paginate @active_campaigns, class:"pagination"%>
   <div class="row-fluid">

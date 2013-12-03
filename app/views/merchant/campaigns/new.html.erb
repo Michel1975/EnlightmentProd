@@ -11,8 +11,8 @@
   <% if @campaign_status == 'true' %>
 	 <%= render 'form' %>
   <% else %>
-  <div class="span5">
-    <p>Det er ikke muligt at oprette nye sms-kampagner i øjeblikket</p>
+  <div class="span10">
+    <p>Det er ikke muligt at oprette nye sms-kampagner i øjeblikket. Vi arbejder på at løse problemet hurtigst muligt!</p>
   </div>
   <% end %>
 </div><!-- /.row-fluid -->
@@ -31,7 +31,7 @@
   <script type="text/javascript">
       $(document).ready(function() {
       	stop_section = $( "#stop_link").data("stop-link");
-        $('#live-preview-display').hide();
+        //$('#live-preview-display').hide();
         $('textarea.preview').bind('blur keyup',function() {
           var display_container = $('#live-preview-display')
           if ('display_container:hidden'){
@@ -43,6 +43,8 @@
           commentNode.text(text);
           commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
         });
+        //Stimulate click in textarea to show preview form start
+        $('textarea.limited').keyup();
       });
       jQuery(function($) {
           $('[data-rel=tooltip]').tooltip({container:'body'});

@@ -1,7 +1,7 @@
 class Subscriber < ActiveRecord::Base
   attr_accessible :member_id, :start_date
 
-  has_many :campaign_members #no dependent destroy due to historic campaign tracking for merchant
+  has_many :campaign_members, dependent: :destroy 
   belongs_to :merchant_store, counter_cache: true 
   belongs_to :member
 
@@ -108,7 +108,7 @@ class Subscriber < ActiveRecord::Base
   end
 
   def before_destroy_subscriber
-    self.merchant_store.subscriber_histories.create(event_type: "sign_out", member_id: self.member_id )   
+    self.merchant_store.subscriber_histories.create(event_type: "sign_out", member_id: self.member_id )
   end
 
   #Custom counter cache - note that counter cache is not displayed next to merchant_store above

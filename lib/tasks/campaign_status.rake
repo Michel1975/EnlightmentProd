@@ -6,10 +6,38 @@ class MyApi
 end
 
 namespace :campaign do
+  
+  #Step 1: Confirm campaigns in SMS gateway
+  desc "Confirm due campaigns with sms gateway..."
+  task :confirm_campaign => :environment do
+    puts "Preparing to confirm campaigns due for activation during the next +10 => 20 minutes"
+    campaigns = Campaign.where(:activation_time => (Time.zone.now + 10.minutes)..(Time.zone.now + 20.minutes)).scheduled
+    puts "Number of campaigns to be processed in this time window: #{campaigns.size.inspect}"
+    
+    campaigns.each do |campaign|
+        error = false
+        merchant_store = MerchantStore.find_by_id(campaign.merchant_store_id)
+        if merchant_store.present?
+            result = SMSUtility::SMSFactory.sendOfferReminderScheduled?(campaign, merchant_store)
+            unless result && campaign.update_column(:status, 'gateway_confirmed')
+                error = true
+            end
+        else
+            error = true
+        end
+        if error
+            campaign.update_column(:status, 'error')   
+        end
+    end
+    puts "Done confirming campaigns"
+  end#End task
  
+  #Step 2: Retrieve group campaig status
   desc "Retrieve campaign status from server"
+  #Interval: Every 30 minutes
   task :get_status => :environment do
-    campaigns = Campaign.where(:activation_time => (Time.zone.now - 1.day)..(Time.zone.now)).where(:status => 'scheduled')
+    #Find all confirmed campaigns with activation_time in the past up until 30 minutes ago.
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 10.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
     puts "Initializing campaign status batch job"
     
     puts "Loading status codes..."
@@ -44,9 +72,9 @@ namespace :campaign do
         messages = response.parsed_response['Gateway']['Messages']
 
         if messages
-            puts "Indenfor"
-            #Retrieve all sms notifications for this campaign
-    	   notifications = MessageNotification.where(campaign_group_id: campaign.message_group_id)
+           puts "Loaded status messages from SMS gateway. Starting to process..."
+           #Retrieve all sms notifications for this campaign
+           notifications = MessageNotification.where(campaign_group_id: campaign.message_group_id)
     	
     	   #Convert to hash for easy lookup - vi må prøve nogle metoder af.
     	   #http://stackoverflow.com/questions/4314384/ruby-on-rails-array-to-hash-with-key-array-of-values
@@ -64,12 +92,11 @@ namespace :campaign do
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
             messages.each do |item|
-                status_code = item[1]['sStatus'].strip
-                recipient = item[1]['sDeviceName'].strip
-                message_id = item[1]['sProviderMessageId'].strip
+                status_code = item[1]['sStatus'] && item[1]['sStatus'].strip
+                recipient = item[1]['sDeviceName'] && item[1]['sDeviceName'].strip
+                message_id = item[1]['sProviderMessageId'] && item[1]['sProviderMessageId'].strip
             
                 if status_code.present? && recipient.present? && message_id.present? 
-                    #notification =  MessageNotification.find_by_message_id(message_id)
                     notification = notifications_lookup[recipient]
                     if notification != nil && notification.status_code != "1"
                         if status_code == "0"
@@ -99,9 +126,11 @@ namespace :campaign do
     puts "Finished fetching campaign updates"
   end#end task
 
+  #Step 3: Update campaign members
   desc "Retrieve campaign status from server"
+  #Interval: Every 30 minutes
   task :update_member_status => :environment do
-    campaigns = Campaign.where(:activation_time => (Time.zone.now - 1.day)..(Time.zone.now)).where(:status => 'status_retrived_once')
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 1.day)..(Time.zone.now - 30.minutes)).where(:status => 'status_retrived_once')
     puts "#{campaigns.size} campaigns with status retrieved from gateway loaded...done"
     puts "Preparing to update campaign member_status"
     
@@ -128,12 +157,27 @@ namespace :campaign do
         merchant_store = MerchantStore.find(campaign.merchant_store_id)
         if merchant_store
             merchant_store.event_histories.create(event_type: "campaign-finished", description: "Kampagnen #{campaign.title} er nu afsluttet")
-            logger.debug "Event history updated for campaign"
         end
     end#Finish campaign logic
     puts "Finished updating campaign member status for #{campaigns.size}"
   end#End task
 
+  #Step 4: Delete status messages related to campaign with error status - due to billing issues
+  desc "Batch delete error message notifications to avoid billing issues"
+  #Interval: Once every night
+  task :delete_error_status => :environment do
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 2.day)..(Time.zone.now - 1.day)).where(:status => 'error')
+    puts "Preparing to delete error entries from MessageNotification..."
+    puts "#{campaigns.size} campaigns with related status messages due for deletion"
+    campaigns.each do |campaign|
+        notifications = MessageNotification.where(campaign_group_id: campaign.message_group_id)
+        if notifications.size != 0
+            notifications.delete_all
+        end
+    end#Finish campaign logic
+    puts "Finished deleting invalid error entries in MessageNotification"
+  end#End task
+  
 end#End namespace
 
 

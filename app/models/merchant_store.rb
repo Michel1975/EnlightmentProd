@@ -50,18 +50,24 @@ class MerchantStore < ActiveRecord::Base
   #Map positioning coordinates
   acts_as_gmappable :address => "address", :process_geocoding => false
 
-  def validate_montly_message_limit?(message_count)
-    return result = (self.message_notifications.month_total_messages.count + message_count) <= SMSUtility::STORE_TOTAL_MESSAGES_MONTH
+  def validate_monthly_message_limit?(message_count)
+    return result = (self.message_notifications.month_total_messages.count + message_count) <= SMSUtility::STORE_TOTAL_MESSAGES_MONTH.to_i
   end
   
-  #Bit.ly link for sms
+  #Bit.ly link for store link
   def store_link
     client = Bitly.client
     return "\nButik:" + client.shorten("http://www.clubnovus.dk/display_store/#{self.id}").short_url
   end
 
+  #Store regards
   def store_regards
     return "\nMvh\n" + self.store_name + store_link
+  end
+
+  #Used only when using static stop link instead of unique bitly links. 
+  def static_stop_link
+    return "\nStop: STOP #{self.sms_keyword} til 1276 222"
   end
   
   def self.search(city, store_name)
@@ -95,7 +101,7 @@ class MerchantStore < ActiveRecord::Base
     self 
   end
 
-  #Used by GeoCoder
+  #Used by GeoCoder to get latitude and longitude
   def address
     return street + " " + house_number + " " + postal_code + " " + city + " Denmark"
   end
@@ -107,10 +113,6 @@ class MerchantStore < ActiveRecord::Base
   #Used by Gmaps4Rails
   def gmaps4rails_address
     address
-  end
-
-  def short_store_link
-    #To-Do: Generate bitly link for store. This link should not be changed - maybe stored in database.
   end
 
   private

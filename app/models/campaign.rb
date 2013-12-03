@@ -21,12 +21,12 @@ class Campaign < ActiveRecord::Base
   #Custom check of sms-message
   validate  :sms_compliance_validation
   validates :activation_time, presence: true
-  validate :validate_activatation_time
-  validates :status, :inclusion => { :in => %w( new scheduled status_retrived_once completed error)}, :allow_blank => true
+  validate  :validate_activation_time
+  validates :status, :inclusion => { :in => %w( new scheduled gateway_confirmed status_retrived_once completed error)}, :allow_blank => true
   validates :merchant_store_id, presence: true
 
   def start_date
-   @start_date || activation_time.try(:strftime, "%d-%m-%Y")
+    @start_date || activation_time.try(:strftime, "%d-%m-%Y")
   end
 
   def start_time
@@ -49,7 +49,9 @@ class Campaign < ActiveRecord::Base
 
   private
     def save_activation_time
-      self.activation_time = Time.zone.parse(@start_date + " " + @start_time )
+      if @start_date && @start_time
+        self.activation_time = Time.zone.parse(@start_date + " " + @start_time )
+      end
     end
 
     #Default start time is 2 hours from now
@@ -63,24 +65,27 @@ class Campaign < ActiveRecord::Base
     end
 
 
-    def validate_activatation_time
+    def validate_activation_time
       #earliest = Time.zone.now + 1.hour
-      #latest = Time.zone.now + 7.days + 2.hour
+      #latest = Time.zone.now + 5.days + 2.hour
       earliest = Time.zone.now + 1.hour
-      latest = earliest + 1.days #Time.zone.now + 1.days  
+      latest = earliest + 5.days  
       if self.activation_time.present?
-        if (self.activation_time < earliest) && (self.activation_time < latest) 
+        if (!self.activation_time >= earliest) && (!self.activation_time <= latest) 
           errors.add(:activation_time, I18n.t(:invalid_activation_time, earliest: I18n.l(earliest), latest: I18n.l(latest), :scope => [:business_validations, :campaign]) )
         end
       end
     end
 
     def delete_message_notifications
+      #If campaign is completed, we don't delete since we loose invoice tracking in message notification
+      if self.status != "completed" 
         sms_message_entries = self.merchant_store.message_notifications.where(campaign_group_id: self.message_group_id)
         #Bulk delete in this situation
-        if sms_message_entries.size !=0
+        if sms_message_entries.size != 0
           sms_message_entries.delete_all
         end
+      end
     end
 
     def calculate_cost

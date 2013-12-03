@@ -20,7 +20,7 @@
   <script type="text/javascript">
       $(document).ready(function() {
         var stop_section = $( "#stop_link").data("stop-link");
-        $('#live-preview-display').hide();
+        //$('#live-preview-display').hide();
         $('textarea.preview').bind('blur keyup',function() {
           var display_container = $('#live-preview-display')
           if ('display_container:hidden'){
@@ -32,6 +32,8 @@
           commentNode.text(text);
           commentNode.html($('#sms_text').html().replace(/\n/g,'<br />'));
         });
+        //Stimulate click in textarea to show preview form start
+        $('textarea.limited').keyup();
       });
       jQuery(function($) {
           $('[data-rel=tooltip]').tooltip({container:'body'});

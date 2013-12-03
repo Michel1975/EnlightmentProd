@@ -257,7 +257,7 @@ end
       client = Savon.client(  env_namespace: :soap, wsdl: wsdl_file, raise_errors: true, ssl_verify_mode: :none, 
                     pretty_print_xml: true, namespaces: { "xmlns:myb" => "http://myblipz.com" },
                     soap_version:2, soap_header: %{<myb:AuthHeader><myb:Login>#{ENV["SMS_GATEWAY_USER_NAME"]}</myb:Login><myb:Password>#{ENV["SMS_GATEWAY_PASSWORD"]}</myb:Password></myb:AuthHeader>})
-      #result = client.call(method.to_sym, message: messageContent )
+      result = client.call(method.to_sym, message: messageContent )
       #Rails.logger.debug "Transmission result: #{result.inspect}" 
       #return result 
       return true

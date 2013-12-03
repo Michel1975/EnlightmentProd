@@ -48,9 +48,9 @@ class ApplicationController < ActionController::Base
   #end
 
   def log_event_history_merchant_portal(merchant_store, event_type, description)
-    logger.info "Updating event-history"
-    if event_type && description
-      logger.debug "Event-history event_type: #{event_type.inspect}, description: #{description.inspect}"
+    logger.info "Updating event-history for store"
+    if merchant_store && event_type && description
+      logger.debug "Event-history for store: #{merchant_store.store_name.inspect}, event_type: #{event_type.inspect}, description: #{description.inspect}"
       merchant_store.event_histories.create(event_type: event_type, description: description)
       logger.debug "Event history updated for specific store"
     else
