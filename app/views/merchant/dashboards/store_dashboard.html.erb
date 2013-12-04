@@ -1,4 +1,4 @@
-<% provide(:title, 'Overblik over kundeklub') %>
+<% provide(:title, 'Overblik over statistik') %>
 <% provide(:description, 'Overblik og statistik') %>
 <% content_for :breadcrumps do %>
   <li class="active">Overblik og statistik</li>
@@ -113,7 +113,7 @@
                 <tr>
                   <td><%= I18n.t(event.event_type.to_sym, :scope => [:enums, :event_type] ) if event.event_type %></td>
                   <td><%= I18n.l( event.created_at ) %></td>
-                  <td><%= event.description %></td>
+                  <td><%= h event.description %></td>
                 </tr>
               <% end %>
             </tbody>

@@ -326,6 +326,7 @@ da:
     gateway_inactive_message: Din besked kunne ikke sendes grundet tekniske problemer. Vi arbejder på at løse problemet så hurtigt som muligt!
     gateway_inactive_campaign_create: Din sms-kampagne kan ikke oprettes i øjeblikket. Vi arbejder på at løse problemet så hurtigt som muligt!
     gateway_inactive_campaign_update: Din sms-kampagne kan ikke opdateres i øjeblikket. Vi arbejder på at løse problemet så hurtigt som muligt!
+    gateway_inactive_single: Din besked kunne ikke sendes grundet tekniske problemer. Vi arbejder på at løse problemet så hurtigt som muligt!
     monthly_message_limit_broken: SMS-kampagne kan ikke oprettes, da grænsen på %{total_messages} sms-beskeder er overskredet for din butik!
   business_validations:
     generic:
@@ -479,9 +480,9 @@ da:
       one: medlem
       other: medlemmer
     memberships:
-      zero: aktive tilmeldinger
-      one: aktive tilmelding
-      other: aktive tilmeldinger
+      zero: aktive medlemmer
+      one: aktivt medlem
+      other: aktive medlemmer
     memberships_sign_outs:
       zero: afmeldinger
       one: afmelding
@@ -503,9 +504,9 @@ da:
       one: afsluttet kampagne ialt
       other: afsluttede kampagner ialt
     total_sms_messages:
-      zero: sms-beskeder ialt
-      one:  sms-besked ialt
-      other: sms-beskeder ialt
+      zero: afsendte sms-beskeder ialt
+      one:  afsendt sms-besked ialt
+      other: afsendte sms-beskeder ialt
     month_total_sms_messages:
       zero: sms-beskeder denne måned
       one:  sms-besked denne måned

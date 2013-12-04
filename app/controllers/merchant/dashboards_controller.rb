@@ -2,7 +2,8 @@ class Merchant::DashboardsController < Merchant::BaseController
     
     #Note om tidszoner: http://www.elabs.se/blog/36-working-with-time-zones-in-ruby-on-rails
     #Link til charts-kode fra episode223: https://github.com/railscasts/223-charts-graphs-revised
-	def store_dashboard
+	#Test:OK
+    def store_dashboard
         logger.info "Loading store_dashboard action"
     	@merchant_store = current_merchant_store
         logger.debug "Merchant_store attributes hash: #{@merchant_store.attributes.inspect}"
@@ -36,7 +37,7 @@ class Merchant::DashboardsController < Merchant::BaseController
     	@completed_campaigns = @merchant_store.campaigns.completed.count
         logger.debug "Completed campaigns count: #{@completed_campaigns.inspect}"
 
-        #SMS-beskeder ialt- admin messages not included
+        #Total sent sms messages for store - admin messages exluded. Error messages are deleted each night in batch.
         @total_sms_messages = @merchant_store.message_notifications.store.count#length-size
         logger.debug "Total sms messages (admin messages excluded) count: #{@total_sms_messages.inspect}"
 
@@ -45,7 +46,7 @@ class Merchant::DashboardsController < Merchant::BaseController
         #@total_sms_messages_single = @merchant_store.message_notifications.month_total_messages.single.length #.month_total_messages.size
         #@total_sms_messages_test = @merchant_store.message_notifications.month_total_messages.test.length #.month_total_messages.size
 
-        #Gns. daglig medlemstilgang
+        #Total sign-outs for store
         @sign_outs_total = @merchant_store.subscriber_histories.sign_outs.count
         logger.debug "Sign_outs total: #{@sign_outs_total.inspect}"
 

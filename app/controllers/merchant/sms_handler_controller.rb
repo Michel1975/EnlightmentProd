@@ -72,7 +72,7 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 	 				SMSUtility::BackgroundWorker.new.delay.stopStoreSubscription(sender, text)
 	 			else
 	 				logger.debug "Opt-in request received. Calling signupMember method...background process"
-	 				SMSUtility::BackgroundWorker.new.signupMember(sender, text)
+	 				SMSUtility::BackgroundWorker.new.delay.signupMember(sender, text)
 	 			end
 	 		else
 	 			logger.fatal "Error: Incoming phone number not valid"

@@ -476,7 +476,15 @@ class BackgroundWorker
       else
         Rails.logger.debug "Error: Merchant-store NOT found from received keyword"
         Rails.logger.fatal "Error: Merchant-store NOT found from received keyword"
-        
+
+        Rails.logger.fatal "Checking if member record should be deleted due to failure..."
+        #Delete new member if sign-ups fails - only for pure store-profiles with no memberships
+        if member.subscribers.empty? && !member.complete
+          Rails.logger.debug "Member has no subscribers and is a pure store-only profile...go ahead and delete"
+          if member.destroy
+            Rails.logger.debug "Member deleted successfully"
+          end
+        end
         #Log all keywords that doesn't match stores
         message_error = MessageError.create!(recipient: sender, text: keyword, error_type: "invalid_keyword")
         Rails.logger.debug "Message error entry created: #{message_error.inspect}"

@@ -1,6 +1,7 @@
 class Subscriber < ActiveRecord::Base
   attr_accessible :member_id, :start_date
 
+  #Ensures that opt-out members don't get campaign sms'es after opt-out (unless during 30 minutes confirm interval)
   has_many :campaign_members, dependent: :destroy 
   belongs_to :merchant_store, counter_cache: true 
   belongs_to :member

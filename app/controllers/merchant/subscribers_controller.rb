@@ -1,16 +1,19 @@
 class Merchant::SubscribersController < Merchant::BaseController
+	#Test:OK
 	def index
 		logger.info "Loading subscriber index action"
     	@subscribers = current_merchant_store.subscribers.page(params[:page]).per_page(10)
     	logger.debug "Subscribers - attributes hash: #{@subscribers.inspect}"
 	end
 
+	#Test:OK
 	def show
 		logger.info "Loading subscriber show action"
 		@subscriber = current_resource
 		logger.debug "Subscriber - attributes hash: #{@subscriber.attributes.inspect}"
 	end
 
+	#Test:OK
 	def destroy
 		logger.info "Loading subscriber destroy action"
   		subscriber = current_resource
@@ -26,23 +29,20 @@ class Merchant::SubscribersController < Merchant::BaseController
 		end
 	end
 
+	#Test:OK
 	def prepare_single_message
 		logger.info "Loading subscriber prepare_single_message action"
 		@subscriber = current_resource
 		logger.debug "Subscriber - attributes hash: #{@subscriber.attributes.inspect}"
-		@message_limit = 160 - 30 #Safe guess on bitly length.
+		@stop_link = @subscriber.opt_out_link_sms
+		logger.debug "Stop link: #{@stop_link.inspect}"
+		@message_limit = 160 - @subscriber.opt_out_link_sms.length
     	logger.debug "Message limit: #{@message_limit.inspect}"
-
-    	#SMS stop link - if we decide to go with this option
-    	@stop_link = "\nStop: STOP #{current_merchant_store.sms_keyword} til 1276 222"
-    	logger.debug "Stop link: #{@stop_link.inspect}"
-		#Used for max-length property in textarea
-		#old: @message_limit = 160 - @subscriber.opt_out_link.length
-
 	end
 
+	#Test:OK
 	def send_single_message
-		logger.info "Loading subscriber send_single_message action"
+		logger.info "Loading Subscribers send_single_message action"
 		@subscriber = current_resource
 		logger.debug "Subscriber - attributes hash: #{@subscriber.attributes.inspect}"
 		
@@ -61,7 +61,7 @@ class Merchant::SubscribersController < Merchant::BaseController
 
 			logger.debug "Validating monthly message limits..."
 	      	#Validate monthly message limits
-      		if current_merchant_store.validate_montly_message_limit?(1)
+      		if current_merchant_store.validate_monthly_message_limit?(1)
       			logger.debug "Monthly message limit not broken for store...proceeding"
 				if SMSUtility::SMSFactory.validate_sms?(message) && no_characters < 160
 					logger.debug "Message validation OK"
@@ -87,7 +87,7 @@ class Merchant::SubscribersController < Merchant::BaseController
 			end
 		else
 			logger.debug "SMS Gateway is set to inactive - thus new campaigns cannot be created"
-      		flash[:error] = t(:gateway_inactive, :scope => [:system])
+      		flash[:error] = t(:gateway_inactive_single, :scope => [:system])
       		redirect_to merchant_subscribers_path
 		end
 	end
