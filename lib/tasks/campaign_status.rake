@@ -9,9 +9,10 @@ namespace :campaign do
   
   #Step 1: Confirm campaigns in SMS gateway
   desc "Confirm due campaigns with sms gateway..."
+  #Interval: Every 10 minutes
   task :confirm_campaign => :environment do
     puts "Preparing to confirm campaigns due for activation during the next +10 => 20 minutes"
-    campaigns = Campaign.where(:activation_time => (Time.zone.now + 10.minutes)..(Time.zone.now + 20.minutes)).scheduled
+    campaigns = Campaign.where(:activation_time => (Time.zone.now + 10.minutes)..(Time.zone.now + 20.minutes ) ).scheduled
     puts "Number of campaigns to be processed in this time window: #{campaigns.size.inspect}"
     
     campaigns.each do |campaign|
@@ -128,9 +129,9 @@ namespace :campaign do
 
   #Step 3: Update campaign members
   desc "Retrieve campaign status from server"
-  #Interval: Every 30 minutes
+  #Interval: Every 60 minutes
   task :update_member_status => :environment do
-    campaigns = Campaign.where(:activation_time => (Time.zone.now - 1.day)..(Time.zone.now - 30.minutes)).where(:status => 'status_retrived_once')
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 10.hours)..(Time.zone.now - 30.minutes)).where(:status => 'status_retrived_once')
     puts "#{campaigns.size} campaigns with status retrieved from gateway loaded...done"
     puts "Preparing to update campaign member_status"
     

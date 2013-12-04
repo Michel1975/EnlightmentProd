@@ -67,7 +67,7 @@ class MerchantStore < ActiveRecord::Base
 
   #Used only when using static stop link instead of unique bitly links. 
   def static_stop_link
-    return "\nStop: STOP #{self.sms_keyword} til 1276 222"
+    return "\nSTOP: Stop #{self.sms_keyword} til 1276 222"
   end
   
   def self.search(city, store_name)

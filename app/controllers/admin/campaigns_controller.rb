@@ -35,12 +35,44 @@ class Admin::CampaignsController < Admin::BaseController
   	end
 
   	def show
-	    logger.info "Loading campaign show action"
+	    logger.info "Loading Campaigns show action"
 	    @campaign = current_resource
 	    @campaign_members = @campaign.campaign_members.page(params[:page]).per_page(10)
 	    logger.debug "Campaign attributes hash: #{@campaign.attributes.inspect}"
 	    logger.debug "Campaign members attributes hash: #{@campaign_members.inspect}"
   	end
+
+  	def destroy
+    	logger.info "Loading Campaigns destroy action"
+    	@campaign = current_resource
+    	logger.debug "Campaign attributes hash: #{@campaign.attributes.inspect}"
+    
+    	gateway_delete_status = true
+
+      if @campaign.status == "gateway_confirmed" 
+        logger.debug "Campaign is confirmed by gateway. Need to cancel in sms gateway..."
+        if SMSUtility::SMSFactory.cancelScheduledOfferReminder?(@campaign)
+          logger.debug "Campaign is successfully deleted in SMS gateway"
+        else
+          gateway_delete_status = false
+          logger.debug "Error: Campaign was NOT deleted in SMS gateway"
+        end
+      end
+
+      if gateway_delete_status && @campaign.destroy
+        logger.debug "Campaign successfully deleted"
+        logger.debug "Updating eventhistory..."
+        m_user = MerchantUser.find(current_user.sub_id)
+        log_event_history_merchant_portal(current_merchant_store, "campaign-cancelled", "#{m_user.name} annullerede en kampagne")
+        flash[:success] = t(:campaign_deleted, :scope => [:business_validations, :campaign])
+        redirect_to scheduled_admin_campaigns_path
+      else
+        logger.debug "Error: Campaign NOT deleted due to unknown errors"
+        logger.fatal "Error: Campaign NOT deleted due to unknown errors"
+        flash[:error] = t(:campaign_delete_technical_error, :scope => [:business_validations, :campaign])
+        redirect_to scheduled_admin_campaigns_path
+      end
+  end
 
   	private
     def current_resource

@@ -40,6 +40,13 @@
       </div>
 
       <div class="profile-info-row">
+        <div class="profile-info-name"> Bekræftelse </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="acknowledgement"> <%= b( @campaign.acknowledgement ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
           <span class="editable editable-click" id="age"> <%= I18n.l( @campaign.created_at ) %> </span>
@@ -69,6 +76,7 @@
 <div class="row-fluid">
   <div class="span7">
     <hr>
+
     <%= link_to :back, class: "btn btn-primary btn-small" do %>
     <i class="icon-arrow-left bigger-110"></i>
     Tilbage
@@ -78,6 +86,7 @@
     <i class="icon-edit bigger-110"></i>
     Rediger
     <% end %>
+
     <%= link_to [:merchant, @campaign], 
       method: :delete, data: { confirm: t(:warning_deletion_campaign, :scope => [:business_validations, :campaign]) } do %>
       <button class="btn btn-small btn-danger">

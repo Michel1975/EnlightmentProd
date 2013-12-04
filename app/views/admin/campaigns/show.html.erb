@@ -47,6 +47,13 @@
       </div>
 
       <div class="profile-info-row">
+        <div class="profile-info-name"> Bekræftelse </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="acknowledgement"> <%= b( @campaign.acknowledgement ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
           <span class="editable editable-click" id="age"> <%= I18n.l( @campaign.created_at ) %> </span>

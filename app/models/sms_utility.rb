@@ -189,7 +189,7 @@ class SMSFactory
       recipientString = ""
 
       #Insert placeholder macro for stop-link
-      message = campaign.message + "\n%StopLink%"
+      message = campaign.message + "%StopLink%"
       campaign.campaign_members.each do |campaign_member|
         #Generate safe message-id from log method
         recipient = campaign_member.subscriber.member.phone
@@ -199,7 +199,7 @@ class SMSFactory
       recipientXml = "<recipients>" + recipientString + "</recipients>"     
       stringXml = "<bulk>" +    
       "<message>" + HTMLEntities.new.encode(message) + "</message>" +
-      "<header><from>Club-Novus</from>" +
+      "<header><from>1276222</from>" +
       "<GroupID>" + campaign.message_group_id + "</GroupID></header>" + 
       recipientXml + "</bulk>"      
       builder = Builder::XmlMarkup.new(:target => xml_body, :indent => 2)
@@ -231,7 +231,7 @@ class SMSFactory
       "<messageid>" + message_id + "</messageid>" +
       "<recipient>" + recipient + "</recipient>" +
       #ekstra tilføjelse med from
-      "<from>Club-Novus</from>" +
+      "<from>1276222</from>" +
       "</item></xml>"      
       builder = Builder::XmlMarkup.new(:target => xml_body, :indent => 2)
       builder.tag!("myb:iGatewayId", ENV["SMS_GATEWAY_ID"])
@@ -257,7 +257,7 @@ end
       client = Savon.client(  env_namespace: :soap, wsdl: wsdl_file, raise_errors: true, ssl_verify_mode: :none, 
                     pretty_print_xml: true, namespaces: { "xmlns:myb" => "http://myblipz.com" },
                     soap_version:2, soap_header: %{<myb:AuthHeader><myb:Login>#{ENV["SMS_GATEWAY_USER_NAME"]}</myb:Login><myb:Password>#{ENV["SMS_GATEWAY_PASSWORD"]}</myb:Password></myb:AuthHeader>})
-      result = client.call(method.to_sym, message: messageContent )
+      #result = client.call(method.to_sym, message: messageContent )
       #Rails.logger.debug "Transmission result: #{result.inspect}" 
       #return result 
       return true

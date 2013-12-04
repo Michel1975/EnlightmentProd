@@ -99,7 +99,7 @@ class Subscriber < ActiveRecord::Base
   def opt_out_link_sms 
     #client = Bitly.client
     #No new-line since link is inserted with stop macro
-    return "Stop: send #{merchant_store.sms_keyword} til 1276 222" 
+    return "\nSTOP: Stop #{merchant_store.sms_keyword} til 1276 222" 
   end
 
   #Updates eventhistory for subscriber - for reporting purposes

@@ -92,7 +92,7 @@ class Member < ActiveRecord::Base
       end
 
       #Store profiles has automatically provided their permission on phone
-      if origin == 'store' && !self.phone_confirmed 
+      if self.origin == 'store' && !self.phone_confirmed 
         self.phone_confirmed = true
       end
 

@@ -1,7 +1,7 @@
 class Campaign < ActiveRecord::Base
   scope :completed, where(:status => 'completed')
   scope :scheduled, where(:status => 'scheduled')
-  attr_accessible :title, :message, :status, :activation_time, :message_group_id, :start_date, :start_time
+  attr_accessible :title, :message, :status, :activation_time, :message_group_id, :start_date, :start_time, :acknowledgement
   attr_writer :start_date, :start_time
 
   belongs_to :merchant_store
@@ -13,7 +13,9 @@ class Campaign < ActiveRecord::Base
   #Customers must only pay for sent messages - thus we delete if message entries if campaign is deleted.
   before_destroy :delete_message_notifications 
   
-  before_save :save_activation_time, :set_default_status
+  before_save :set_default_status
+  #Must be a before_validation callback - otherwise activation datetime is not set before validation
+  before_validation :save_activation_time
 
   validates :title, presence: true, length: { maximum: 30 }
   validates :message, presence: true, length: { maximum: 160 }
@@ -24,6 +26,7 @@ class Campaign < ActiveRecord::Base
   validate  :validate_activation_time
   validates :status, :inclusion => { :in => %w( new scheduled gateway_confirmed status_retrived_once completed error)}, :allow_blank => true
   validates :merchant_store_id, presence: true
+  validates :acknowledgement, :acceptance  => {:accept => true}
 
   def start_date
     @start_date || activation_time.try(:strftime, "%d-%m-%Y")
@@ -66,12 +69,10 @@ class Campaign < ActiveRecord::Base
 
 
     def validate_activation_time
-      #earliest = Time.zone.now + 1.hour
-      #latest = Time.zone.now + 5.days + 2.hour
       earliest = Time.zone.now + 1.hour
       latest = earliest + 5.days  
       if self.activation_time.present?
-        if (!self.activation_time >= earliest) && (!self.activation_time <= latest) 
+        if (self.activation_time < earliest) || (self.activation_time > latest) 
           errors.add(:activation_time, I18n.t(:invalid_activation_time, earliest: I18n.l(earliest), latest: I18n.l(latest), :scope => [:business_validations, :campaign]) )
         end
       end
