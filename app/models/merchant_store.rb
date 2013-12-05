@@ -26,7 +26,7 @@ class MerchantStore < ActiveRecord::Base
   before_save { |store| store.sms_keyword = store.sms_keyword.downcase } #af hensyn til match-forespørgsler ved sms-tilmelding
   before_save :convert_phone_standard
 
-  validates :email, :store_name, :active, :city, :country, :description, :short_description, :owner, :street, :house_number, :postal_code, :sms_keyword, :phone, presence: true
+  validates :email, :store_name, :city, :country, :description, :short_description, :owner, :street, :house_number, :postal_code, :sms_keyword, :phone, presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, format: { with: VALID_EMAIL_REGEX }, :allow_blank => true
   validates :active, :inclusion => { :in => [ true, false ] }, :allow_blank => true

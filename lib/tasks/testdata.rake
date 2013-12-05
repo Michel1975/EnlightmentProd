@@ -132,9 +132,9 @@ namespace :db do
       5.times do |n|
         title = "Tilbud på kaffe"
         description = "Lorem ipsum Lorem ipsum Lorem ipsum"
-        valid_from = (Time.now - 50.days)
-        valid_to = (Time.now - 10.days)
-        store.offers.create!(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
+        valid_from_text = (Time.now - 50.days).to_s
+        valid_to_text = (Time.now - 10.days).to_s
+        store.offers.create!(title: title, description: description, valid_from_text: valid_from_text, valid_to_text: valid_to_text)
         #Adding dummy container for image
         store.create_image()
       end
@@ -143,9 +143,9 @@ namespace :db do
       5.times do |n|
         title = "Tilbud på chocolade"
         description = "Lorem ipsum Lorem ipsum Lorem ipsum"
-        valid_from = (Time.now - 5.days)
-        valid_to = (Time.now + 20.days)
-        store.offers.create!(title: title, description: description, valid_from: valid_from, valid_to: valid_to)
+        valid_from_text = (Time.now - 5.days).to_s
+        valid_to_text = (Time.now + 20.days).to_s
+        store.offers.create!(title: title, description: description, valid_from_text: valid_from_text, valid_to_text: valid_to_text)
         #Adding dummy container for image
         store.create_image()
       end
