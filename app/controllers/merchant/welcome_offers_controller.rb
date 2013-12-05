@@ -1,12 +1,13 @@
 class Merchant::WelcomeOffersController < Merchant::BaseController
-	#If-override-from-base: layout "merchant", except: [:index]
 	
+	#Test:OK
 	def show
 		logger.info "Loading welcome_offer show action"
     	@welcome_offer = current_resource #Old:current_merchant_store.welcome_offer
     	logger.debug "Welcome offer - attributes hash: #{@welcome_offer.attributes.inspect}"
 	end
 
+	#Test:OK
 	def edit
 		logger.info "Loading welcome_offer edit action"
 		@welcome_offer = current_resource
@@ -16,6 +17,7 @@ class Merchant::WelcomeOffersController < Merchant::BaseController
 		logger.debug "Message limit: #{@message_limit.inspect}"
 	end
 
+	#Test:OK
 	def update
 		logger.info "Loading welcome_offer update action"
 		@welcome_offer = current_resource

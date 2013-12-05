@@ -28,11 +28,11 @@
         </li>          
         <li>
           <i class="icon-caret-right blue"></i>
-          Vej:<%= @merchant_store.street + " " + @merchant_store.house_number %>
+          Vej: <%= @merchant_store.street + " " + @merchant_store.house_number %>
         </li>
         <li>
           <i class="icon-caret-right blue"></i>
-          Postnr./by:<%= @merchant_store.postal_code + " " + @merchant_store.city %>
+          Postnr./by: <%= @merchant_store.postal_code + " " + @merchant_store.city %>
         </li>
         <li class="divider"></li>
         <li>
@@ -103,9 +103,9 @@
             <td><%= @subscription.subscription_type.monthly_price %> kr.</td>
         </tr>
          <tr>
-          <td class="center">1</td>
+          <td class="center">2</td>
             <td>Løbende sms-forbrug</td>
-            <td> <%= @number_of_messages_month * 0.25 %> kr. ( <%= t('misc.total_sms_messages', :count =>  @number_of_messages_month ) %> )</td>
+            <td> <%= @running_total_month %> kr. ( <%= @number_of_messages_month %> <%= t('misc.total_sms_messages', :count =>  @number_of_messages_month ) %> )</td>
         </tr>
       </tbody>
     </table>
@@ -137,8 +137,8 @@
             <td>
                 <%= I18n.l(invoice.period_start.beginning_of_month, :format => "%B %y") %>
             </td>       
-            <td><%= invoice.amount_ex_moms %> kr.</td>
-            <td>to-do: download knap</td>
+            <td> <%= invoice.amount_ex_moms %> kr.</td>
+            <td> to-do: download knap</td>
           </tr>
         <% end %>
       </tbody>

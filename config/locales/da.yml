@@ -410,6 +410,7 @@ da:
       member_added: Medlemmet er nu oprettet og tilføjet din kundeklub!
     merchant_store:
       information_updated: Oplysninger er nu opdateret!
+      invalid_phone: er ugyldig. Skal være et dansk telefonnummer med/uden landekode.
     merchant_user:
       profile_updated: Din brugerprofil er nu opdateret!
       new_password_created: Dit password er nu gemt. Log ind på din profil allerede nu under "For Butikker" i menuen!
@@ -419,6 +420,10 @@ da:
       offer_created: Tilbud er oprettet og synligt på clubnovus.dk!
       offer_updated: Tilbud er opdateret!
       offer_deleted: Tilbud er slettet!
+      offer_delete_error: Tilbuddet kunne ikke slettes grundet en teknisk fejl. Kontakt venligst support, hvis problemet fortsætter.
+      invalid_valid_from: er ugyldig. Skal gælde fra mindst idag
+      invalid_valid_to: er ugyldig. Skal ligge i fremtiden
+      invalid_interval: er ugyldig. 'Gyldig fra' skal være mindre end 'Gyldig til'
       warning_deletion_offer: Du er ved at slette et aktivt tilbud. Er du sikker?
     subscriber:
       subscriber_removed: Medlem er nu fjernet fra kundeklubben!

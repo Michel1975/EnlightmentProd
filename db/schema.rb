@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131204124005) do
+ActiveRecord::Schema.define(:version => 20131205153338) do
 
   create_table "backend_admins", :force => true do |t|
     t.string   "name"
@@ -171,8 +171,6 @@ ActiveRecord::Schema.define(:version => 20131204124005) do
     t.datetime "updated_at",                                     :null => false
     t.string   "phone"
     t.text     "short_description"
-    t.string   "store_picture"
-    t.integer  "store_picture_size"
     t.integer  "subscribers_count"
     t.integer  "message_notifications_count"
     t.string   "email"
@@ -218,10 +216,8 @@ ActiveRecord::Schema.define(:version => 20131204124005) do
     t.date     "valid_from"
     t.date     "valid_to"
     t.integer  "merchant_store_id"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-    t.string   "offer_picture"
-    t.integer  "offer_picture_size"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "offers", ["merchant_store_id"], :name => "index_offers_on_merchant_store_id"

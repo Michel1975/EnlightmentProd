@@ -3,6 +3,9 @@ class Shared::MemberSessionsController < Shared::BaseController
 
   def create
     logger.info "Loading MemberSession create action"
+    #Remove old session data to be sure
+    logout
+    delete_session_variables
     user = login(params[:email], params[:password], params[:remember_me])
     #Login and verify user type to avoid invalid logins
     if user && user.sub_type == "Member"
