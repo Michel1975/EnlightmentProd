@@ -26,16 +26,15 @@ class Merchant::WelcomeOffersController < Merchant::BaseController
 		#Used for max-length property in textarea
 		@message_limit = 160 - current_merchant_store.store_regards.length
 		logger.debug "Message limit: #{@message_limit.inspect}"
-
-    	respond_to do |format|
-      		if @welcome_offer.update_attributes(params[:welcome_offer])
-      			logger.debug "Welcome offer updated successfully: #{@welcome_offer.attributes.inspect}"
-        		format.html { redirect_to [:merchant, @welcome_offer], :success => t(:offer_updated, :scope => [:business_validations, :welcome_offer]) }
-      		else
-      			logger.debug "Validation errors. Loading edit view with errors"
-        		format.html { render action: "edit" }
-      		end
-      	end
+    	
+  		if @welcome_offer.update_attributes(params[:welcome_offer])
+  			flash[:success] = t(:offer_updated, :scope => [:business_validations, :welcome_offer]) 
+  			logger.debug "Welcome offer updated successfully: #{@welcome_offer.attributes.inspect}"
+    		redirect_to [:merchant, @welcome_offer]
+  		else
+  			logger.debug "Validation errors. Loading edit view with errors"
+    		render :edit
+  		end
 	end
 
 	private

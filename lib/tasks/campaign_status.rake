@@ -93,9 +93,9 @@ namespace :campaign do
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
             messages.each do |item|
-                status_code = item[1]['sStatus'] && item[1]['sStatus'].strip
-                recipient = item[1]['sDeviceName'] && item[1]['sDeviceName'].strip
-                message_id = item[1]['sProviderMessageId'] && item[1]['sProviderMessageId'].strip
+                status_code = item[1]['sStatus'].strip
+                recipient = item[1]['sDeviceName'].strip
+                message_id = item[1]['sProviderMessageId'].strip
             
                 if status_code.present? && recipient.present? && message_id.present? 
                     notification = notifications_lookup[recipient]
