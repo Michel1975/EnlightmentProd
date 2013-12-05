@@ -35,7 +35,7 @@ namespace :campaign do
  
   #Step 2: Retrieve group campaig status
   desc "Retrieve campaign status from server"
-  #Interval: Every 30 minutes
+  #Interval: Every 60 minutes
   task :get_status => :environment do
     #Find all confirmed campaigns with activation_time in the past up until 30 minutes ago.
     campaigns = Campaign.where(:activation_time => (Time.zone.now - 10.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')

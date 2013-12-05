@@ -2,6 +2,7 @@
      <%= form_for @member_user, as: :member, :url => @member_user.new_record? ? member_users_path : member_user_path(@member_user), html: { class: "reg-page", style: "max-width: 50%"} do |f| %>
       <%= render :partial => "/shared/error_messages", :locals => { :obj => @member_user } %>
       <div class="controls">
+        <!-- /.inside row-fluid start-->
         <div class="row-fluid">
           <div class="span6">
             <div class="field">
@@ -61,6 +62,7 @@
           </div><!-- /.span6 -->
         </div><!-- /.controls-->
      </div><!-- /.inside row-fluid end-->
+
      <% if f.object.new_record? %>
       <div class="row-fluid">
         <hr>
@@ -69,9 +71,10 @@
             <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bekræftelseskode</label>
             <%= f.simple_captcha :label => "", :code_type => "" %>
           </div>
-        </div><!-- /.inside span12 end-->
+        </div><!-- /.inside span3 end-->
       </div><!-- /.inside row-fluid end-->
      <% end %>
+
      <div class="row-fluid">
         <div class="controls form-inline" style="margin-top:20px">
           <% if f.object.new_record? %> 
@@ -97,7 +100,7 @@
           <p>Allerede medlem? klik <%= link_to "her", shared_login_member_path, class: "color-green" %> for at logge ind</p>
         <% end %>
     <% end %><!-- /.end form -->
-<div><!-- /.row-fluid -->
+</div><!-- /.row-fluid -->
 
 
  
