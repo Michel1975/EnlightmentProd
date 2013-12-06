@@ -96,9 +96,10 @@ namespace :campaign do
                 #Need to put content into new clean hash - to avoid weird bugs
                 tmp = item[1]
                 puts "Item-hash" + tmp.to_s
-                status_code = tmp['sStatus']
-                recipient =  tmp['sDeviceName']
-                message_id = tmp['sProviderMessageId']
+                status_code = tmp['sStatus'].to_s
+                recipient =  tmp['sDeviceName'].to_s
+                message_id = tmp['sProviderMessageId'].to_s
+                
                 puts "Status-kode: " + status_code
                 puts "Recipient: " + recipient
                 puts "Message-id: " + message_id
