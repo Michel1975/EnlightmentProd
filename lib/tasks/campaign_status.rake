@@ -38,7 +38,7 @@ namespace :campaign do
   #Interval: Every 60 minutes
   task :get_status => :environment do
     #Find all confirmed campaigns with activation_time in the past up until 30 minutes ago.
-    campaigns = Campaign.where(:activation_time => (Time.zone.now - 10.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 20.hours)..(Time.zone.now + 30.minutes) ).where(:status => 'gateway_confirmed')
     puts "Initializing campaign status batch job"
     
     puts "Loading status codes..."
@@ -93,11 +93,16 @@ namespace :campaign do
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
             messages.each do |item|
-                status_code = item[1]['sStatus'].strip
-                recipient = item[1]['sDeviceName'].strip
-                message_id = item[1]['sProviderMessageId'].strip
+                status_code = item[1]['sStatus']
+                recipient = item[1]['sDeviceName']
+                message_id = item[1]['sProviderMessageId']
             
                 if status_code.present? && recipient.present? && message_id.present? 
+                    #Remove whitespaces from non-blank string values
+                    status_code = status_code.strip
+                    recipient = recipient.strip
+                    message_id = message_id.strip    
+
                     notification = notifications_lookup[recipient]
                     if notification != nil && notification.status_code != "1"
                         if status_code == "0"
