@@ -1,16 +1,19 @@
 class Merchant::MerchantUsersController < Merchant::BaseController
+	#Test:OK
 	def show
 		logger.info "Loading MerchantUser show action"
 		@merchant_user = current_resource
 		logger.debug "Merchant user attributes hash: #{@merchant_user.attributes.inspect}"
 	end
 
+	#Test:OK
 	def edit
 		logger.info "Loading MerchantUser edit action"
 		@merchant_user = current_resource
 		logger.debug "Merchant user attributes hash: #{@merchant_user.attributes.inspect}"
 	end
 
+	#Test:OK
 	def update
 		logger.info "Loading MerchantUser update action"
 		@merchant_user = current_resource

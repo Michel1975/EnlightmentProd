@@ -37,7 +37,7 @@ namespace :campaign do
   #Interval: Every 60 minutes
   task :get_status => :environment do
     #Find all confirmed campaigns with activation_time in the past up until 30 minutes ago.
-    campaigns = Campaign.where(:activation_time => (Time.zone.now - 20.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 30.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
     puts "Initializing campaign status batch job"
     
     puts "Loading status codes..."
@@ -99,15 +99,16 @@ namespace :campaign do
                 res = {}
                 message[1].each do |k, v|
                     res[k] = v
+                    puts "Value: #{v}" if v
                 end
                 puts "Result-hash:" + res.to_s
 
                 status_code = res['sStatus']
-                puts "Status-code:" + status_code.to_s
+                puts "Status-code: #{status_code.inspect}" 
                 recipient = res['sDeviceName']
-                puts "Recipient:" + recipient.to_s
+                puts "Recipient: #{recipient.inspect}" 
                 message_id = res['sProviderMessageId']
-                puts "Message-Id:" + message_id.to_s
+                puts "Message-Id: #{message_id.inspect}"
 
                 #Could also work out
                 #items[1].each do |item|
@@ -118,6 +119,7 @@ namespace :campaign do
                 #end
             
                 if status_code.present? && recipient.present? && message_id.present? 
+                    puts "All attributes are present. Proceeding with status update..."
                     #Remove whitespaces from non-blank string values
                     status_code = status_code.strip
                     recipient = recipient.strip

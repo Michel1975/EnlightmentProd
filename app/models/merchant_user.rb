@@ -8,7 +8,8 @@ class MerchantUser < ActiveRecord::Base
   before_save :convert_phone_standard
 
   validates :name, :role, presence: true
-  validates :phone, presence: true, length: { maximum: 12 }
+  validates :phone, presence: true
+  validate :validate_phone_format
   validates :admin, :inclusion => { :in => [true, false] }
 
   def login_as(merchant_store_id)
@@ -19,9 +20,11 @@ class MerchantUser < ActiveRecord::Base
     def convert_phone_standard
       self.phone = SMSUtility::SMSFactory.convert_phone_number(self.phone)
     end
-
-    #Not currently used - we implement later with client-side code
-    def validate_phone_standard
-      return SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
+    
+    def validate_phone_format
+      if !self.phone.blank? && !SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone) && (self.phone.length <= 12)
+        errors.add(:phone, I18n.t(:invalid_phone, :scope => [:business_validations, :backend, :merchant_user]) )
+      end
     end
+
 end

@@ -5,8 +5,8 @@ class Admin::CampaignsController < Admin::BaseController
 		@search = false
 		logger.debug "Search flag: #{@search.inspect}"
     	
-    	@campaigns = @active_campaigns = Campaign.where("activation_time > :date_now", :date_now => Time.zone.now ).page(params[:page]).per_page(15)
-    	logger.debug "Scheduled campaigns attributes hash: #{@campaigns.inspect}"
+    @campaigns = @active_campaigns = Campaign.where("activation_time > :date_now", :date_now => Time.zone.now ).page(params[:page]).per_page(15)
+    logger.debug "Scheduled campaigns attributes hash: #{@campaigns.inspect}"
 	end
 
 	def completed
@@ -37,7 +37,7 @@ class Admin::CampaignsController < Admin::BaseController
   	def show
 	    logger.info "Loading Campaigns show action"
 	    @campaign = current_resource
-	    @campaign_members = @campaign.campaign_members.page(params[:page]).per_page(10)
+	    @campaign_members = @campaign.campaign_members.page(params[:page]).per_page(15)
 	    logger.debug "Campaign attributes hash: #{@campaign.attributes.inspect}"
 	    logger.debug "Campaign members attributes hash: #{@campaign_members.inspect}"
   	end

@@ -1,18 +1,21 @@
 class Admin::BackendAdminsController < Admin::BaseController
+	#Test: OK
 	def show
-		logger.info "Loading BackendAdmin show action"
+		logger.info "Loading BackendAdmins show action"
 		@backend_admin_user = current_resource
 		logger.debug "BackendAdmin user attributes hash: #{@backend_admin_user.attributes.inspect}"
 	end
 
+	#Test: OK
 	def edit
-		logger.info "Loading BackendAdmin edit action"
+		logger.info "Loading BackendAdmins edit action"
 		@backend_admin_user = current_resource
 		logger.debug "BackendAdmin user attributes hash: #{@backend_admin_user.attributes.inspect}"
 	end
 
+	#Test: OK
 	def update
-		logger.info "Loading BackendAdmin update action"
+		logger.info "Loading BackendAdmins update action"
 		@backend_admin_user = current_resource
 		logger.debug "BackendAdmin user attributes hash: #{@backend_admin_user.attributes.inspect}"
     	if @backend_admin_user.update_attributes(params[:backend_admin])

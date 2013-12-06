@@ -14,45 +14,49 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Navn </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_user.name %> </span>
+          <span class="editable editable-click" id="name"> <%= @merchant_user.name %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Rolle </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_user.role %> </span>
+          <span class="editable editable-click" id="role"> <%= @merchant_user.role %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Telefon </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_user.phone %> </span>
+          <span class="editable editable-click" id="phone"> <%= @merchant_user.phone %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Email </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= @merchant_user.user.try(:email) %> </span>
+          <span class="editable editable-click" id="email"> <%= @merchant_user.user.try(:email) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= I18n.l( @merchant_user.created_at) %> </span>
+          <span class="editable editable-click" id="created_at"> <%= I18n.l( @merchant_user.created_at) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Opdateret </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="age"> <%= I18n.l( @merchant_user.created_at ) %> </span>
+          <span class="editable editable-click" id="updated_at"> <%= I18n.l( @merchant_user.updated_at ) %> </span>
         </div>
       </div>
     </div><!-- /.profile-user-info -->
+    <%= link_to :back, class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
+      <i class="icon-arrow-left bigger-110"></i>
+      Tilbage
+    <% end %>
     <%= link_to edit_merchant_merchant_user_path(current_merchant_user), 
     		class: "btn btn-primary btn-small", style: "margin-top:10px" do %>
         <i class="icon-edit bigger-110"></i>

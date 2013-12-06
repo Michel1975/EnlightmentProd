@@ -29,7 +29,7 @@
         <%= f.label :phone, class: "control-label" %>
         <div class="controls">
           <%= f.text_field :phone, placeholder: "Telefon" %>&nbsp;&nbsp;
-          <%= tooltip("Indtast kun danske telefonnumre uden landekode eks. 24600819", "Telefon") %>
+          <%= tooltip("Indtast telefonnummer", "Telefon") %>
         </div>
       </div>
       <%= f.fields_for :user do |merchant_user| %>

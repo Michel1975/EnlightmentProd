@@ -375,6 +375,7 @@ da:
         profile_created: Brugerprofil er nu oprettet og brugeren har modtaget en email med loginoplysninger!
         profile_deleted: Brugerprofilen er nu slettet og brugeren kan ikke længere logge ind!
         profile_delete_warning: Du er ved at slette en butiksbruger, som ikke længere kan logge ind. Er du sikker?
+        invalid_phone: er ugyldigt
     user:
       invalid_password: Ugyldigt password. Password skal fylde mindst 8 tegn og have mindst et tal.
     session_merchant:
