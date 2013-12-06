@@ -6,7 +6,6 @@ class MyApi
 end
 
 namespace :campaign do
-  
   #Step 1: Confirm campaigns in SMS gateway
   desc "Confirm due campaigns with sms gateway..."
   #Interval: Every 10 minutes
@@ -92,15 +91,28 @@ namespace :campaign do
     	    #response.class.get("/messages/").each do |callback_message|
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
-            messages.each do |item|
+            messages.each do |message|
+                #Need to convert the array format of enumerator to a new has - manual style
+                res = {}
+                message[1].each do |k, v|
+                    res[k] = v
+                end
 
-                array_to_hash = Hash[*item[1].flatten]
+                status_code = res['sStatus'].strip
+                recipient = res['sDeviceName'].strip
+                message_id = res['sProviderMessageId'].strip
+                
+                puts "Hurra1:" + status_code
+                puts "Hurra2:" + recipient
+                puts "Hurra3:" + message_id
 
-                status_code = array_to_hash['sStatus']
-                puts "Status-kode: " + status_code
-                recipient = array_to_hash['sDeviceName']
-                message_id = array_to_hash['sProviderMessageId']
-                puts "Message-id" + message_id
+                #Could also work out
+                #items[1].each do |item|
+                    #puts item[0].to_s
+                    #if item[0] == 'sStatus'
+                        #puts "Yees:" + item[1].to_s
+                    #end
+                #end
             
                 if status_code.present? && recipient.present? && message_id.present? 
                     #Remove whitespaces from non-blank string values
