@@ -36,7 +36,7 @@
 		                    			Se detaljer
 		                  			</button>
 		                		<% end %>
-								<%= link_to [:admin, campaign ], method: :delete, data: { confirm: t(:warning_deletion_store, :scope => [:business_validations, :backend, :store])} do %>
+								<%= link_to [:admin, campaign ], method: :delete, data: { confirm: t(:warning_deletion_campaign, :scope => [:business_validations, :campaign])} do %>
 									<button class="btn btn-small btn-danger">
 										<i class="icon-trash bigger-110"></i>
 										Slet kampagne
@@ -49,20 +49,4 @@
 			</table>
 		</div><!-- /.span12 -->
 	</div><!-- /.row-fluid -->
-	
-<% content_for :scripts do %>
-  <script type="text/javascript">
-      jQuery(function($) {
-          $('.date-picker').datepicker().next().on(ace.click_event, function(){
-            $(this).prev().focus();
-          });
-          
-          $('.datepicker').datepicker({
-            format: 'dd/mm/yyyy',
-            language: 'da',
-            autoclose: true
-          });
-      });
-  </script>
-<% end %>
 	

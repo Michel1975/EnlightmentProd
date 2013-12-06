@@ -38,11 +38,11 @@ class Campaign < ActiveRecord::Base
 
   def self.search(from_date, to_date, status)
     if from_date !=""
-      result = where("activation_time >= ?", Time.zone.parse(from_date) )
+      result = where("activation_time >= ?", Time.zone.parse(from_date).beginning_of_day )
     end
 
     if to_date !=""
-      result = result.nil? ? result.where("activation_time <= ?", Time.zone.parse(to_date) ) : result.where("activation_time <= ?", Time.zone.parse(to_date) )
+      result = result.nil? ? where("activation_time <= ?", Time.zone.parse(to_date).end_of_day ) : result.where("activation_time <= ?", Time.zone.parse(to_date).end_of_day )
     end
     
     if status !=""

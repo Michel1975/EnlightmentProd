@@ -24,28 +24,28 @@
       <div class="profile-info-row">
         <div class="profile-info-name"> Navn </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="store_name"> <%= @merchant_user.name %> </span>
+          <span class="editable editable-click" id="name"> <%= @merchant_user.name %> </span>
         </div>
       </div>
      
       <div class="profile-info-row">
         <div class="profile-info-name"> Rolle </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="created_at"> <%= @merchant_user.role %> </span>
+          <span class="editable editable-click" id="role"> <%= @merchant_user.role %> </span>
         </div>
       </div>
 
        <div class="profile-info-row">
         <div class="profile-info-name"> Telefon </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="created_at"> <%= @merchant_user.phone %> </span>
+          <span class="editable editable-click" id="phone"> <%= @merchant_user.phone %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> Email </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="created_at"> <%= @merchant_user.user.try(:email) %> </span>
+          <span class="editable editable-click" id="email"> <%= @merchant_user.user.try(:email) %> </span>
         </div>
       </div>
 
@@ -53,6 +53,13 @@
         <div class="profile-info-name"> Oprettet </div>
         <div class="profile-info-value">
           <span class="editable editable-click" id="created_at"> <%= I18n.l( @merchant_user.created_at ) %> </span>
+        </div>
+      </div>
+
+      <div class="profile-info-row">
+        <div class="profile-info-name"> Opdateret </div>
+        <div class="profile-info-value">
+          <span class="editable editable-click" id="updated_at"> <%= I18n.l( @merchant_user.updated_at ) %> </span>
         </div>
       </div>
     </div><!-- /.profile-user-info -->

@@ -74,7 +74,7 @@
         <div class="profile-info-row">
           <div class="profile-info-name"> Besked </div>
           <div class="profile-info-value">
-            <span class="editable editable-click" id="message"> <%= simple_format( @campaign.message ) %> </span>
+            <span class="editable editable-click" id="message"> <%= simple_format( @message_with_stop_link ) %> </span>
           </div>
         </div>
     </div><!-- /.profile-user-info -->
@@ -115,9 +115,9 @@
         <tbody>
           <% @campaign_members.each do |campaign_member| %>
             <tr>
-              <td> <%= campaign_member.subscriber.member.name %> </td>
-              <td> <%= campaign_member.subscriber.member.phone %> </td>
-              <td> <%= campaign_member.status %> </td>
+              <td> <%= empty_attribute_info( campaign_member.subscriber.member.name ) %> </td>
+              <td> <%= empty_attribute_info( campaign_member.subscriber.member.phone ) %> </td>
+              <td> <%= I18n.t(campaign_member.status.to_sym, :scope => [:enums, :campaign_member] ) if campaign_member.status %></td>
               <td> <%= I18n.l( campaign_member.subscriber.start_date ) %> </td>
             </tr>
           <% end %>

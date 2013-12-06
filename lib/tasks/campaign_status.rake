@@ -1,5 +1,4 @@
 #encoding: utf-8
-
 class MyApi
   include HTTParty
   format :xml
@@ -93,30 +92,23 @@ namespace :campaign do
             #puts "Found #{messages.length} messages for this campaign"
             messages.each do |message|
                 puts "Message-brutto:" + message.to_s
-                puts "Message-netto:" + message[1].to_s
-                #Need to convert the array format of enumerator to a new has - manual style
-                #http://stackoverflow.com/questions/17435768/convert-ruby-array-of-hashes-into-one-hash
-                res = {}
-                message[1].each do |k, v|
-                    res[k] = v
-                    puts "Value: #{v}" if v
+                #puts "Message-netto:" + message[1].to_s
+
+                if Rails.env.prod?
+                    status_code = message[1][1]['sStatus']
+                    puts "Status-code: #{status_code.inspect}" 
+                    recipient = message[1][1]['sDeviceName']
+                    puts "Recipient: #{recipient.inspect}" 
+                    message_id = message[1][1]['sProviderMessageId']
+                    puts "Message-Id: #{message_id.inspect}"
+                else
+                    status_code = message[1]['sStatus']
+                    puts "Status-code: #{status_code.inspect}" 
+                    recipient = message[1]['sDeviceName']
+                    puts "Recipient: #{recipient.inspect}" 
+                    message_id = message[1]['sProviderMessageId']
+                    puts "Message-Id: #{message_id.inspect}"
                 end
-                puts "Result-hash:" + res.to_s
-
-                status_code = res['sStatus']
-                puts "Status-code: #{status_code.inspect}" 
-                recipient = res['sDeviceName']
-                puts "Recipient: #{recipient.inspect}" 
-                message_id = res['sProviderMessageId']
-                puts "Message-Id: #{message_id.inspect}"
-
-                #Could also work out
-                #items[1].each do |item|
-                    #puts item[0].to_s
-                    #if item[0] == 'sStatus'
-                        #puts "Yees:" + item[1].to_s
-                    #end
-                #end
             
                 if status_code.present? && recipient.present? && message_id.present? 
                     puts "All attributes are present. Proceeding with status update..."

@@ -10,10 +10,10 @@
 <div class="row-fluid">
 	<div class="span10"> 
 		<%= form_tag search_campaigns_admin_campaigns_path, :method => 'get', class: "form-search" do %>
-			<%= text_field_tag :from_date, "", class: "datepicker", placeholder: "Fra Dato"%> &nbsp;&nbsp;
-            <%= text_field_tag :to_date, "", class: "datepicker", placeholder: "Til Dato"%> &nbsp;&nbsp;
+			<%= text_field_tag :from_date, @from_date, class: "datepicker", placeholder: "Fra Dato"%> &nbsp;&nbsp;
+            <%= text_field_tag :to_date, @to_date, class: "datepicker", placeholder: "Til Dato"%> &nbsp;&nbsp;
             Status:
-			<%= select_tag(:status, options_for_select([ ["Planlagt", "scheduled"], ["Gennemført", "completed"], ["Fejl", "error"] ], @status.nil? ? "scheduled" :  @status) ) %>
+			<%= select_tag(:status, options_for_select([ ["Ny", "new"], ["Planlagt", "scheduled"], ["Bekræftet", "gateway_confirmed"], ["Status opdateret", "status_retrived_once"], ["Gennemført", "completed"], ["Fejl", "error"] ], @status.nil? ? "scheduled" :  @status) ) %>
             &nbsp;&nbsp;
             <%= button_tag class: "btn btn-small btn-success" do %>
             	Søg
@@ -61,7 +61,7 @@
 		                    			Se detaljer
 		                  			</button>
 		                		<% end %>
-								<%= link_to [:admin, campaign ], method: :delete, data: { confirm: t(:warning_deletion_store, :scope => [:business_validations, :backend, :store])} do %>
+								<%= link_to [:admin, campaign ], method: :delete, data: { confirm: t(:warning_deletion_campaign, :scope => [:business_validations, :campaign])} do %>
 									<button class="btn btn-small btn-danger">
 										<i class="icon-trash bigger-110"></i>
 										Slet kampagne
