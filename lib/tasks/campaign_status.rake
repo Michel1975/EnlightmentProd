@@ -92,14 +92,12 @@ namespace :campaign do
     	    #response.class.get("/messages/").each do |callback_message|
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
-            messages.each do |item|
-                #Need to put content into new clean hash - to avoid weird bugs
-                tmp = item[1]
-                puts "Item-hash" + tmp.to_s
-                status_code = tmp['sStatus'].to_s
-                recipient =  tmp['sDeviceName'].to_s
-                message_id = tmp['sProviderMessageId'].to_s
-                
+            messages.each.map do |item|
+                puts "Item-hash" + item[1].to_s
+                status_code = item[1]['sStatus']
+                recipient = item[1]['sDeviceName']
+                message_id = item[1]['sProviderMessageId']
+
                 puts "Status-kode: " + status_code
                 puts "Recipient: " + recipient
                 puts "Message-id: " + message_id
