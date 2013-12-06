@@ -92,15 +92,15 @@ namespace :campaign do
     	    #response.class.get("/messages/").each do |callback_message|
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
-            messages.each.map do |item|
-                puts "Item-hash" + item[1].to_s
-                status_code = item[1]['sStatus']
-                recipient = item[1]['sDeviceName']
-                message_id = item[1]['sProviderMessageId']
+            messages.each do |item|
 
+                array_to_hash = Hash[*item[1].flatten]
+
+                status_code = array_to_hash['sStatus']
                 puts "Status-kode: " + status_code
-                puts "Recipient: " + recipient
-                puts "Message-id: " + message_id
+                recipient = array_to_hash['sDeviceName']
+                message_id = array_to_hash['sProviderMessageId']
+                puts "Message-id" + message_id
             
                 if status_code.present? && recipient.present? && message_id.present? 
                     #Remove whitespaces from non-blank string values
