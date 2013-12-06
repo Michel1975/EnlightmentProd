@@ -92,19 +92,22 @@ namespace :campaign do
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
             messages.each do |message|
+                puts "Message-brutto:" + message.to_s
+                puts "Message-netto:" + message[1].to_s
                 #Need to convert the array format of enumerator to a new has - manual style
+                #http://stackoverflow.com/questions/17435768/convert-ruby-array-of-hashes-into-one-hash
                 res = {}
                 message[1].each do |k, v|
                     res[k] = v
                 end
+                puts "Result-hash:" + res.to_s
 
-                status_code = res['sStatus'].strip
-                recipient = res['sDeviceName'].strip
-                message_id = res['sProviderMessageId'].strip
-                
-                puts "Hurra1:" + status_code
-                puts "Hurra2:" + recipient
-                puts "Hurra3:" + message_id
+                status_code = res['sStatus']
+                puts "Status-code:" + status_code.to_s
+                recipient = res['sDeviceName']
+                puts "Recipient:" + recipient.to_s
+                message_id = res['sProviderMessageId']
+                puts "Message-Id:" + message_id.to_s
 
                 #Could also work out
                 #items[1].each do |item|
