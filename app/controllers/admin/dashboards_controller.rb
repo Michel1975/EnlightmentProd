@@ -1,5 +1,7 @@
+#encoding: utf-8
 class Admin::DashboardsController < Admin::BaseController
 
+    #Test: OK
 	def overview
 		logger.info "Loading overview action"
 
@@ -15,7 +17,7 @@ class Admin::DashboardsController < Admin::BaseController
     	@total_memberships_count = Subscriber.scoped.count
         logger.debug "Total memberships count: #{@total_memberships_count.inspect}"
 
-        #Number of send total sms-messages
+        #Number of sent total sms-messages
         @total_sms_messages_count = MessageNotification.scoped.count
         logger.debug "Total sent sms messages count: #{@total_sms_messages_count.inspect}"
 

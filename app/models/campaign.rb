@@ -48,6 +48,12 @@ class Campaign < ActiveRecord::Base
     if status !=""
       result = result.nil? ? where("status = ?", status.downcase) : result.where("status = ?", status.downcase) 
     end
+
+    #If no parameters are provided, we insert dummy values to ensure proper return type
+    if from_date.blank? && to_date.blank? && status.blank?
+      result = where("status = 'XXXX'")
+    end
+    return result
   end
 
   private

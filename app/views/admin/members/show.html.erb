@@ -22,7 +22,7 @@ Medlemsprofil
       <div class="profile-info-row">
         <div class="profile-info-name"> Medlemsnummer </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="name"> <%= empty_attribute_info( h(@member.id) ) %> </span>
+          <span class="editable editable-click" id="member_id"> <%= empty_attribute_info( h(@member.id) ) %> </span>
         </div>
       </div>
 
@@ -30,6 +30,7 @@ Medlemsprofil
         <div class="profile-info-name"> Telefon </div>
         <div class="profile-info-value">
           <span class="editable editable-click" id="phone"> <%= empty_attribute_info( @member.phone ) %> </span>
+          <%= "(" + (@member.phone_confirmed ? "bekræftet" : "ikke bekræftet") + ")" %></span>
         </div>
       </div>
 
@@ -94,14 +95,14 @@ Medlemsprofil
       <div class="profile-info-row">
         <div class="profile-info-name"> Nøgle </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="origin"> <%= empty_attribute_info( @member.access_key ) %> </span>
+          <span class="editable editable-click" id="access_key"> <%= empty_attribute_info( @member.access_key ) %> </span>
         </div>
       </div>
 
       <div class="profile-info-row">
         <div class="profile-info-name"> SMS-kode </div>
         <div class="profile-info-value">
-          <span class="editable editable-click" id="origin"> <%= empty_attribute_info( @member.phone_confirmation_code ) %> </span>
+          <span class="editable editable-click" id="sms_keyword"> <%= empty_attribute_info( @member.phone_confirmation_code ) %> </span>
         </div>
       </div>
 

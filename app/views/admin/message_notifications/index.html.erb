@@ -30,11 +30,11 @@
 				<tr>
 					<td> <%= notification.merchant_store.try(:store_name) == nil ? "Club Novus" : notification.merchant_store.try(:store_name) %> </td>
 					<td> <%= I18n.t( notification.notification_type.to_sym, :scope => [:enums, :message_notification] ) if notification.notification_type %> </td>
-					<td> <%= notification.recipient %> </td>	
-					<td> <%= notification.message_id %> </td>
-					<td> <%= notification.campaign_group_id %> </td>
-					<td> <%= notification.status_code.name %> </td>
-					<td> <%= notification.status_code.description %> </td>
+					<td> <%= empty_attribute_info( notification.recipient ) %> </td>	
+					<td> <%= empty_attribute_info( notification.message_id ) %> </td>
+					<td> <%= empty_attribute_info( notification.campaign_group_id ) %> </td>
+					<td> <%= empty_attribute_info( notification.status_code.name ) %> </td>
+					<td> <%= empty_attribute_info( notification.status_code.description ) %> </td>
 					<td> <%= I18n.l( notification.created_at ) %> </td>
 					<td> <%= I18n.l( notification.updated_at ) %> </td>				
 				</tr>

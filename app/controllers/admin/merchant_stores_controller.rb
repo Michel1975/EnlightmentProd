@@ -1,5 +1,7 @@
+#encoding: utf-8
 class Admin::MerchantStoresController < Admin::BaseController
 
+	#Test: OK
 	def active
 		logger.info "Loading MerchantStores active action"
 		@search = false
@@ -9,12 +11,14 @@ class Admin::MerchantStoresController < Admin::BaseController
 		logger.debug "Merchant-stores attributes hash: #{@merchant_stores.inspect}"
 	end
 
+	#Test: OK
 	def inactive
 		logger.info "Loading MerchantStores inactive action"
 		@merchant_stores = MerchantStore.where(active: false).page(params[:page]).per_page(15)
 		logger.debug "Merchant-stores attributes hash: #{@merchant_stores.inspect}"
 	end
 
+	#Test: OK
 	def search_stores
 	    logger.info "Loading MerchantStores search_stores action"
 	    @city = params[:city]
@@ -31,6 +35,7 @@ class Admin::MerchantStoresController < Admin::BaseController
 	    render 'active'
 	end
 
+	#Test: OK
 	def new
 		logger.info "Loading MerchantStore new action"
 		@merchant_store = MerchantStore.new
@@ -40,35 +45,38 @@ class Admin::MerchantStoresController < Admin::BaseController
 		logger.debug "MerchantStore business hours - attributes hash: #{@merchant_store.business_hours.inspect}"
 	end
 
+	#Test: OK
 	def create
 		logger.info "Loading MerchantStore create action"
 		logger.debug "Building new empty merchant_store record"
 		@merchant_store = MerchantStore.new(params[:merchant_store])
 		logger.debug "Inserting country into record"
+		
 		#Need to manually insert country
 		@merchant_store.country = 'Denmark'
 		logger.debug "MerchantStore initialized - attributes hash: #{@merchant_store.attributes.inspect}"
-		respond_to do |format|
-		  if @merchant_store.save
-		  	logger.debug "MerchantStore created successfully: #{@merchant_store.attributes.inspect}"
-		  	logger.debug "Proceeding with default subscription..."
-		  	#Create default subscription to store. Currently we only choose basic subscription as default choice
-		  	subscription_type = SubscriptionType.find_by_name("Basis medlemsskab")
-		  	logger.debug "Basic subscription type lookup: #{subscription_type.attributes.inspect}"
-		  	@merchant_store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_type.id)
-		  	logger.debug "Successfully created default basic subscription for store"
+		
+	  	if @merchant_store.save
+	  		logger.debug "MerchantStore created successfully: #{@merchant_store.attributes.inspect}"
+	  		logger.debug "Proceeding with default subscription..."
+	  		#Create default subscription to store. Currently we only choose basic subscription as default choice
+	  		subscription_type = SubscriptionType.find_by_name("Basis medlemsskab")
+	  		logger.debug "Basic subscription type lookup: #{subscription_type.attributes.inspect}"
+	  		@merchant_store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_type.id)
+	  		logger.debug "Successfully created default basic subscription for store"
 
-		  	#Create default welcome offer
-      		@merchant_store.create_welcome_offer!(description: 'Super', active: true)
-      		logger.debug "Successfully created default welcome offer for store"
-		    format.html { redirect_to [:admin, @merchant_store], :success => t(:store_created, :scope => [:business_validations, :backend, :store]) }
-		  else
-		    logger.debug "Validation errors. Loading new view with errors"
-		    format.html { render action: "new" }
-		  end
-		end
+	  		#Create default welcome offer
+  			@merchant_store.create_welcome_offer!(description: 'Velkomstgave er ikke aktiv i øjeblikket', active: true)
+  			logger.debug "Successfully created default welcome offer for store"
+	    	flash[:success] = t(:store_created, :scope => [:business_validations, :backend, :store])
+	    	redirect_to [:admin, @merchant_store] 
+	  	else
+	    	logger.debug "Validation errors. Loading new view with errors"
+	    	render :new
+	  	end
 	end
 
+	#Test: OK
 	def edit
 		logger.info "Loading MerchantStore edit action"
 	    @merchant_store = current_resource
@@ -83,6 +91,7 @@ class Admin::MerchantStoresController < Admin::BaseController
 	    end
 	end
 
+	#Test: OK
 	def update
 		logger.info "Loading MerchantStore update action"
 		@merchant_store = current_resource
@@ -97,6 +106,7 @@ class Admin::MerchantStoresController < Admin::BaseController
 		end
 	end
 
+	#Test: OK
 	def show
 		logger.info "Loading MerchantStore show action"
 		@merchant_store = current_resource
@@ -109,20 +119,26 @@ class Admin::MerchantStoresController < Admin::BaseController
 		end
 	end
 
+	#Test: OK
 	def destroy
 		logger.info "Loading MerchantStore destroy action"
+		logger.info "We don't actually delete stores at this moment. We only deactivate them for now..."
 		@merchant_store = current_resource
     	logger.debug "MerchantStore - attributes hash: #{@merchant_store.attributes.inspect}"
-  		@merchant_store.destroy
-  		logger.debug "MerchantStore deleted"
-  		respond_to do |format|
-			format.html { 
-				flash[:success] = t(:store_deleted, :scope => [:business_validations, :backend, :store])
-				redirect_to active_admin_merchant_stores_path
-			}
-  		end	
+  		@merchant_store.active = false
+  		if @merchant_store.save
+  			logger.debug "MerchantStore deactivated successfully"
+			flash[:success] = t(:store_deleted, :scope => [:business_validations, :backend, :store])
+			redirect_to active_admin_merchant_stores_path
+		else
+			logger.debug "Error: Could not deacticate store due to unknown error"
+			logger.fatal "Error: Could not deacticate store due to unknown error"
+			flash[:error] = t(:store_delete_error, :scope => [:business_validations, :backend, :store])
+			redirect_to active_admin_merchant_stores_path	
+		end
 	end
 
+	#Test: OK
 	def login_as
     	logger.info "Loading MerchantStore log_in_as action"
     	@merchant_store = current_resource

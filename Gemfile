@@ -25,6 +25,7 @@ gem 'simple_captcha', :git => 'git://github.com/galetahub/simple-captcha.git'
 gem 'rmagick', '2.13.2'
 gem 'hirefire-resource' #to autoscale workers on heroku platform
 gem 'feedzirra'
+gem 'crack' #used to parse the special output by httpparty in campaign status jobs
 #gem 'railties' #for heroku deploy. Følg op på versionen ved næste deploy til heroku.
 
 

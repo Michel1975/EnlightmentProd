@@ -121,7 +121,7 @@ class MerchantStore < ActiveRecord::Base
     end
     
     def validate_phone_standard
-      if !self.phone.blank && !SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
+      if !self.phone.blank? && !SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone)
         errors.add(:phone, I18n.t(:invalid_phone, :scope => [:business_validations, :merchant_store]) )
       end
     end

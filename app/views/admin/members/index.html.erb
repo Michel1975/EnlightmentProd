@@ -8,9 +8,10 @@
 	Aktive Medlemmer
 </h3>
 <div class="row-fluid">
-	<div class="span5"> 
+	<div class="span7"> 
 		<%= form_tag search_members_admin_members_path, :method => 'get', class: "form-search" do %>
-			<%= text_field_tag :name, "", class: "input-medium search-query", placeholder: "Indtast navn..." %>
+			<%= text_field_tag :name, @name, class: "input-medium search-query", placeholder: "Indtast navn..." %>&nbsp;&nbsp;
+			<%= text_field_tag :phone, @phone, class: "input-medium search-query", placeholder: "Indtast telefon..." %>
             <%= button_tag class: "btn btn-small btn-success" do %>
             	Søg
             	<i class="icon-search icon-on-right bigger-110"></i>

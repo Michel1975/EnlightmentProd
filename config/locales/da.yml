@@ -360,7 +360,8 @@ da:
         warning_deletion_store: Du er ved at deaktivere en butik. Er du sikker?
         store_created: Butik er nu oprettet!
         store_updated: Stamdata på butik er opdateret!
-        store_deleted: Butik og relateret data er nu slettet!
+        store_deleted: Butikken er nu deaktiveret og kan nu ikke længere anvendes af hverken butiksejer eller medlemmer!
+        store_delete_error: Butikken kunne ikke deaktiveres grundet en teknisk fejl!
         login_as_success: Du kan nu logge ind på %{store_name} med admin-brugeren admin@clubnovus.dk!
         login_as_error: Der opstod en fejl i opdateringen af standardbrugeren admin@clubnovus.dk til den valgte butik!
         notification_login_as: Du er ved at oprette et login-link for standardbrugeren admin@clubnovus.dk til den valgte butik. Er du sikker?

@@ -67,8 +67,9 @@ namespace :campaign do
         #http://blog.teamtreehouse.com/its-time-to-httparty
         #response = MyApi.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=_Lizl-1_zfrVSnyqsJr3ZA" )
         puts "http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}"
-        response = MyApi.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}" )
-        messages = response.parsed_response['Gateway']['Messages']
+        response = HTTParty.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}" )
+        puts "Response from server: " + response.to_xml
+        messages = Crack::XML.parse(response.to_xml)['hash']['Gateway']['Messages']#response.parsed_response['Gateway']['Messages']
 
         if messages
            puts "Loaded status messages from SMS gateway. Starting to process..."
@@ -90,18 +91,22 @@ namespace :campaign do
     	    #response.class.get("/messages/").each do |callback_message|
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
+            
             messages.each do |message|
                 puts "Message-brutto:" + message.to_s
                 #puts "Message-netto:" + message[1].to_s
+                
 
                 if Rails.env.prod?
-                    status_code = message[1][1]['sStatus']
+                    uts "Prod environment..."
+                    status_code = message[1][0]['sStatus']
                     puts "Status-code: #{status_code.inspect}" 
-                    recipient = message[1][1]['sDeviceName']
+                    recipient = message[1][0]['sDeviceName']
                     puts "Recipient: #{recipient.inspect}" 
-                    message_id = message[1][1]['sProviderMessageId']
+                    message_id = message[1][0]['sProviderMessageId']
                     puts "Message-Id: #{message_id.inspect}"
                 else
+                    puts "Dev environment..."
                     status_code = message[1]['sStatus']
                     puts "Status-code: #{status_code.inspect}" 
                     recipient = message[1]['sDeviceName']

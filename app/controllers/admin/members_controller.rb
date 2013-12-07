@@ -1,24 +1,32 @@
+#encoding: utf-8
 class Admin::MembersController < Admin::BaseController
+	
+	#Test: OK 
 	def index
 		logger.info "Loading Members index action"
 		@search = false
 		logger.debug "Search flag: #{@search.inspect}"
-    	@members = Member.scoped.page( params[:page] ).per_page(15)
-    	logger.debug "Members - attributes hash: #{@members.inspect}"
+		#Scoped is a special method to return all members in normal format without causing issues in will-paginate
+		@members = Member.scoped.page(params[:page]).per_page(15)
+		logger.debug "Members - attributes hash: #{@members.inspect}"
 	end
 
+	#Test: OK
 	def search_members
 	    logger.info "Loading Members search_members action"
 	    @name = params[:name]
 	    logger.debug "Search parameter - name: #{@name.inspect}"
+	    @phone = params[:phone]
+	    logger.debug "Search parameter - phone: #{@phone.inspect}"
 	    @search = true
 	    logger.debug "Search flag: #{@search.inspect}"
-	    @members = Member.search(@name).page( params[:page] ).per_page(15)
+	    @members = Member.search(@name, @phone).page(params[:page]).per_page(15)
 	    logger.debug "Search result: #{@members.inspect}"
 	    logger.debug "Loading index view with search result..."
-	    render 'index'
+	    render :index
   	end
 
+  	#Test: OK
   	def send_mobile_confirmation_with_sms 
 	    logger.info "Loading MemberUser send_mobile_confirmation_with_sms action"
 	    @member = current_resource
@@ -35,9 +43,9 @@ class Admin::MembersController < Admin::BaseController
 	      flash[:alert] = t(:sms_confirmation_error, :scope => [:business_validations, :backend, :member])
 	      redirect_to admin_member_path(@member)
 	    end
-  end
+  	end
 
-
+  	#Test: OK
   	def resend_email_confirmation
 	    logger.info "Loading Members resend_email_confirmation action"
 	    @member = current_resource
@@ -55,6 +63,7 @@ class Admin::MembersController < Admin::BaseController
 	    end
   	end
 
+  	#Test: OK 
 	def show
 		logger.info "Loading Members show action"
 		@member = current_resource
@@ -64,28 +73,7 @@ class Admin::MembersController < Admin::BaseController
 		logger.debug "Subscriber stores - attributes hash: #{@subscriber_stores.inspect}"
 	end
 
-	def edit
-		logger.info "Loading Members edit action"
-  		#logger.info("Michel:" + current_member_user.id + "current_user-id:" + current_user.id)
-  		@member_user = current_resource #Old:current_member_user
-    	logger.debug "Member attributes hash: #{@member_user.attributes.inspect}"
-	end
-
-	def update
-		logger.info "Loading Members update action"
-  		@member_user = current_resource
-    	logger.debug "Member attributes hash: #{@member_user.attributes.inspect}" 
-    	
-    	if @member_user.update_attributes(params[:member])
-      		logger.debug "Member updated succesfully - attributes hash: #{@member_user.attributes.inspect}" 
-    		flash[:success] = t(:member_updated, :scope => [:business_validations, :backend, :member])
-    		redirect_to member_user_admin_path(@member_user)
-    	else
-      		logger.debug "Validation errors. Loading edit view with errors"
-    		render 'edit'
-    	end
-	end
-
+	#Test: OK
 	def remove_subscriber
 		logger.info "Loading Members remove_subscriber action"
   		subscriber = Subscriber.find(params[:id])
@@ -104,6 +92,7 @@ class Admin::MembersController < Admin::BaseController
 		end
 	end
 
+	#Test: OK
 	def destroy
 		logger.info "Loading Members destroy action"
   		member = current_resource

@@ -45,11 +45,22 @@ class Member < ActiveRecord::Base
   def confirm_email_link
     link = "http://www.clubnovus.dk/confirm_email?token=#{self.access_key}&email=#{self.user.email}"
   end
-
-  def self.search(search_name)
+  
+  def self.search(search_name, phone_number)
     if search_name !="" 
-      where('name ILIKE ?', "%#{search_name.downcase}%")
+      result = where('name ILIKE ?', "%#{search_name.downcase}%")
     end
+
+    if phone_number !=""
+      phone_number = SMSUtility::SMSFactory.convert_phone_number(phone_number)
+      result = result.nil? ? where("phone = ?", phone_number) : result.where("phone = ?", phone_number )
+    end
+
+    #If no parameters are provided, we insert dummy values to ensure proper return type
+    if search_name.blank? && phone_number.blank?
+      result = where("name = 'XXXX'")
+    end
+    return result
   end
 
   #To-Do: Group by month, når vi installerer postgress på lokal maskine.
