@@ -1,4 +1,6 @@
 #encoding: utf-8
+require 'nokogiri'
+require 'open-uri'
 class MyApi
   include HTTParty
   format :xml
@@ -67,9 +69,10 @@ namespace :campaign do
         #http://blog.teamtreehouse.com/its-time-to-httparty
         #response = MyApi.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=_Lizl-1_zfrVSnyqsJr3ZA" )
         puts "http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}"
-        response = MyApi.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}" )
-        puts "Response from server: " + response.to_xml
-        messages = response.parsed_response['Gateway']['Messages']
+        response = Nokogiri::XML(open("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}" ))
+        #puts "Response from server: " + response.to_xml
+        messages = response.xpath("//Message")
+        #messages = response.parsed_response['Gateway']['Messages']
 
         if messages
            puts "Loaded status messages from SMS gateway. Starting to process..."
@@ -92,20 +95,20 @@ namespace :campaign do
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
             
-            messages.each do |key, value|
+            messages.each do |message|
                 #puts "Message-brutto:" + message.to_s
                 #puts "Message-netto:" + message[1].to_s
 
-                puts "Key: " + key.to_s
-                puts "Value: " + value.to_s
+                puts "Message: " + message.to_s
 
                 #if Rails.env.prod?
                 #puts "Dev environment..."
-                status_code = value['sStatus']
+                status_code = message.xpath("sStatus").text
                 puts "Status-code: #{status_code.inspect}" 
-                recipient = value['sDeviceName']
+
+                recipient = message.xpath("sDeviceName").text
                 puts "Recipient: #{recipient.inspect}" 
-                message_id = value['sProviderMessageId']
+                message_id = message.xpath("sProviderMessageId").text
                 puts "Message-Id: #{message_id.inspect}"
                 
             
