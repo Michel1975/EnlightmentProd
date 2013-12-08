@@ -50,13 +50,13 @@ namespace :db do
 
     end 
 	  #*********End create default admin-store for backend*************
-    
+
 	  puts "Loading default merchant store for admin-backend...done"
 
 	  puts "Loading admin users for backend..."
- 	  #*********Start create admin users for backend*************
+ 	  #*********Start create special admin user for backend*************
     user = User.create!(
-             email: "michel@clubnovus.dk",
+             email: "michelhansen75@hotmail.com",
              password: 'test500test45',
              password_confirmation: 'test500test45')
     merchant_user = store.merchant_users.create!( name: "Michel Kenneth Hansen",
@@ -73,8 +73,31 @@ namespace :db do
             role: "Administrator", phone: '88888888')
     user.sub = merchant_user
     user.save! 
-    #*********End create admin users for backend*************
+    #*********End create special admin users for backend*************
 	  puts "Loading admin users for backend...done"
+
+    puts "Loading backend admin users..."
+    #*********Start create backend admin users*************
+      1.times do |n| 
+        name = "Michel K. Hansen"
+        postal_code = "3360"
+        gender = "W"
+        email = "michel@clubnovus.dk"
+        phone = "24600819"
+        password  = "testtest75"
+        
+        admin_user = User.create!(
+                 email: email,
+                 password: password,
+                 password_confirmation: password)
+        admin = BackendAdmin.create!( name: name,
+                                      role: 'admin')
+                                        
+        admin_user.sub = admin
+        admin_user.save!
+      end
+    puts "Loading backend admin users...done"
+    #*********End create backend admin users*************
 
     puts "Loading selected status codes for handling callbacks from CIM Mobil..."
     #*********Start loading selected status codes for handling callbacks from CIM Mobil**********
