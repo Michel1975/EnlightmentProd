@@ -22,6 +22,7 @@ class RootController < ApplicationController
 		#Note: Vi bliver nødt til at lave vores egen sidebar med markers. Vi skal bare finde linket til hver kort.
 		#link til kort markør: http://stackoverflow.com/questions/8608602/make-map-marker-direct-link-onclick-for-gmaps4rails
 		@merchant_stores = MerchantStore.search('Frederiksværk', "")
+    @search = false
     logger.debug "Merchant-stores attributes hash: #{@merchant_stores.inspect}"
     logger.debug "Loading Google Maps markers..."
     @json = showMarkers(@merchant_stores)
@@ -30,23 +31,24 @@ class RootController < ApplicationController
   #Test:OK
   def search_stores
     logger.info "Loading Root search_stores action"
+    @search = true
     @city = params[:city]
     logger.debug "Search parameter - city: #{@city.inspect}"
     @store_name = params[:store_name]
     logger.debug "Search parameter - store_name: #{@store_name.inspect}"
-    @search_result = MerchantStore.search(@city, @store_name )
-    logger.debug "Search result: #{@search_result.inspect}"
-    if @search_result.size == 0
+    @merchant_stores = MerchantStore.search(@city, @store_name )
+    logger.debug "Search result: #{@merchant_stores.inspect}"
+    if @merchant_stores.empty?
       logger.debug "Search result = No stores found"
       logger.debug "Loading default map view"
       #We need to display something on map
       @merchant_stores = MerchantStore.search('Frederiksværk', "")
       @json = showMarkers(@merchant_stores)
     else
-      @search_result = @search_result.page( params[:page] ).per_page(15)
-      logger.debug "Search result = #{@search_result.size.inspect} stores found"
+      @merchant_stores = @merchant_stores.page( params[:page] ).per_page(15)
+      logger.debug "Search result = #{@merchant_stores.size.inspect} stores found"
       logger.debug "Loading Google Maps markers..."
-      @json = showMarkers(@search_result)
+      @json = showMarkers(@merchant_stores)
     end
     render 'home'
   end
