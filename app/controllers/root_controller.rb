@@ -55,7 +55,7 @@ class RootController < ApplicationController
 	def show_merchant_store
     logger.info "Loading Root show_merchant_store action"
     @merchant_store = MerchantStore.find_by_id(params[:id])
-    if @merchant_store.present?
+    if @merchant_store.present? && @merchant_store.active? 
       logger.debug "Merchant-store - attributes hash: #{@merchant_store.attributes.inspect}"
       @subscriber = member_user? && @merchant_store.subscribers.find_by_member_id(current_member_user.id)
       logger.debug "Subscriber: #{@subscriber.inspect}"

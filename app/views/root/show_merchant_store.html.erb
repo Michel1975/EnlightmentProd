@@ -5,7 +5,7 @@
 <% end %>
 <div class="row-fluid margin-bottom-10">
   <div class="span4">
-    <% if !@merchant_store.image.picture.blank? %>
+    <% if !@merchant_store.image.try(:picture).blank? %>
       <%= cl_image_tag(@merchant_store.image.try(:picture), :width => 400, :height => 400, :crop => :fit, class: "img-rounded") %>
     <% else %>
       "Fotografen er på vej"

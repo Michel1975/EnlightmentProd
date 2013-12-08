@@ -35,7 +35,22 @@ namespace :db do
         postal_code: '3360', city: 'Liseleje', country: 'Denmark', owner: 'Michel Kenneth Hansen', store_name: 'Backend Admin', sms_keyword: "CN_admin", active: false)
 
     store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_basic.id)
+
+    store.create_welcome_offer!(description: 'Spørg i butikken', active: false)
+
+    #Create business hours
+    7.times do |n|
+      weekday = (Date.today.beginning_of_week + n)
+      
+      if n == 6
+        store.business_hours.create!(day: (n+1), day_text: I18n.l(weekday, :format => "%A"), closed: true, open_time: Time.new(2013, 8, 29, 8, 30, 0), close_time: Time.new(2013, 8, 29, 16, 30, 0))
+      else
+        store.business_hours.create!(day: (n+1), day_text: I18n.l(weekday, :format => "%A"), closed: false, open_time: Time.new(2013, 8, 29, 8, 30, 0), close_time: Time.new(2013, 8, 29, 16, 30, 0))
+      end
+
+    end 
 	  #*********End create default admin-store for backend*************
+    
 	  puts "Loading default merchant store for admin-backend...done"
 
 	  puts "Loading admin users for backend..."
