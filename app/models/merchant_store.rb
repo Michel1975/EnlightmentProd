@@ -57,7 +57,8 @@ class MerchantStore < ActiveRecord::Base
   #Bit.ly link for store link
   def store_link
     client = Bitly.client
-    return "\nButik:" + client.shorten("http://www.clubnovus.dk/display_store/#{self.id}").short_url
+    store_link = "#{ENV['PORTAL_LINK']}/display_store/#{self.id}"
+    return "\nButik:" + client.shorten( store_link ).short_url
   end
 
   #Store regards

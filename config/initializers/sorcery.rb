@@ -24,7 +24,7 @@ Rails.application.config.sorcery.configure do |config|
   # Set domain option for cookies; Useful for remember_me submodule.
   # Default: `nil`
   #
-  # config.cookie_domain =
+    config.cookie_domain = test.clubnovus.dk
 
 
   # -- session timeout --

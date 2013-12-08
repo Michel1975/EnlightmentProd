@@ -55,6 +55,10 @@ class Merchant::OffersController < Merchant::BaseController
       redirect_to [:merchant, @offer]
     else
       logger.debug "Validation errors. Loading new view with errors"
+      if @offer.image.nil?
+        logger.debug "No image record present. Building new image"
+        @offer.build_image()
+      end
       render :new
     end
   end
@@ -70,6 +74,10 @@ class Merchant::OffersController < Merchant::BaseController
       redirect_to [:merchant, @offer]
     else
       logger.debug "Validation errors. Loading edit view with errors"
+      if @offer.image.nil?
+        logger.debug "No image record present. Building new image"
+        @offer.build_image()
+      end
       render :edit
     end
   end

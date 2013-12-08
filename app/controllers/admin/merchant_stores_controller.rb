@@ -60,13 +60,13 @@ class Admin::MerchantStoresController < Admin::BaseController
 	  		logger.debug "MerchantStore created successfully: #{@merchant_store.attributes.inspect}"
 	  		logger.debug "Proceeding with default subscription..."
 	  		#Create default subscription to store. Currently we only choose basic subscription as default choice
-	  		subscription_type = SubscriptionType.find_by_name("Basis medlemsskab")
+	  		subscription_type = SubscriptionType.find_by_name("Test medlemskab")
 	  		logger.debug "Basic subscription type lookup: #{subscription_type.attributes.inspect}"
 	  		@merchant_store.create_subscription_plan(start_date: Time.now, subscription_type_id: subscription_type.id)
 	  		logger.debug "Successfully created default basic subscription for store"
 
 	  		#Create default welcome offer
-  			@merchant_store.create_welcome_offer!(description: 'Velkomstgave er ikke aktiv i øjeblikket', active: true)
+  			@merchant_store.create_welcome_offer!(description: 'Spørg i butikken', active: true)
   			logger.debug "Successfully created default welcome offer for store"
 	    	flash[:success] = t(:store_created, :scope => [:business_validations, :backend, :store])
 	    	redirect_to [:admin, @merchant_store] 

@@ -43,7 +43,7 @@
 </div><!-- /.span6 -->
 <div class="span6 align-center">
   <div class="control-group">
-    <% if !@offer.image.picture.blank? %>
+    <% if !@offer.image.try(:picture).blank? %>
       <label class="control-label">Billede</label>
       <div id="picture_container">
         <%= cl_image_tag(@offer.image.picture, :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>

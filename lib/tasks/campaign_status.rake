@@ -1,10 +1,6 @@
 #encoding: utf-8
 require 'nokogiri'
 require 'open-uri'
-class MyApi
-  include HTTParty
-  format :xml
-end
 
 namespace :campaign do
   #Step 1: Confirm campaigns in SMS gateway
@@ -38,7 +34,7 @@ namespace :campaign do
   #Interval: Every 60 minutes
   task :get_status => :environment do
     #Find all confirmed campaigns with activation_time in the past up until 30 minutes ago.
-    campaigns = Campaign.where(:activation_time => (Time.zone.now - 100.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 10.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
     puts "Initializing campaign status batch job"
     
     puts "Loading status codes..."
@@ -64,13 +60,12 @@ namespace :campaign do
             puts "Invalid campaign group-id. Jumping to next record"
             next
         end
-
-    	#https://gist.github.com/xentek/1756582 - link for this solution
-        #http://blog.teamtreehouse.com/its-time-to-httparty
-        #response = MyApi.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=_Lizl-1_zfrVSnyqsJr3ZA" )
+    	
+        #We use Nokogiri instead of Httparty since the latter caused parsing issues on Heroku
+        #Source: Railscast episode 190 and http://stackoverflow.com/questions/11391080/using-nokogiri-to-parse-xml-and-create-records-with-multiple-attributes
         puts "http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}"
         response = Nokogiri::XML(open("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}" ))
-        #puts "Response from server: " + response.to_xml
+        #Fetch all occurences of Message - no need to waste time on Messages parent
         messages = response.xpath("//Message")
         #messages = response.parsed_response['Gateway']['Messages']
 
@@ -87,22 +82,10 @@ namespace :campaign do
     	   notifications.each do |notification|
     	       notifications_lookup[notification.recipient] = notification	
     	   end
-
-            #puts response.body.get('/messages/message') #, response.code, response.message, response.headers.inspect
-            #puts response
-    	    #Loop through each notification for a particular campaign
-    	    #response.class.get("/messages/").each do |callback_message|
-            #puts callback_message
-            #puts "Found #{messages.length} messages for this campaign"
             
             messages.each do |message|
-                #puts "Message-brutto:" + message.to_s
-                #puts "Message-netto:" + message[1].to_s
-
                 puts "Message: " + message.to_s
-
-                #if Rails.env.prod?
-                #puts "Dev environment..."
+                
                 status_code = message.xpath("sStatus").text
                 puts "Status-code: #{status_code.inspect}" 
 
@@ -143,6 +126,7 @@ namespace :campaign do
         end#If messages
         #campaign.status = 'status_retrived_once'
         #campaign.save(validate: false)
+        #We use direct update to avoid issues with validation
         campaign.update_column(:status, 'status_retrived_once')
     end#End campaign
     puts "Finished fetching campaign updates"
