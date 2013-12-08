@@ -36,7 +36,7 @@ namespace :campaign do
   #Interval: Every 60 minutes
   task :get_status => :environment do
     #Find all confirmed campaigns with activation_time in the past up until 30 minutes ago.
-    campaigns = Campaign.where(:activation_time => (Time.zone.now - 30.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
+    campaigns = Campaign.where(:activation_time => (Time.zone.now - 100.hours)..(Time.zone.now - 30.minutes) ).where(:status => 'gateway_confirmed')
     puts "Initializing campaign status batch job"
     
     puts "Loading status codes..."
@@ -67,9 +67,9 @@ namespace :campaign do
         #http://blog.teamtreehouse.com/its-time-to-httparty
         #response = MyApi.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=_Lizl-1_zfrVSnyqsJr3ZA" )
         puts "http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}"
-        response = HTTParty.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}" )
+        response = MyApi.get("http://sdk.ecmr.biz/src/GatewayXmlReport.aspx?rqGatewayID=#{ENV["SMS_GATEWAY_ID"]}&rqMessageGroupId=#{campaign.message_group_id}" )
         puts "Response from server: " + response.to_xml
-        messages = Crack::XML.parse(response.to_xml)['hash']['Gateway']['Messages']#response.parsed_response['Gateway']['Messages']
+        messages = response.parsed_response['Gateway']['Messages']
 
         if messages
            puts "Loaded status messages from SMS gateway. Starting to process..."
@@ -92,28 +92,22 @@ namespace :campaign do
             #puts callback_message
             #puts "Found #{messages.length} messages for this campaign"
             
-            messages.each do |message|
-                puts "Message-brutto:" + message.to_s
+            messages.each do |key, value|
+                #puts "Message-brutto:" + message.to_s
                 #puts "Message-netto:" + message[1].to_s
-                
 
-                if Rails.env.prod?
-                    uts "Prod environment..."
-                    status_code = message[1][0]['sStatus']
-                    puts "Status-code: #{status_code.inspect}" 
-                    recipient = message[1][0]['sDeviceName']
-                    puts "Recipient: #{recipient.inspect}" 
-                    message_id = message[1][0]['sProviderMessageId']
-                    puts "Message-Id: #{message_id.inspect}"
-                else
-                    puts "Dev environment..."
-                    status_code = message[1]['sStatus']
-                    puts "Status-code: #{status_code.inspect}" 
-                    recipient = message[1]['sDeviceName']
-                    puts "Recipient: #{recipient.inspect}" 
-                    message_id = message[1]['sProviderMessageId']
-                    puts "Message-Id: #{message_id.inspect}"
-                end
+                puts "Key: " + key.to_s
+                puts "Value: " + value.to_s
+
+                #if Rails.env.prod?
+                #puts "Dev environment..."
+                status_code = value['sStatus']
+                puts "Status-code: #{status_code.inspect}" 
+                recipient = value['sDeviceName']
+                puts "Recipient: #{recipient.inspect}" 
+                message_id = value['sProviderMessageId']
+                puts "Message-Id: #{message_id.inspect}"
+                
             
                 if status_code.present? && recipient.present? && message_id.present? 
                     puts "All attributes are present. Proceeding with status update..."
