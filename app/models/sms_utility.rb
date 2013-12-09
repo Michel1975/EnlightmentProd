@@ -440,6 +440,37 @@ class BackgroundWorker
       Rails.logger.fatal "Member NOT found from phone number" 
     end  
   end#end stopsubscription
+
+  #Used to delete invalid member signups from people under 18 years old
+  #Test:OK
+  def stopStoreSubscriptionMinor(sender, text)
+    Rails.logger.info "Loading sms_handler stopStoreSubscriptionMinor"
+
+    #Determine if member already exists in database. First, incoming phone is standardized with +45 notation.
+    converted_phone_number = SMSUtility::SMSFactory.convert_phone_number(sender)
+    Rails.logger.debug "Converted phone number: #{converted_phone_number.inspect}"
+    Rails.logger.debug "Trying to find existing member in database from phone number"
+    member = Member.find_by_phone(converted_phone_number)
+    if member.present?
+      Rails.logger.debug "Member found in database: #{member.attributes.inspect}. Proceeding with deletion..."  
+      phone = member.phone
+      if member.destroy
+        Rails.logger.debug "Member deleted successfully"
+        if SMSUtility::SMSFactory.sendSingleAdminMessageInstant?( I18n.t(:success, :scope => [:business_messages, :opt_out_minor] ), phone, nil)
+          Rails.logger.debug "Confirmation message sent successfully to minor members phone"
+        else
+          Rails.logger.debug "Error when sending confirmation message sent to member about minor member deletion"
+          Rails.logger.fatal "Error when sending confirmation message sent to member about minor member deletion"
+        end
+      else
+        Rails.logger.debug "Error: Could not destroy member record."  
+        Rails.logger.fatal "Error: Could not destroy member record."
+      end
+    else
+      Rails.logger.debug "Member NOT found from phone number"
+      Rails.logger.fatal "Member NOT found from phone number" 
+    end
+  end#end stopStoreSubscriptionMinor
   
   #Test:OK
   def signupMember(sender, text)

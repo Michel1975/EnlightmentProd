@@ -70,6 +70,9 @@ class Merchant::SmsHandlerController < Merchant::BaseController
 	 			if text.downcase.include? "stop"
 	 				logger.debug "Opt-out request received. Calling stopStoreSubscription method..background process"
 	 				SMSUtility::BackgroundWorker.new.delay.stopStoreSubscription(sender, text)
+	 			elsif text.downcase.include? "nej"
+	 				logger.debug "Invalid signup from people under 18 years old. Member must be deleted"
+	 				SMSUtility::BackgroundWorker.new.delay.stopStoreSubscriptionMinor(sender, text)	
 	 			else
 	 				logger.debug "Opt-in request received. Calling signupMember method...background process"
 	 				SMSUtility::BackgroundWorker.new.delay.signupMember(sender, text)

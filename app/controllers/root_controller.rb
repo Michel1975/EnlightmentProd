@@ -156,7 +156,7 @@ class RootController < ApplicationController
     def showMarkers(merchant_stores)
       logger.debug "Creating markers from store search array..."
       member_ships = Hash.new
-      if current_member_user && current_member_user.subscribers.any?
+      if current_member_user && member_user? && current_member_user.subscribers.any?
         current_member_user.subscribers.each do |c|
           member_ships[c.merchant_store_id] = c.id
         end

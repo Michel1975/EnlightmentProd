@@ -14,21 +14,22 @@
 
   <div class="span6">
     <div class="headline">
-      <h4 class="pull-left" style="white-space: nowrap;margin-bottom:10px"><%= h(@merchant_store.store_name) %></h4>
+      <h4 class="pull-left" style="white-space: nowrap;margin-bottom:10px;margin-right:10px"><%= h(@merchant_store.store_name) %></h4>
       <div class="fb-like" data-href="<%= display_store_url(@merchant_store)%>" data-layout="standard" data-action="like" data-show-faces="false" data-share="true"></div>
     </div>
     <p><%= simple_format( h(@merchant_store.description) )%></p>
   </div><!-- /.span6 -->
   
   <div class="span2">
-    <h4>Medlemskab</h4>
     <% if member_user? && logged_in? %>
       <% if @subscribed %>
+        <h4>Medlemskab</h4>
         <div id="membership">
           <%= render :partial => "/member_subscribers/unsubscribe", :locals => { :merchant_store => @merchant_store } %>
         </div>
         <p>Medlem siden: <%= I18n.l( @subscriber.start_date ) %></p>
     <% else %>
+        <h4>Medlemskab</h4>
         <div id="membership">
           <%= render :partial => "/member_subscribers/subscribe", :locals => { :merchant_store => @merchant_store } %>
         </div>
@@ -85,38 +86,40 @@
   </div><!-- /.span6 -->
 </div><!-- /.row-fluid -->
 
-<div class="row-fluid margin-bottom-20">
-  <div class="span10">
-    <div class="headline">
-        <h4 style="margin-bottom:10px">Aktuelle medlemstilbud</h4>
-        <p class="muted">Der tages forbehold for trykfejl, ændrede priser og udsolgte varer i medlemstilbud</p>
+<% if @merchant_store.offers.any? %>
+  <div class="row-fluid margin-bottom-20">
+    <div class="span10">
+      <div class="headline">
+          <h4 style="margin-bottom:10px">Aktuelle medlemstilbud</h4>
+          <p class="muted">Der tages forbehold for trykfejl, ændrede priser og udsolgte varer i medlemstilbud</p>
+      </div>
     </div>
-  </div>
-</div><!-- /.row-fluid -->
+  </div><!-- /.row-fluid -->
 
-<% @merchant_store.offers.active.order("valid_to DESC").each do |offer| %>
-    <div class="row-fluid" style="margin-bottom:50px">
-        <div class="span3">
-          <% if !offer.image.blank? %>
-            <%= cl_image_tag(offer.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
-          <% else %>
-            <%= image_tag("standard_offer_picture.png") %>
-           <% end %>
-        </div><!-- /.span4 -->
+  <% @merchant_store.offers.active.order("valid_to DESC").each do |offer| %>
+      <div class="row-fluid" style="margin-bottom:50px">
+          <div class="span3">
+            <% if !offer.image.blank? %>
+              <%= cl_image_tag(offer.image.try(:picture), :width => 300, :height => 300, :crop => :fit, class: "img-rounded") %>
+            <% else %>
+              <%= image_tag("standard_offer_picture.png") %>
+             <% end %>
+          </div><!-- /.span4 -->
 
-        <div class="span6">
-          <div class="headline" style="margin-top:0px">
-            <h4><%= h(offer.title) %></h4>
-          </div>
-          <p><%= simple_format( h(offer.description) ) %></p>
-        </div><!-- /.span6 -->
+          <div class="span6">
+            <div class="headline" style="margin-top:0px">
+              <h4><%= h(offer.title) %></h4>
+            </div>
+            <p><%= simple_format( h(offer.description) ) %></p>
+          </div><!-- /.span6 -->
 
-        <div class="span2" style="text-align:right;">
-          <p><small>Gyldig fra: </small><b><%= I18n.l( offer.valid_from ) %></b></p>
-          <p><small>Gyldig til: </small><b><%= I18n.l( offer.valid_to ) %></b></p> 
-        </div><!-- /.span2 -->
-    </div><!-- /.row-fluid -->
-<% end %>
+          <div class="span2" style="text-align:right;">
+            <p><small>Gyldig fra: </small><b><%= I18n.l( offer.valid_from ) %></b></p>
+            <p><small>Gyldig til: </small><b><%= I18n.l( offer.valid_to ) %></b></p> 
+          </div><!-- /.span2 -->
+      </div><!-- /.row-fluid -->
+  <% end %>
+<% end %><!-- /.if offers exist for merchant -->
 
 <div id="fb-root"></div>
 <% content_for :scripts do %>
