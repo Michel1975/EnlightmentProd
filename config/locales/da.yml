@@ -486,17 +486,17 @@ da:
       one: aktiv butik
       other: aktive butikker
     total_members:
-      zero: medlemmer
-      one: medlem
-      other: medlemmer
-    memberships:
       zero: aktive medlemmer
       one: aktivt medlem
       other: aktive medlemmer
+    memberships:
+      zero: aktive medlemskaber
+      one: aktivt medlemskab
+      other: aktive medlemskaber
     memberships_sign_outs:
-      zero: afmeldinger
-      one: afmelding
-      other: afmeldinger  
+      zero: afmeldinger ialt
+      one: afmelding ialt
+      other: afmeldinger ialt
     memberships_sign_ups:
       zero: tilmeldinger ialt
       one: tilmelding ialt
