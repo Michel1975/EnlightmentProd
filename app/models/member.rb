@@ -33,6 +33,11 @@ class Member < ActiveRecord::Base
 
   #Only necessary to validate in web scenarios since phone validation for in-store signups is handled in controller logic
   validate :validate_phone_format, :unless => "validation_mode == 'store'"
+  validates_inclusion_of :birthday, :in => Date.new(1900)..Time.now.years_ago(18).to_date,
+    :message => I18n.t(:invalid_birthday, :scope => [:business_validations, :frontend, :member_user]), :allow_blank => true, :unless => "validation_mode == 'store'"
+
+
+
 
 
   #This method is called in sms-utility before sending a message to subscriber
@@ -119,6 +124,14 @@ class Member < ActiveRecord::Base
     def validate_phone_format
       if !SMSUtility::SMSFactory.validate_phone_number_incoming?(self.phone) && (self.phone.length <= 12)
         errors.add(:phone, I18n.t(:invalid_phone, :scope => [:business_validations, :frontend, :member_user]) )
+      end
+    end
+
+    #Used in frontend to ensure that members are at least 18 years old
+    def validate_birthday
+      invalid_range = (Date.today - 18.years)..Date.today
+      if self.birthday == invalid_range
+        errors.add(:birthday, I18n.t(:invalid_birthday, :scope => [:business_validations, :frontend, :member_user]) )
       end
     end
 

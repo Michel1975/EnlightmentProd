@@ -346,6 +346,7 @@ da:
         phone_confirmed_success: Dit telefonnummer er nu bekræftet!
         phone_confirmed_error: Dit telefonnummer kunne ikke bekræftes. Prøv venligst igen eller kontakt support!
         invalid_phone: er ugyldigt
+        invalid_birthday: du skal være fyldt 18 år for at blive medlem
     backend:
       member:
         warning_deletion_member: Du er ved at slette et medlem. Er du sikker?
