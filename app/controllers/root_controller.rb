@@ -36,19 +36,20 @@ class RootController < ApplicationController
     logger.debug "Search parameter - city: #{@city.inspect}"
     @store_name = params[:store_name]
     logger.debug "Search parameter - store_name: #{@store_name.inspect}"
-    @merchant_stores = MerchantStore.search(@city, @store_name )
-    logger.debug "Search result: #{@merchant_stores.inspect}"
-    if @merchant_stores.empty?
+    @search_result = MerchantStore.search(@city, @store_name ).page( params[:page] ).per_page(15)
+    logger.debug "Search result: #{@search_result.inspect}"
+    if @search_result.empty?
       logger.debug "Search result = No stores found"
       logger.debug "Loading default map view"
-      #We need to display something on map
-      @merchant_stores = MerchantStore.search('Frederiksværk', "")
+      #We need to display something on map - reset to base city
+      @city = 'Frederiksværk' 
+      @merchant_stores = MerchantStore.search(@city, "")
       @json = showMarkers(@merchant_stores)
     else
-      @merchant_stores = @merchant_stores.page( params[:page] ).per_page(15)
-      logger.debug "Search result = #{@merchant_stores.size.inspect} stores found"
+      #Extra assignment to MerchantStore variable
+      @merchant_stores = @search_result
       logger.debug "Loading Google Maps markers..."
-      @json = showMarkers(@merchant_stores)
+      @json = showMarkers(@search_result)
     end
     render 'home'
   end

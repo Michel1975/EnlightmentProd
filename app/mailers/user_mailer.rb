@@ -8,18 +8,20 @@ class UserMailer < ActionMailer::Base
   #   en.user_mailer.reset_password_email.subject
   #
   def reset_password_email(user)
+    host_state = ENV['TEST_STAGE'] == 'true' ? 'test.clubnovus.dk' : 'clubnovus.dk'
     @user_name = ""
     if user.sub_type == 'MerchantUser'
       @merchant_user = MerchantUser.find(user.sub_id)
       @user_name = @merchant_user.name
-      @url  = edit_shared_password_reset_url(user.reset_password_token)
+      #Host me specified explicit since controller context is missing
+      @url  = edit_shared_password_reset_url(user.reset_password_token, host: host_state)
       mail(:to => user.email,
         :subject => t(:password_reset, :scope => [:business_messages, :email]) )
     elsif
       user.sub_type == 'Member'
       @member_user = Member.find(user.sub_id)
       @user_name = @member_user.name
-      @url  = edit_shared_password_reset_url(user.reset_password_token)
+      @url  = edit_shared_password_reset_url(user.reset_password_token, host: host_state)
       mail(:to => user.email,
       :subject => t(:password_reset, :scope => [:business_messages, :email]) )
     end
@@ -27,11 +29,13 @@ class UserMailer < ActionMailer::Base
   
   #Only for merchant users
   def welcome_merchant_user(merchant_user)
+    host_state = ENV['TEST_STAGE'] == 'true' ? 'test.clubnovus.dk' : 'clubnovus.dk'
     Rails.logger.info "Into UserMailer welcome_merchant_user method"
     @merchant_user = MerchantUser.find(merchant_user)
     if @merchant_user.present?
       Rails.logger.debug "Merchant user attributes hash: #{@merchant_user.attributes.inspect}"
-      @url = edit_shared_password_reset_url(@merchant_user.user.reset_password_token)
+      #Host me specified explicit since controller context is missing
+      @url = edit_shared_password_reset_url(@merchant_user.user.reset_password_token, host: host_state)
       Rails.logger.debug "Password reset url: #{@url.inspect}"
       Rails.logger.debug "Merchant user present - sending email"
       mail(:to => @merchant_user.user.email,
