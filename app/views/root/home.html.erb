@@ -40,6 +40,8 @@
     </div><!--/row-fluid-->
 </div><!-- /. row-fluid-->
 
+<% if !Rails.env.prod? %> <!--tmp disable when we have fewer than 5 stores online -->
+
 <div class"row-fluid">
     <div class"span12" style="text-align:center">
     <%= form_tag search_stores_path, :method => 'get', style: "margin-top:15px" do %>
@@ -118,52 +120,53 @@
             </table>
         </div> 
     </div>
-<% end %>
+<% end %><!-- End if search result -->
 
-<div id="fb-root"></div>
+<% end %><!-- End prod disable when we have fewer than 5 stores online -->
+
 <% content_for :scripts do %>
-<script type="text/javascript">
-    jQuery(document).ready(function() {
-        App.init();
-        //http://silviomoreto.github.io/bootstrap-select/
-        $('.selectpicker').selectpicker({
-            size: 4,
-            noneSelectedText: 'Vælg by'
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            App.init();
+            //http://silviomoreto.github.io/bootstrap-select/
+            $('.selectpicker').selectpicker({
+                size: 4,
+                noneSelectedText: 'Vælg by'
+            });
         });
-    });
-    var myStyle = [ 
-        { featureType: "all", stylers: [{ "hue": "#37657F" } ]} 
-    ];
-    
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
-            fjs.parentNode.insertBefore(js, fjs);
-    }
-    (document, 'script', 'facebook-jssdk'));
+        var myStyle = [ 
+            { featureType: "all", stylers: [{ "hue": "#37657F" } ]} 
+        ];
+        
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+                fjs.parentNode.insertBefore(js, fjs);
+        }
+        (document, 'script', 'facebook-jssdk'));
 
-   Gmaps.map.infobox = function(boxText) {
-  return {
-     content: boxText
-    ,disableAutoPan: false
-    ,maxWidth: 0
-    ,pixelOffset: new google.maps.Size(-140, 0)
-    ,zIndex: null
-    ,boxStyle: {
-      background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
-      ,opacity: 1.0
-      ,width: "300px"
-       }
-    ,closeBoxMargin: "-13px -60px 10px 10px"
-    ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
-    ,infoBoxClearance: new google.maps.Size(1, 1)
-    ,isHidden: false
-    ,pane: "floatPane"
-    ,enableEventPropagation: false
- }};
-</script> 
+       Gmaps.map.infobox = function(boxText) {
+      return {
+         content: boxText
+        ,disableAutoPan: false
+        ,maxWidth: 0
+        ,pixelOffset: new google.maps.Size(-140, 0)
+        ,zIndex: null
+        ,boxStyle: {
+          background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.5/examples/tipbox.gif') no-repeat"
+          ,opacity: 1.0
+          ,width: "300px"
+           }
+        ,closeBoxMargin: "-13px -60px 10px 10px"
+        ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
+        ,infoBoxClearance: new google.maps.Size(1, 1)
+        ,isHidden: false
+        ,pane: "floatPane"
+        ,enableEventPropagation: false
+     }};
+    </script> 
 <% end %>
 
 

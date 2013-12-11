@@ -77,6 +77,7 @@ namespace :db do
 	  puts "Loading admin users for backend...done"
 
     puts "Loading backend admin users..."
+    
     #*********Start create backend admin users*************
       1.times do |n| 
         name = "Michel K. Hansen"

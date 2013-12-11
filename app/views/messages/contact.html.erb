@@ -47,31 +47,32 @@
             </ul>
         </div><!--/span3-->
     </div><!--/row-fluid-->
+
 <% content_for :scripts do %>
-<script type="text/javascript">
-    jQuery(document).ready(function() {
-        App.init();
-        Contact.initMap();
-    });
-
-    jQuery(function($) {
-        $("#contact_form").validate();
-        $('textarea.contact_form').inputlimiter({
-            limit: 500,
-            lineReturnCount: 2,
-            remText: '%n tegn tilbage...',
-            limitText: 'maks tilladt: %n.'
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            App.init();
+            Contact.initMap();
         });
-    });
 
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
-            fjs.parentNode.insertBefore(js, fjs);
-    }
-    (document, 'script', 'facebook-jssdk'));
-</script> 
+        jQuery(function($) {
+            $("#contact_form").validate();
+            $('textarea.contact_form').inputlimiter({
+                limit: 500,
+                lineReturnCount: 2,
+                remText: '%n tegn tilbage...',
+                limitText: 'maks tilladt: %n.'
+            });
+        });
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/da_DK/all.js#xfbml=1&appId=155627067978522";
+                fjs.parentNode.insertBefore(js, fjs);
+        }
+        (document, 'script', 'facebook-jssdk'));
+    </script> 
 <% end %>
 

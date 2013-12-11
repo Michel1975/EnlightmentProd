@@ -142,18 +142,25 @@ namespace :campaign do
     
     campaigns.each do |campaign|
         notifications = MessageNotification.where(campaign_group_id: campaign.message_group_id)
+        puts "Notification loaded for campaign - #{notifications.inspect}"
 
         notifications.each do |notification|
+            puts "Notification found - #{notification.inspect}"
             member = Member.find_by_phone(notification.recipient)
-            if member #code 1
-                campaign_member = campaign.campaign_members.find_by_subscriber_id(member)
+            puts "Trying to find member from recipient phone: #{notification.recipient.inspect}"
+            if member
+                puts "Member found: #{member.attributes.inspect}"
+                campaign_member = campaign.campaign_members.find_by_subscriber_id(member.id)
                 if campaign_member
+                    puts "Campaign Member found: #{campaign_member.attributes.inspect}"
                     if notification.status_code.name == '1'
+                        puts "Updating to received status..."
                         campaign_member.status = 'received' 
                     else
+                        puts "Updating to not-received status"
                         campaign_member.status = 'not-received'
                     end 
-                    campaign_member.save
+                    campaign_member.save!
                 end 
             end
         end#Finish notification logic for campaign
