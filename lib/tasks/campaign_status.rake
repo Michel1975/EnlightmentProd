@@ -150,7 +150,7 @@ namespace :campaign do
             puts "Trying to find member from recipient phone: #{notification.recipient.inspect}"
             if member
                 puts "Member found: #{member.attributes.inspect}"
-                campaign_member = campaign.campaign_members.find_by_subscriber_id(member.id)
+                campaign_member = campaign.campaign_members.find_by_member_id(member.id)
                 if campaign_member
                     puts "Campaign Member found: #{campaign_member.attributes.inspect}"
                     if notification.status_code.name == '1'
