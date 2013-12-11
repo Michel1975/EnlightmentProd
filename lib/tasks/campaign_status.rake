@@ -150,18 +150,22 @@ namespace :campaign do
             puts "Trying to find member from recipient phone: #{notification.recipient.inspect}"
             if member
                 puts "Member found: #{member.attributes.inspect}"
-                campaign_member = campaign.campaign_members.find_by_member_id(member.id)
-                if campaign_member
-                    puts "Campaign Member found: #{campaign_member.attributes.inspect}"
-                    if notification.status_code.name == '1'
-                        puts "Updating to received status..."
-                        campaign_member.status = 'received' 
-                    else
-                        puts "Updating to not-received status"
-                        campaign_member.status = 'not-received'
+                subscriber = campaign.subscribers.find_by_member_id(member.id)
+                if subscriber
+                    puts "Subscriber found: #{subscriber.attributes.inspect}"
+                    campaign_member = campaign.campaign_members.find_by_subscriber_id(subscriber.id)
+                    if campaign_member
+                        puts "Campaign Member found: #{campaign_member.attributes.inspect}"
+                        if notification.status_code.name == '1'
+                            puts "Updating to received status..."
+                            campaign_member.status = 'received' 
+                        else
+                            puts "Updating to not-received status"
+                            campaign_member.status = 'not-received'
+                        end 
+                        campaign_member.save!
                     end 
-                    campaign_member.save!
-                end 
+                end
             end
         end#Finish notification logic for campaign
 
