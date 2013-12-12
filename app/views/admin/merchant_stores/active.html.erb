@@ -12,7 +12,7 @@
 		<%= form_tag search_stores_admin_merchant_stores_path, :method => 'get', class: "form-search" do %>
 			<%= select_tag(:city, options_for_select([ "Frederiksværk", "Helsinge", "Liseleje" ], @city.nil? ? "Frederiksværk" :  @city) ) %>
             &nbsp;&nbsp;
-			<%= text_field_tag :store_name, "", class: "input-medium search-query", placeholder: "Indtast butiksnavn..." %>
+			<%= text_field_tag :store_name, @store_name.nil? ? "" : @store_name, class: "input-medium search-query", placeholder: "Indtast butiksnavn..." %>
             <%= button_tag class: "btn btn-small btn-success" do %>
             	Søg
             	<i class="icon-search icon-on-right bigger-110"></i>

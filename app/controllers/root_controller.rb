@@ -21,7 +21,12 @@ class RootController < ApplicationController
 		#http://t3923.codeinpro.us/q/51502208e8432c04261eb26e
 		#Note: Vi bliver nødt til at lave vores egen sidebar med markers. Vi skal bare finde linket til hver kort.
 		#link til kort markør: http://stackoverflow.com/questions/8608602/make-map-marker-direct-link-onclick-for-gmaps4rails
-		@merchant_stores = MerchantStore.search('Frederiksværk', "")
+		logger.debug "Resetting search params if they exist...."
+    params[:city].delete if params[:city]
+    params[:store_name].delete if params[:store_name]
+    
+
+    @merchant_stores = MerchantStore.search('Frederiksværk', "")
     @search = false
     logger.debug "Merchant-stores attributes hash: #{@merchant_stores.inspect}"
     logger.debug "Loading Google Maps markers..."

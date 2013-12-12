@@ -7,7 +7,13 @@ class Shared::BackendAdminSessionsController < Shared::BaseController
     #Remove old session data to be sure
     logout
     delete_session_variables
-		user = login(params[:email], params[:password], params[:remember_me])
+    #Remove whitespace
+    email = params[:email]
+    email.strip if email
+    password = params[:password]
+    password.strip if password
+
+		user = login(email, password, params[:remember_me])
 		#Login and verify user type to avoid invalid logins
     if user && user.sub_type == "BackendAdmin"
         logger.debug "Backend user logged in successfully: #{user.attributes.inspect}"
