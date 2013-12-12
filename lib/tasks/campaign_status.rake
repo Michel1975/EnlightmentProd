@@ -9,9 +9,10 @@ namespace :campaign do
   task :confirm_campaign => :environment do
     puts "Preparing to confirm campaigns due for activation during the next +10 => 20 minutes"
     campaigns = Campaign.where(:activation_time => (Time.zone.now + 10.minutes)..(Time.zone.now + 20.minutes ) ).scheduled
-    puts "Number of campaigns to be processed in this time window: #{campaigns.size.inspect}"
+    puts "Number of campaigns to be processed in this time window: #{campaigns.count.inspect}"
     
     campaigns.each do |campaign|
+        puts "Campaign being processed: #{campaign.attributes.inspect}"
         error = false
         merchant_store = MerchantStore.find_by_id(campaign.merchant_store_id)
         if merchant_store.present?

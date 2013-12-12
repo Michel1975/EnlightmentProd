@@ -451,7 +451,7 @@ da:
       store_not_found_error: "Kære medlem,\nder findes ikke en Club Novus partnerbutik med teksten %{keyword}.\nTjek venligst om teksten er korrekt og prøv igen.\n\nMvh\nClub Novus"
       already_signed_up: "Kære medlem,\n\ndu er allerede tilmeldt %{store_name} i %{city} via Club Novus.\n\nMvh\nClub Novus"
     opt_out:
-      success: "Kære medlem,\ndu vil nu ikke længere modtage tilbud og nyheder fra %{store_name}.\n\nMvh\nClub Novus"
+      success: "Kære medlem,\nVi har registreret din afmelding til %{store_name}. \nAfmeldingen træder i kraft indenfor 1 time.\n\nMvh\nClub Novus"
     opt_out_minor:
       success: "Kære medlem,\nDit medlemskab er nu ophørt og du vil nu ikke længere modtage tilbud og nyheder.\n\nMvh\nClub Novus"
     web_profile:
