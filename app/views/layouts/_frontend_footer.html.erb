@@ -18,7 +18,7 @@
                     <div class="headline"><h3>Seneste blogindlæg</h3></div>
                     <% for entry in FeedEntry.all(:limit => 5, :order => "published_at desc") %>
                         <dd class="dl-horizontal">
-                            <p><i class="icon-star"></i>&nbsp;&nbsp;<%= link_to h(entry.name), entry.url %></p>
+                            <p><i class="icon-star"></i>&nbsp;&nbsp;<%= link_to h(entry.name), entry.url, :target => "_blank" %></p>
                         </dd>
                     <% end %>
                 </div>
