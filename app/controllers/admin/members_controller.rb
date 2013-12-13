@@ -4,9 +4,6 @@ class Admin::MembersController < Admin::BaseController
 	#Test: OK 
 	def index
 		logger.info "Loading Members index action"
-		logger.debug "Resetting search params if they exist...."
-    	params[:name].delete if params[:name]
-    	params[:phone].delete if params[:phone]
 		
 		@search = false
 		logger.debug "Search flag: #{@search.inspect}"

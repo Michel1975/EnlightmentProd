@@ -4,11 +4,6 @@ class Admin::CampaignsController < Admin::BaseController
   #Test: OK
   def scheduled
 		logger.info "Loading Campaigns scheduled action"
-    logger.debug "Resetting search params if they exist...."
-    params[:from_date].delete if params[:from_date]
-    params[:to_date].delete if params[:to_date]
-    params[:status].delete if params[:status]
-		
     @search = false
 		logger.debug "Search flag: #{@search.inspect}"
     	

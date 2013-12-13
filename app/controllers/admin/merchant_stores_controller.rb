@@ -4,9 +4,6 @@ class Admin::MerchantStoresController < Admin::BaseController
 	#Test: OK
 	def active
 		logger.info "Loading MerchantStores active action"
-		logger.debug "Resetting search params if they exist...."
-    	params[:store_name].delete if params[:store_name]
-    	params[:city].delete if params[:city]
 		
 		@search = false
 		logger.debug "Search flag: #{@search.inspect}"
