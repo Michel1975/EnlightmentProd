@@ -7,7 +7,7 @@ namespace :campaign do
   desc "Confirm due campaigns with sms gateway..."
   #Interval: Every 10 minutes
   task :confirm_campaign => :environment do
-    puts "Preparing to confirm campaigns due for activation during the next +10 => 20 minutes"
+    puts "Preparing to confirm campaigns due for activation during the next +10 => 30 minutes"
     campaigns = Campaign.where(:activation_time => (Time.zone.now + 10.minutes)..(Time.zone.now + 30.minutes ) ).scheduled
     puts "Number of campaigns to be processed in this time window: #{campaigns.count.inspect}"
     
