@@ -10,22 +10,24 @@ namespace :campaign do
     puts "Preparing to confirm campaigns due for activation during the next +10 => 30 minutes"
     campaigns = Campaign.where(:activation_time => (Time.zone.now + 10.minutes)..(Time.zone.now + 30.minutes ) ).scheduled
     puts "Number of campaigns to be processed in this time window: #{campaigns.count.inspect}"
-    
     campaigns.each do |campaign|
-        puts "Campaign being processed: #{campaign.attributes.inspect}"
-        error = false
-        merchant_store = MerchantStore.find_by_id(campaign.merchant_store_id)
-        if merchant_store.present?
-            result = SMSUtility::SMSFactory.sendOfferReminderScheduled?(campaign, merchant_store)
-            unless result && campaign.update_column(:status, 'gateway_confirmed')
+        #Its necessary to lock campaign record to avoid double submission in error scenarios
+        campaign.with_lock do
+            puts "Campaign being processed: #{campaign.attributes.inspect}"
+            error = false
+            merchant_store = MerchantStore.find_by_id(campaign.merchant_store_id)
+            if merchant_store.present?
+                result = SMSUtility::SMSFactory.sendOfferReminderScheduled?(campaign, merchant_store)
+                unless result && campaign.update_column(:status, 'gateway_confirmed')
+                    error = true
+                end
+            else
                 error = true
             end
-        else
-            error = true
-        end
-        if error
-            campaign.update_column(:status, 'error')   
-        end
+            if error
+                campaign.update_column(:status, 'error')   
+            end
+        end#End with_lock
     end
     puts "Done confirming campaigns"
   end#End task
@@ -50,7 +52,6 @@ namespace :campaign do
     end
 
     puts "Loading status codes...done"
-
     campaigns.each do |campaign|
         puts "Fetching data for #{campaign.title}"
 
@@ -83,7 +84,6 @@ namespace :campaign do
     	   notifications.each do |notification|
     	       notifications_lookup[notification.recipient] = notification	
     	   end
-            
             messages.each do |message|
                 puts "Message: " + message.to_s
                 
@@ -140,7 +140,6 @@ namespace :campaign do
     campaigns = Campaign.where(:activation_time => (Time.zone.now - 10.hours)..(Time.zone.now - 30.minutes)).where(:status => 'status_retrived_once')
     puts "#{campaigns.size} campaigns with status retrieved from gateway loaded...done"
     puts "Preparing to update campaign member_status"
-    
     campaigns.each do |campaign|
         notifications = MessageNotification.where(campaign_group_id: campaign.message_group_id)
         puts "Notification loaded for campaign - #{notifications.inspect}"
@@ -186,7 +185,7 @@ namespace :campaign do
   task :delete_error_status => :environment do
     campaigns = Campaign.where(:activation_time => (Time.zone.now - 2.day)..(Time.zone.now - 1.day)).where(:status => 'error')
     puts "Preparing to delete error entries from MessageNotification..."
-    puts "#{campaigns.size} campaigns with related status messages due for deletion"
+    puts "#{campaigns.count} campaigns with related status messages due for deletion"
     campaigns.each do |campaign|
         notifications = MessageNotification.where(campaign_group_id: campaign.message_group_id)
         if notifications.size != 0
@@ -194,6 +193,22 @@ namespace :campaign do
         end
     end#Finish campaign logic
     puts "Finished deleting invalid error entries in MessageNotification"
+  end#End task
+
+  #Step 5: If campaigns are not confirmed 5 minutes after activation_time, set status to error
+  desc "Set campaign status to error if campaigns are not confirmed within 5 minutes after activation_time"
+  #Interval: Once every 30 minutes
+  task :not_confirmed => :environment do
+    campaigns = Campaign.where("activation_time < ? AND status = 'scheduled'", Time.zone.now - 5.minutes)
+    puts "Preparing update campaign to error status if necessary..."
+    puts "#{campaigns.count} campaigns that are not confirmed by gateway due to unknown reason"
+    campaigns.each do |campaign|
+        #Lock record for safety concerns
+        campaign.with_lock do
+            campaign.update_column(:status, 'error')  
+        end     
+    end#Finish campaign logic
+    puts "Finished updating campaigns to error status"
   end#End task
   
 end#End namespace
