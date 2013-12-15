@@ -14,12 +14,20 @@
     </div><!-- span12 -->
     <div class="span2 offset1" style="text-align:center;display:block">
         <p>Deltager du i testen?</p>
-        <%= link_to shared_login_merchant_path do %>
-            <button class="btn-u btn-primary btn-u-blue">
-                Login på butikskonto
-            </button>
-        <% end %>
 
+        <% if merchant_user? && logged_in? %>
+            <%= link_to merchant_dashboard_path do %>
+                <button class="btn-u btn-primary btn-u-blue">
+                    Åbn butiksportal
+                </button>
+            <% end %>
+        <% else %>
+            <%= link_to shared_login_merchant_path do %>
+                <button class="btn-u btn-primary btn-u-blue">
+                    Login på butikskonto
+                </button>
+            <% end %>
+        <% end %>
         <br /><br />
         <p>Yderligere info?</p>
         <%= link_to contact_path do %>
