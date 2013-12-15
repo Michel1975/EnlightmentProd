@@ -97,11 +97,16 @@ class Subscriber < ActiveRecord::Base
   	return "Stop:" + client.shorten("http://www.clubnovus.dk/stop_sms_confirm?token#{member.access_key}&#{member.id}&#{merchant_store.id}").short_url
   end
 
-  def opt_out_link_sms 
-    #client = Bitly.client
-    #No new-line since link is inserted with stop macro
-    return "\nSTOP: Stop #{merchant_store.sms_keyword} til 1276 222" 
-  end
+  #Is used only by controller and views
+  def opt_out_link_sms
+    return "\nStop: Svar STOP #{merchant_store.sms_keyword}" 
+  end 
+
+  #To be used only in smsUtility when sending messages where new line is inserted directly. This is to avoid extra whitespace character in sms.
+  def opt_out_link_sms_clean
+    #No new-line since link is inserted with stop macro where new line is inserted manually.
+    return "Stop: Svar STOP #{merchant_store.sms_keyword}" 
+  end 
 
   #Updates eventhistory for subscriber - for reporting purposes
   def after_create_subscriber

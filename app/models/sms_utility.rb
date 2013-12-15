@@ -194,7 +194,7 @@ class SMSFactory
         #Generate safe message-id from log method
         recipient = campaign_member.subscriber.member.phone
         message_id = register_message_notification(campaign, recipient, merchant_store, default_status_code, "campaign")
-        recipientString += "<to id='#{message_id}' StopLink='#{campaign_member.subscriber.opt_out_link_sms}' >" + recipient + "</to>" 
+        recipientString += "<to id='#{message_id}' StopLink='#{campaign_member.subscriber.opt_out_link_sms_clean}' >" + recipient + "</to>" 
       end
       recipientXml = "<recipients>" + recipientString + "</recipients>"     
       stringXml = "<bulk>" +    

@@ -446,12 +446,12 @@ da:
       error: Der er opstået en teknisk fejl ved afsendelsen af beskeden. Vi arbejder hurtigst muligt på at løse problemet!
   business_messages:
     store_signup: 
-      success_with_present: "Du er tilmeldt %{store_name}.\nVed modtagelse af denne sms bekræfter du at være fyldt 18 år. Ellers svar nej\n\nMvh\nClub Novus"
+      success_with_present: "Du er nu tilmeldt %{store_name}.\nVed modtagelse af denne sms bekræfter du at være fyldt 18 år. Ellers svar nej\n\nMvh\nClub Novus"
       success_without_present: "Du er nu tilmeldt %{store_name}.\nVed modtagelse af denne sms bekræfter du at være fyldt 18 år. Ellers svar nej\n\nMvh\nClub Novus"
-      store_not_found_error: "Kære medlem,\nder findes ikke en Club Novus partnerbutik med teksten %{keyword}.\nTjek venligst om teksten er korrekt og prøv igen.\n\nMvh\nClub Novus"
+      store_not_found_error: "Kære medlem,\nder findes ikke en Club Novus partnerbutik med teksten %{keyword}.\nTjek at teksten er korrekt og prøv igen.\n\nMvh\nClub Novus"
       already_signed_up: "Kære medlem,\n\ndu er allerede tilmeldt %{store_name} i %{city} via Club Novus.\n\nMvh\nClub Novus"
     opt_out:
-      success: "Kære medlem,\nVi har registreret din afmelding til %{store_name}. \nAfmeldingen træder i kraft indenfor 1 time.\n\nMvh\nClub Novus"
+      success: "Kære medlem,\nVi har registreret din afmelding til %{store_name}.\nAfmeldingen træder i kraft indenfor 1 time.\n\nMvh\nClub Novus"
     opt_out_minor:
       success: "Kære medlem,\nDit medlemskab er nu ophørt og du vil nu ikke længere modtage tilbud og nyheder.\n\nMvh\nClub Novus"
     web_profile:
