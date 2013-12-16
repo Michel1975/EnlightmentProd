@@ -83,7 +83,7 @@
 							</div>
 							<div class="profile-info-row">
 								<div class="profile-info-name"> Køn </div>
-								<div class="profile-info-value"> <%= gender_danish( subscriber.member.gender ) %> </div>
+								<div class="profile-info-value"> <%= subscriber.member.gender.present? ? gender_danish( subscriber.member.gender ) : empty_attribute_info( subscriber.member.gender ) %> </div>
 							</div>
 							<div class="profile-info-row">
 								<div class="profile-info-name"> Fødselsdag </div>
