@@ -489,10 +489,14 @@ da:
       zero: aktive medlemmer
       one: aktivt medlem
       other: aktive medlemmer
-    memberships:
+    memberships_backend:
       zero: aktive medlemskaber
       one: aktivt medlemskab
       other: aktive medlemskaber
+    memberships_store:
+      zero: aktive medlemmer
+      one: aktivt medlem
+      other: aktive medlemmer
     memberships_sign_outs:
       zero: afmeldinger ialt
       one: afmelding ialt

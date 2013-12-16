@@ -38,14 +38,9 @@
       </div>
       <div class="infobox-data">
         <span class="infobox-data-number"> <%= @total_memberships_count %> </span>
-        <div class="infobox-content"> <%= t('misc.memberships', :count => @total_memberships_count ) %> </div>
+        <div class="infobox-content"> <%= t('misc.memberships_backend', :count => @total_memberships_count ) %> </div>
       </div>
     </div>
-    
-  </div><!-- /.span10 infobox-container-->
-</div><!-- /.row-fluid -->
-<div class="row-fluid">
-  <div class="span10 infobox-container">
 
     <div class="infobox infobox-blue">
       <div class="infobox-icon">
@@ -76,11 +71,6 @@
         <div class="infobox-content"> <%= t('misc.campaigns_finished', :count => @completed_campaigns_count ) %> </div>
       </div>
     </div>
- </div><!-- /.infobox container -->
-</div><!-- /.row-fluid -->
-
-<div class="row-fluid">
-  <div class="span10 infobox-container">
 
     <div class="infobox infobox-green">
       <div class="infobox-icon">

@@ -9,15 +9,17 @@
 </h3>
 <div class="row-fluid">
   <div class="span10 infobox-container">
+
     <div class="infobox infobox-green">
         <div class="infobox-icon">
           <i class="icon-user"></i>
         </div>
         <div class="infobox-data">
           <span class="infobox-data-number"> <%= @total_subscribers_count %> </span>
-          <div class="infobox-content"> <%= t('misc.memberships', :count => @total_subscribers_count ) %> </div>
+          <div class="infobox-content"> <%= t('misc.memberships_store', :count => @total_subscribers_count ) %> </div>
       </div>
     </div>
+
     <div class="infobox infobox-blue">
       <div class="infobox-icon">
         <i class="icon-money"></i>
@@ -27,6 +29,7 @@
         <div class="infobox-content"> <%= t('misc.offers', :count => @active_offers ) %> </div>
       </div>
     </div>
+
     <div class="infobox infobox-orange">
       <div class="infobox-icon">
         <i class="icon-bullhorn"></i>
@@ -36,10 +39,7 @@
         <div class="infobox-content"> <%= t('misc.campaigns_scheduled', :count => @scheduled_campaigns ) %> </div>
       </div>
     </div>
-  </div> 
-</div><!-- /.row-fluid -->
-<div class="row-fluid">
-  <div class="span10 infobox-container">
+
     <div class="infobox infobox-blue">
       <div class="infobox-icon">
         <i class="icon-envelope"></i>
@@ -49,6 +49,7 @@
         <div class="infobox-content"> <%= t('misc.total_sms_messages', :count => @total_sms_messages ) %> </div>
       </div>
     </div>
+
     <div class="infobox infobox-orange2">
       <div class="infobox-icon">
         <i class="icon-bullhorn"></i>
@@ -58,6 +59,7 @@
         <div class="infobox-content"> <%= t('misc.campaigns_finished', :count => @completed_campaigns ) %> </div>
       </div>
     </div>
+
     <div class="infobox infobox-red">
       <div class="infobox-icon">
         <i class="icon-user"></i>
@@ -67,7 +69,8 @@
         <div class="infobox-content"> <%= t('misc.memberships_sign_outs', :count => @sign_outs_total ) %> </div>
       </div>
     </div>
- </div><!-- /.infobox container -->
+    
+ </div><!-- /.span10 -->
 </div><!-- /.row-fluid -->
 
 <div class="row-fluid">
