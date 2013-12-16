@@ -11,14 +11,14 @@
       </div>
       <div class="control-group">
         <div class="input-append date">
-          <%= f.label :start_date, "Dato", class: "control-label" %>
+          <%= f.label :start_date, "Dato for afsendelse", class: "control-label" %>
           <%= f.text_field :start_date, class: "datepicker", placeholder: "Dato"%> &nbsp;&nbsp;
           <span class="add-on"><i class="icon-calendar"></i></span>
           <%= tooltip("Angiv dato/tidspunkt for afsendelse af sms'er (interval: mindst 1 time fra nu og 5 dage frem)", "Dato") %>
         </div>          
       </div>
       <div class="input-append bootstrap-timepicker-component">
-        <%= f.label :start_time, "Tidspunkt", class: "control-label" %>
+        <%= f.label :start_time, "Tidspunkt for afsendelse", class: "control-label" %>
         <%= f.text_field :start_time, class: "timepicker-default input-small open_time", placeholder: "Tidspunkt" %>
         <span class="add-on">
           <i class="icon-time"></i>
